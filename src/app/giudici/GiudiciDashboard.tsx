@@ -1,6 +1,6 @@
 "use client";
 
-import { DisciplineKind, FinalStage, MatchPhase } from "@/generated/prisma/browser";
+import { DisciplineKind, FinalStage, MatchPhase } from "@prisma/client";
 import { type ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 

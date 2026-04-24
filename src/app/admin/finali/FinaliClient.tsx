@@ -15,7 +15,7 @@ import {
 import PremiumCard from "@/components/ui/PremiumCard";
 import Link from "next/link";
 
-import { DisciplineKind } from "@/generated/prisma/client";
+import { DisciplineKind } from "@prisma/client";
 
 type QualRow = {
   athlete_id: string;

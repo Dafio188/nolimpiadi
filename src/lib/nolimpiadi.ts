@@ -1,4 +1,4 @@
-import { DisciplineKind, Tier } from "@/generated/prisma/client";
+import { DisciplineKind, Tier } from "@prisma/client";
 
 export const athleteNames = [
   "Pietro",

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { DisciplineKind } from "@/generated/prisma/client";
+import { DisciplineKind } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 function parseKind(value: string | null): DisciplineKind | null {

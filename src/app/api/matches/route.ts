@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { DisciplineKind, FinalStage, MatchPhase } from "@/generated/prisma/client";
+import { DisciplineKind, FinalStage, MatchPhase } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 function isRecord(value: unknown): value is Record<string, unknown> {

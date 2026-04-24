@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { defaultCategoryScoreByAthleteName, defaultTierByAthleteName, disciplineSeeds } from "@/lib/nolimpiadi";
-import type { Prisma } from "@/generated/prisma/client";
+import type { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 

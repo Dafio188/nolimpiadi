@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import PrintButton from "./PrintButton";
 import { prisma } from "@/lib/prisma";
-import { DisciplineKind } from "@/generated/prisma/client";
+import { DisciplineKind } from "@prisma/client";
 import Link from "next/link";
 
 type QualRow = {
