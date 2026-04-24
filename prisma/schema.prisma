@@ -1,0 +1,169 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Tier {
+  ALTO
+  MEDIO
+  BASSO
+}
+
+enum DisciplineKind {
+  CALCIO_BALILLA
+  FRECCETTE
+  PING_PONG
+  AIR_HOCKEY
+}
+
+enum MatchPhase {
+  QUALIFICAZIONE
+  FINALI
+}
+
+enum FinalStage {
+  QUARTI
+  SEMIFINALI
+  FINALE
+}
+
+model Athlete {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  tier      Tier
+  categoryScore Int  @default(100) @map("category_score")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  sides MatchSideAthlete[]
+
+  @@map("athletes")
+}
+
+model SystemSetting {
+  id           Int @id @default(1)
+  malusDivisor Int @default(1000) @map("malus_divisor")
+  turnDurationMinutes Int @default(10) @map("turn_duration_minutes")
+
+  @@map("system_settings")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("admins")
+}
+
+model QualificationTurn {
+  id          String   @id @default(cuid())
+  index       Int      @unique
+  scheduledAt DateTime? @map("scheduled_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  slots QualificationSlot[]
+
+  @@map("qualification_turns")
+}
+
+model QualificationSlot {
+  id             String        @id @default(cuid())
+  turnId         String        @map("turn_id")
+  disciplineId   String        @map("discipline_id")
+  kind           DisciplineKind
+  targetVictory  Int           @map("target_victory")
+  side1AthleteIds String[]     @map("side1_athlete_ids")
+  side2AthleteIds String[]     @map("side2_athlete_ids")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  turn       QualificationTurn @relation(fields: [turnId], references: [id], onDelete: Cascade)
+  discipline Discipline        @relation(fields: [disciplineId], references: [id])
+  match      Match?
+
+  @@unique([turnId, kind])
+  @@index([turnId])
+
+  @@map("qualification_slots")
+}
+
+model Discipline {
+  id          String        @id @default(cuid())
+  kind        DisciplineKind @unique
+  name        String
+  coefficient Int
+  teamSize    Int           @map("team_size")
+  targetMin   Int?          @map("target_min")
+  targetMax   Int?          @map("target_max")
+  targetFixed   Int?          @map("target_fixed")
+  targetOverride Int?          @map("target_override")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  matches Match[]
+  qualificationSlots QualificationSlot[]
+
+  @@map("disciplines")
+}
+
+model Match {
+  id           String     @id @default(cuid())
+  disciplineId String     @map("discipline_id")
+  phase        MatchPhase
+  targetVictory Int       @map("target_victory")
+  finalStage   FinalStage? @map("final_stage")
+  plannedSlotId String?   @unique @map("planned_slot_id")
+  playedAt     DateTime   @default(now()) @map("played_at")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  discipline Discipline @relation(fields: [disciplineId], references: [id])
+  plannedSlot QualificationSlot? @relation(fields: [plannedSlotId], references: [id])
+  sides      MatchSide[]
+
+  @@index([disciplineId, phase])
+  @@index([playedAt])
+
+  @@map("matches")
+}
+
+model MatchSide {
+  id      String @id @default(cuid())
+  matchId String @map("match_id")
+  side    Int
+  points  Int
+
+  match    Match              @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  athletes MatchSideAthlete[]
+
+  @@unique([matchId, side])
+  @@index([matchId])
+
+  @@map("match_sides")
+}
+
+model MatchSideAthlete {
+  sideId    String @map("side_id")
+  athleteId String @map("athlete_id")
+
+  side    MatchSide @relation(fields: [sideId], references: [id], onDelete: Cascade)
+  athlete Athlete   @relation(fields: [athleteId], references: [id])
+
+  @@id([sideId, athleteId])
+  @@index([athleteId])
+
+  @@map("match_side_athletes")
+}

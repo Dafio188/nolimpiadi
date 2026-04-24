@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Giudici - NOLImpiadi</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #18181b; min-height: 100vh; padding: 1rem; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .header h1 { color: white; font-size: 1.25rem; }
+    .header a { color: #a1a1aa; text-decoration: none; font-size: 0.875rem; }
+    .idle { background: #22c55e; color: white; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 1rem; }
+    .msg { background: #22c55e; color: white; padding: 0.5rem; border-radius: 0.375rem; margin-bottom: 0.5rem; display: none; }
+    .msg.error { background: #dc2626; display: block; }
+    .msg.ok { display: block; }
+    
+    /* Grid 2x2 */
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    
+    .card { 
+      background: white; 
+      border-radius: 0.75rem; 
+      padding: 1rem; 
+      display: flex; 
+      flex-direction: column;
+      min-height: 200px;
+    }
+    .card h2 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+    .card .target { font-size: 0.75rem; color: #71717a; margin-bottom: 0.75rem; }
+    
+    .side { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .side label { font-size: 0.75rem; color: #52525b; margin-bottom: 0.25rem; }
+    .side .names { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .side input { 
+      width: 100%; 
+      padding: 0.75rem; 
+      font-size: 1.5rem; 
+      text-align: center; 
+      border: 2px solid #e4e4e7; 
+      border-radius: 0.5rem; 
+    }
+    .side input:focus { outline: none; border-color: #18181b; }
+    
+    .btn { 
+      width: 100%; 
+      padding: 1rem; 
+      font-size: 1.25rem; 
+      font-weight: 600; 
+      border: none; 
+      border-radius: 0.5rem; 
+      cursor: pointer;
+      margin-top: 0.75rem;
+    }
+    .btn-green { background: #22c55e; color: white; }
+    .btn-green:active { background: #16a34a; }
+    
+    .result { display: none; padding: 0.5rem; text-align: center; font-size: 0.875rem; margin-top: 0.5rem; border-radius: 0.25rem; }
+    .result.ok { display: block; background: #dcfce7; color: #166534; }
+    .result.error { display: block; background: #fecaca; color: #991b1b; }
+    
+    /* Colors per disciplina */
+    .card-air_hockey { border-left: 4px solid #ef4444; }
+    .card-ping_pong { border-left: 4px solid #3b82f6; }
+    .card-freccette { border-left: 4px solid #22c55e; }
+    .card-calcio_balilla { border-left: 4px solid #f59e0b; }
+    
+    .btn-next {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      background: #18181b;
+      color: white;
+    }
+    .btn-next:disabled { background: #d4d4d8; cursor: not-allowed; }
+    .btn-next:hover:not(:disabled) { background: #27272a; }
+    
+    .actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+    .btn-action {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #e4e4e7;
+      border-radius: 0.5rem;
+      background: white;
+      cursor: pointer;
+    }
+    .btn-action:hover { background: #f4f4f5; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Giudici</h1>
+    <a href="/">← Home</a>
+  </div>
+  
+  <div id="idle" class="idle"></div>
+  <div id="msg" class="msg"></div>
+  
+  <div class="grid">
+    <!-- Air Hockey -->
+    <div class="card card-air_hockey">
+      <h2>Air Hockey</h2>
+      <p class="target">Target: <span id="target_AIR_HOCKEY">4</span> goal</p>
+      <div class="side">
+        <label>Lato 1: <span id="name1_AIR_HOCKEY"></span></label>
+        <input type="number" id="p1_AIR_HOCKEY" placeholder="0">
+      </div>
+      <div class="side">
+        <label>Lato 2: <span id="name2_AIR_HOCKEY"></span></label>
+        <input type="number" id="p2_AIR_HOCKEY" placeholder="0">
+      </div>
+      <button class="btn btn-green" onclick="save('AIR_HOCKEY')">Inserisci</button>
+      <div id="r_AIR_HOCKEY" class="result"></div>
+    </div>
+    
+    <!-- Ping Pong -->
+    <div class="card card-ping_pong">
+      <h2>Ping-pong</h2>
+      <p class="target">Target: <span id="target_PING_PONG">11</span> pt</p>
+      <div class="side">
+        <label>Lato 1: <span id="name1_PING_PONG"></span></label>
+        <input type="number" id="p1_PING_PONG" placeholder="0">
+      </div>
+      <div class="side">
+        <label>Lato 2: <span id="name2_PING_PONG"></span></label>
+        <input type="number" id="p2_PING_PONG" placeholder="0">
+      </div>
+      <button class="btn btn-green" onclick="save('PING_PONG')">Inserisci</button>
+      <div id="r_PING_PONG" class="result"></div>
+    </div>
+    
+    <!-- Freccette -->
+    <div class="card card-freccette">
+      <h2>Freccette</h2>
+      <p class="target">Target: <span id="target_FRECCETTE">220</span> pt</p>
+      <div class="side">
+        <label>Lato 1: <span id="name1_FRECCETTE"></span></label>
+        <input type="number" id="p1_FRECCETTE" placeholder="0">
+      </div>
+      <div class="side">
+        <label>Lato 2: <span id="name2_FRECCETTE"></span></label>
+        <input type="number" id="p2_FRECCETTE" placeholder="0">
+      </div>
+      <button class="btn btn-green" onclick="save('FRECCETTE')">Inserisci</button>
+      <div id="r_FRECCETTE" class="result"></div>
+    </div>
+    
+    <!-- Calcio Balilla -->
+    <div class="card card-calcio_balilla">
+      <h2>Calcio-balilla</h2>
+      <p class="target">Target: <span id="target_CALCIO_BALILLA">4</span> pt</p>
+      <div class="side">
+        <label>Lato 1: <span id="name1_CALCIO_BALILLA"></span></label>
+        <input type="number" id="p1_CALCIO_BALILLA" placeholder="0">
+      </div>
+      <div class="side">
+        <label>Lato 2: <span id="name2_CALCIO_BALILLA"></span></label>
+        <input type="number" id="p2_CALCIO_BALILLA" placeholder="0">
+      </div>
+      <button class="btn btn-green" onclick="save('CALCIO_BALILLA')">Inserisci</button>
+      <div id="r_CALCIO_BALILLA" class="result"></div>
+    </div>
+  </div>
+  
+  <button id="btnNext" class="btn btn-next" onclick="nextTurn()">Prossimo Turno</button>
+  
+  <div class="actions">
+    <button class="btn-action" onclick="reload()" title="Ricarica">🔄</button>
+  </div>
+    
+    <script>
+    let matches = {};
+    let completedKinds = new Set();
+
+    async function load() {
+      const msg = document.getElementById('msg');
+      const idle = document.getElementById('idle');
+      const btnNext = document.getElementById('btnNext');
+      
+      msg.textContent = 'Caricamento...';
+      msg.className = 'msg';
+      completedKinds = new Set();
+      if (btnNext) btnNext.disabled = true;
+      
+      try {
+        const res = await fetch('/api/turni/suggest');
+        const data = await res.json();
+        
+        if (!data.ok) {
+          msg.textContent = data.error || 'Errore';
+          msg.className = 'msg error';
+          return;
+        }
+        
+        msg.textContent = 'Serie ' + (data.turn?.index || '?');
+        msg.className = 'msg ok';
+        
+        idle.textContent = data.idleAthletes?.length ? 'A riposo: ' + data.idleAthletes.map(a => a.name).join(', ') : '';
+        
+        matches = data.matches;
+        
+        // Get athlete names
+        const athletesRes = await fetch('/api/classifica');
+        const athletesData = await athletesRes.json();
+        const nameById = {};
+        if (athletesData.rows) {
+          athletesData.rows.forEach(a => nameById[a.athlete_id] = a.name);
+        }
+        
+        // Update UI for each disciplina
+        const kinds = ['AIR_HOCKEY', 'PING_PONG', 'FRECCETTE', 'CALCIO_BALILLA'];
+        
+        for (const kind of kinds) {
+          const m = data.matches[kind];
+          if (!m) continue;
+          
+          // Target
+          const targetEl = document.getElementById('target_' + kind);
+          if (targetEl) targetEl.textContent = m.targetVictory;
+          
+          // Names
+          const n1 = m.side1.map(id => nameById[id] || id).join(' + ');
+          const n2 = m.side2.map(id => nameById[id] || id).join(' + ');
+          
+          const name1El = document.getElementById('name1_' + kind);
+          const name2El = document.getElementById('name2_' + kind);
+          if (name1El) name1El.textContent = n1;
+          if (name2El) name2El.textContent = n2;
+        }
+      } catch(e) {
+        msg.textContent = 'Errore: ' + e.message;
+        msg.className = 'msg error';
+      }
+    }
+    
+    async function save(kind) {
+      const p1 = document.getElementById('p1_' + kind).value;
+      const p2 = document.getElementById('p2_' + kind).value;
+      const r = document.getElementById('r_' + kind);
+      const m = matches[kind];
+      
+      if (!p1 || !p2) {
+        r.textContent = 'Inserisci punti!';
+        r.className = 'result error';
+        return;
+      }
+      
+      r.textContent = 'Salvo...';
+      r.className = 'result';
+      
+      try {
+        const res = await fetch('/api/matches', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            disciplineKind: kind,
+            phase: 'QUALIFICAZIONE',
+            targetVictory: m.targetVictory,
+            plannedSlotId: m.plannedSlotId,
+            sides: [
+              { points: parseInt(p1), athleteIds: m.side1 },
+              { points: parseInt(p2), athleteIds: m.side2 }
+            ]
+          })
+        });
+        const data = await res.json();
+        
+        if (data.ok) {
+          r.textContent = '✓ ' + p1 + ' - ' + p2;
+          r.className = 'result ok';
+          completedKinds.add(kind);
+          checkAllCompleted();
+        } else {
+          r.textContent = 'Errore: ' + data.error;
+          r.className = 'result error';
+        }
+      } catch(e) {
+        r.textContent = 'Errore';
+        r.className = 'result error';
+      }
+    }
+    
+    function checkAllCompleted() {
+      const kinds = Object.keys(matches);
+      const btnNext = document.getElementById('btnNext');
+      if (btnNext && kinds.length > 0 && completedKinds.size >= kinds.length) {
+        btnNext.disabled = false;
+        btnNext.textContent = 'Prossimo Turno (' + completedKinds.size + '/' + kinds.length + ')';
+      } else if (btnNext) {
+        btnNext.textContent = 'Prossimo Turno (' + completedKinds.size + '/' + kinds.length + ')';
+      }
+    }
+    
+    function nextTurn() {
+      completedKinds = new Set();
+      load();
+    }
+    
+    function reload() {
+      load();
+    }
+    
+    // Auto load on page show
+    load();
+    </script>
+  </body>
+</html>

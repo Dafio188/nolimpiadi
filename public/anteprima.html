@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NOLImpiadi · Anteprima (bozza)</title>
+    <style>
+      :root {
+        --bg: #fafafa;
+        --card: #ffffff;
+        --muted: #52525b;
+        --text: #09090b;
+        --border: #e4e4e7;
+        --soft: #f4f4f5;
+        --btn: #18181b;
+        --btnHover: #27272a;
+        --pillBg: #ffffff;
+        --pillBorder: #d4d4d8;
+        --accent: #a16207;
+        --accentSoft: #fef9c3;
+        --c-basket: #f97316;
+        --c-ping: #38bdf8;
+        --c-freccette: #a78bfa;
+        --c-calcio: #22c55e;
+      }
+      :root[data-theme="color"] {
+        --pillBg: var(--accentSoft);
+        --pillBorder: #eab308;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+      .topbar {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .title {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .subtitle {
+        margin: 6px 0 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.35;
+      }
+      .links {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        font-size: 14px;
+        align-items: center;
+      }
+      .links a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .links a:hover {
+        color: var(--text);
+      }
+      .section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .hero {
+        display: grid;
+        gap: 14px;
+      }
+      .heroTitle {
+        margin: 0;
+        font-size: 34px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1.05;
+      }
+      .heroLead {
+        margin: 0;
+        font-size: 15px;
+        color: var(--muted);
+        line-height: 1.5;
+        max-width: 70ch;
+      }
+      .ctaRow {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .btnSecondary {
+        height: 40px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: #18181b;
+        font-size: 14px;
+        font-weight: 800;
+        padding: 0 14px;
+        cursor: pointer;
+      }
+      .btnSecondary:hover {
+        background: #f4f4f5;
+      }
+      .miniGrid {
+        margin-top: 14px;
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      @media (min-width: 900px) {
+        .miniGrid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      .homeCard {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+        padding: 14px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      .homeCardTitle {
+        font-size: 16px;
+        font-weight: 900;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      .homeCardText {
+        margin: 6px 0 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .howGrid {
+        margin-top: 14px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      @media (min-width: 900px) {
+        .howGrid {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+      }
+      .step {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--soft);
+        padding: 12px;
+      }
+      .stepNum {
+        font-size: 12px;
+        font-weight: 900;
+        color: #18181b;
+      }
+      .stepTitle {
+        margin-top: 6px;
+        font-size: 14px;
+        font-weight: 900;
+      }
+      .stepText {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      .toggle {
+        display: inline-flex;
+        gap: 6px;
+        padding: 4px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--card);
+      }
+      .toggle button {
+        height: 30px;
+        padding: 0 10px;
+        border-radius: 999px;
+        border: 0;
+        background: transparent;
+        color: #3f3f46;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .toggle button[aria-pressed="true"] {
+        background: var(--btn);
+        color: #fff;
+      }
+      .kicker {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #71717a;
+        font-weight: 700;
+      }
+      .h2 {
+        margin: 6px 0 0 0;
+        font-size: 20px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .p {
+        margin: 8px 0 0 0;
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .pillRow {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        border: 1px solid var(--pillBorder);
+        background: var(--pillBg);
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #3f3f46;
+      }
+      .grid3 {
+        margin-top: 14px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      @media (min-width: 900px) {
+        .grid3 {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      .scoreRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+      }
+      .scoreRow .label {
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .scoreRow .value {
+        font-size: 14px;
+        color: #3f3f46;
+      }
+      .grid2 {
+        margin-top: 16px;
+        display: grid;
+        gap: 14px;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      @media (min-width: 900px) {
+        .grid2 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        background: var(--card);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      :root[data-theme="color"] .card {
+        border-color: #d4d4d8;
+      }
+      :root[data-theme="color"] .card--basket {
+        border-left: 6px solid var(--c-basket);
+      }
+      :root[data-theme="color"] .card--ping {
+        border-left: 6px solid var(--c-ping);
+      }
+      :root[data-theme="color"] .card--freccette {
+        border-left: 6px solid var(--c-freccette);
+      }
+      :root[data-theme="color"] .card--calcio {
+        border-left: 6px solid var(--c-calcio);
+      }
+      .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .cardTitle {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .cardMeta {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .side {
+        margin-top: 14px;
+        border: 1px solid var(--border);
+        background: var(--soft);
+        border-radius: 14px;
+        padding: 12px;
+      }
+      .sideName {
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .fakeInput {
+        margin-top: 8px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        color: #a1a1aa;
+        font-size: 14px;
+      }
+      .cardFooter {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        height: 40px;
+        border-radius: 12px;
+        border: 0;
+        background: var(--btn);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 800;
+        padding: 0 14px;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background: var(--btnHover);
+      }
+      .phase2Grid {
+        margin-top: 16px;
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 1000px) {
+        .phase2Grid {
+          grid-template-columns: 2fr 3fr;
+        }
+      }
+      .seedBox {
+        border: 1px solid var(--border);
+        background: var(--soft);
+        border-radius: 16px;
+        padding: 14px;
+      }
+      .seedTitle {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #71717a;
+        font-weight: 800;
+      }
+      .seedList {
+        margin-top: 10px;
+        display: grid;
+        gap: 8px;
+      }
+      .bracketCols {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 900px) {
+        .bracketCols {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      .bracketBox {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px;
+        background: var(--card);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      :root[data-theme="color"] .bracketBox {
+        border-color: #d4d4d8;
+      }
+      :root[data-theme="color"] .bracketBox--q {
+        border-left: 6px solid var(--c-ping);
+      }
+      :root[data-theme="color"] .bracketBox--sf {
+        border-left: 6px solid var(--accent);
+      }
+      :root[data-theme="color"] .bracketBox--f {
+        border-left: 6px solid #eab308;
+      }
+      .bracketTitle {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #71717a;
+        font-weight: 800;
+      }
+      .bracketNames {
+        margin-top: 10px;
+        display: grid;
+        gap: 8px;
+      }
+      .nameCell {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--soft);
+        padding: 10px 12px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .pointsRow {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .pointsCell {
+        height: 40px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        color: #a1a1aa;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      (function () {
+        var key = "nolimpiadi_anteprima_theme";
+        var theme = localStorage.getItem(key) || "mono";
+        document.documentElement.dataset.theme = theme;
+        window.__setTheme = function (next) {
+          document.documentElement.dataset.theme = next;
+          localStorage.setItem(key, next);
+          var monoBtn = document.getElementById("theme-mono");
+          var colorBtn = document.getElementById("theme-color");
+          if (monoBtn) monoBtn.setAttribute("aria-pressed", String(next === "mono"));
+          if (colorBtn) colorBtn.setAttribute("aria-pressed", String(next === "color"));
+        };
+      })();
+    </script>
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h1 class="title">Anteprima grafica (bozza)</h1>
+          <p class="subtitle">
+            Stile A “Olimpiadi da Bar” in versione tutta chiara. È un mock statico (non collegato al DB).
+          </p>
+        </div>
+        <div class="links">
+          <div class="toggle" role="group" aria-label="Tema">
+            <button id="theme-mono" type="button" aria-pressed="true" onclick="__setTheme('mono')">B/N</button>
+            <button id="theme-color" type="button" aria-pressed="false" onclick="__setTheme('color')">Colori</button>
+          </div>
+          <a href="/">Home</a>
+          <a href="/giudici">Giudici</a>
+          <a href="/stampa">Stampa</a>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="kicker">Homepage</div>
+        <div class="hero">
+          <h2 class="heroTitle">NOLImpiadi Manager</h2>
+          <p class="heroLead">
+            12 atleti (sì, ma amici), 4 discipline in parallelo, un solo obiettivo: fare casino in modo ordinato.
+            Il giudice inserisce i punteggi di 4 gare alla volta; completate tutte e 4 si passa al turno successivo già
+            determinato.
+          </p>
+          <div class="ctaRow">
+            <button class="btn" type="button">Vai ai Giudici</button>
+            <button class="btnSecondary" type="button">Classifica</button>
+            <button class="btnSecondary" type="button">Stampa tabelloni</button>
+            <button class="btnSecondary" type="button">Setup</button>
+          </div>
+        </div>
+
+        <div class="miniGrid">
+          <div class="homeCard">
+            <h3 class="homeCardTitle">Fase 1 · Qualificazioni</h3>
+            <p class="homeCardText">
+              Programmazione completa dei turni. 4 match contemporanei, 2 atleti a riposo. Inserimento rapido e senza
+              errori.
+            </p>
+          </div>
+          <div class="homeCard">
+            <h3 class="homeCardTitle">Fase 2 · Tabelloni</h3>
+            <p class="homeCardText">
+              Un tabellone “tipo tennis” per disciplina (quarti/semifinali/finale). Stampabile anche senza nomi come
+              percorso.
+            </p>
+          </div>
+          <div class="homeCard">
+            <h3 class="homeCardTitle">Classifica · Sempre live</h3>
+            <p class="homeCardText">
+              Classifica generale permanente 1–12 con punteggio normalizzato/pesato. Qui si decide chi offre da bere.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px;">
+          <div class="kicker">Come funziona</div>
+          <div class="howGrid">
+            <div class="step">
+              <div class="stepNum">1</div>
+              <div class="stepTitle">Setup</div>
+              <div class="stepText">Atleti, categorie, discipline e parametri.</div>
+            </div>
+            <div class="step">
+              <div class="stepNum">2</div>
+              <div class="stepTitle">Fase 1</div>
+              <div class="stepText">Turni già definiti: carica turno, inserisci 4 risultati.</div>
+            </div>
+            <div class="step">
+              <div class="stepNum">3</div>
+              <div class="stepTitle">Qualificati</div>
+              <div class="stepText">Top 6 (o 5 nel calcio-balilla) per disciplina.</div>
+            </div>
+            <div class="step">
+              <div class="stepNum">4</div>
+              <div class="stepTitle">Finali</div>
+              <div class="stepText">Tabellone eliminazione: quarti/semifinali/finale.</div>
+            </div>
+            <div class="step">
+              <div class="stepNum">5</div>
+              <div class="stepTitle">Classifica</div>
+              <div class="stepText">Risultato finale e gloria eterna.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="row">
+          <div>
+            <div class="kicker">Fase 1</div>
+            <div class="h2">Tabellone segna-punti (turno corrente)</div>
+            <p class="p">
+              Il giudice inserisce i risultati delle 4 gare del turno. Quando 4/4 sono inserite si passa al turno
+              successivo già determinato.
+            </p>
+          </div>
+          <div class="pillRow">
+            <span class="pill">Turno 3</span>
+            <span class="pill">Inizio 20:40</span>
+            <span class="pill">Fine 20:50</span>
+            <span class="pill">Mancano 06:12</span>
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div class="scoreRow">
+            <div class="label">A riposo</div>
+            <div class="value">Emma (25), Gianni (50)</div>
+          </div>
+          <div class="scoreRow">
+            <div class="label">Regola</div>
+            <div class="value">Calcio-balilla a 5</div>
+          </div>
+          <div class="scoreRow">
+            <div class="label">Note</div>
+            <div class="value">Atleti amici: fair play</div>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div class="card card--airhockey">
+            <div class="cardHeader">
+              <div>
+                <h3 class="cardTitle">Air Hockey</h3>
+                <div class="cardMeta">Singolo · peso 8</div>
+              </div>
+              <span class="pill">Da giocare</span>
+            </div>
+            <div class="side">
+              <div class="sideName">Pietro (100)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="side">
+              <div class="sideName">Matheus (25)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="cardFooter">
+              <div style="font-size: 14px; color: #3f3f46">
+                Target vittoria: <span style="font-weight: 800; color: #09090b">10</span>
+              </div>
+              <button class="btn" type="button">Inserisci risultato</button>
+            </div>
+          </div>
+
+          <div class="card card--ping">
+            <div class="cardHeader">
+              <div>
+                <h3 class="cardTitle">Ping-pong</h3>
+                <div class="cardMeta">Singolo · peso 13</div>
+              </div>
+              <span class="pill">Da giocare</span>
+            </div>
+            <div class="side">
+              <div class="sideName">Claudia (75)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="side">
+              <div class="sideName">Stefano (25)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="cardFooter">
+              <div style="font-size: 14px; color: #3f3f46">
+                Target vittoria: <span style="font-weight: 800; color: #09090b">11</span>
+              </div>
+              <button class="btn" type="button">Inserisci risultato</button>
+            </div>
+          </div>
+
+          <div class="card card--freccette">
+            <div class="cardHeader">
+              <div>
+                <h3 class="cardTitle">Freccette</h3>
+                <div class="cardMeta">Singolo · peso 1</div>
+              </div>
+              <span class="pill">Da giocare</span>
+            </div>
+            <div class="side">
+              <div class="sideName">Gustavo (100)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="side">
+              <div class="sideName">Alessandro (75)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="cardFooter">
+              <div style="font-size: 14px; color: #3f3f46">
+                Target vittoria: <span style="font-weight: 800; color: #09090b">220</span>
+              </div>
+              <button class="btn" type="button">Inserisci risultato</button>
+            </div>
+          </div>
+
+          <div class="card card--calcio">
+            <div class="cardHeader">
+              <div>
+                <h3 class="cardTitle">Calcio-balilla</h3>
+                <div class="cardMeta">Doppio · peso 21</div>
+              </div>
+              <span class="pill">Da giocare</span>
+            </div>
+            <div class="side">
+              <div class="sideName">Valentino (100) + Alberto (50)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="side">
+              <div class="sideName">Massimo (75) + Gianluca (50)</div>
+              <div class="fakeInput">Punti…</div>
+            </div>
+            <div class="cardFooter">
+              <div style="font-size: 14px; color: #3f3f46">
+                Target vittoria: <span style="font-weight: 800; color: #09090b">5</span>
+              </div>
+              <button class="btn" type="button">Inserisci risultato</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="row">
+          <div>
+            <div class="kicker">Fase 2</div>
+            <div class="h2">Tabellone eliminazione (bozza percorso)</div>
+            <p class="p">
+              Una pagina per disciplina. Qui esempio “Ping-pong (top 6)”. Si può stampare anche senza nomi usando i seed.
+            </p>
+          </div>
+          <div class="pillRow">
+            <span class="pill">Disciplina: Ping-pong</span>
+            <span class="pill">Qualificati: 6</span>
+          </div>
+        </div>
+
+        <div class="phase2Grid">
+          <div class="seedBox">
+            <div class="seedTitle">Seed (esempio)</div>
+            <div class="seedList">
+              <div class="scoreRow"><div class="label">1</div><div class="value">Pietro</div></div>
+              <div class="scoreRow"><div class="label">2</div><div class="value">Gustavo</div></div>
+              <div class="scoreRow"><div class="label">3</div><div class="value">Claudia</div></div>
+              <div class="scoreRow"><div class="label">4</div><div class="value">Massimo</div></div>
+              <div class="scoreRow"><div class="label">5</div><div class="value">Alberto</div></div>
+              <div class="scoreRow"><div class="label">6</div><div class="value">Emma</div></div>
+            </div>
+          </div>
+
+          <div class="bracketCols">
+            <div style="display: grid; gap: 14px;">
+              <div class="bracketBox bracketBox--q">
+                <div class="bracketTitle">Quarti (3 vs 6)</div>
+                <div class="bracketNames">
+                  <div class="nameCell">3) Claudia</div>
+                  <div class="nameCell">6) Emma</div>
+                </div>
+                <div class="pointsRow">
+                  <div class="pointsCell">Punti…</div>
+                  <div class="pointsCell">Punti…</div>
+                </div>
+              </div>
+              <div class="bracketBox bracketBox--q">
+                <div class="bracketTitle">Quarti (4 vs 5)</div>
+                <div class="bracketNames">
+                  <div class="nameCell">4) Massimo</div>
+                  <div class="nameCell">5) Alberto</div>
+                </div>
+                <div class="pointsRow">
+                  <div class="pointsCell">Punti…</div>
+                  <div class="pointsCell">Punti…</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: grid; gap: 14px;">
+              <div class="bracketBox bracketBox--sf">
+                <div class="bracketTitle">Semifinale 1</div>
+                <div class="bracketNames">
+                  <div class="nameCell">1) Pietro</div>
+                  <div class="nameCell">Vincente (4 vs 5)</div>
+                </div>
+                <div class="pointsRow">
+                  <div class="pointsCell">Punti…</div>
+                  <div class="pointsCell">Punti…</div>
+                </div>
+              </div>
+              <div class="bracketBox bracketBox--sf">
+                <div class="bracketTitle">Semifinale 2</div>
+                <div class="bracketNames">
+                  <div class="nameCell">2) Gustavo</div>
+                  <div class="nameCell">Vincente (3 vs 6)</div>
+                </div>
+                <div class="pointsRow">
+                  <div class="pointsCell">Punti…</div>
+                  <div class="pointsCell">Punti…</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: grid; gap: 14px;">
+              <div class="bracketBox bracketBox--f">
+                <div class="bracketTitle">Finale</div>
+                <div class="bracketNames">
+                  <div class="nameCell">Vincente SF1</div>
+                  <div class="nameCell">Vincente SF2</div>
+                </div>
+                <div class="pointsRow">
+                  <div class="pointsCell">Punti…</div>
+                  <div class="pointsCell">Punti…</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script>
+      (function () {
+        var theme = document.documentElement.dataset.theme || "mono";
+        var monoBtn = document.getElementById("theme-mono");
+        var colorBtn = document.getElementById("theme-color");
+        if (monoBtn) monoBtn.setAttribute("aria-pressed", String(theme === "mono"));
+        if (colorBtn) colorBtn.setAttribute("aria-pressed", String(theme === "color"));
+      })();
+    </script>
+  </body>
+</html>

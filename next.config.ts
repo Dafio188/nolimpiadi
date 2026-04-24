@@ -1,7 +1,2 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+// File disabilitato in favore di next.config.js per risolvere problemi di compatibilità HMR
+export default {};

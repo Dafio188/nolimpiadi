@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup - Nolimpiadi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-zinc-50 min-h-screen">
+  <div class="mx-auto max-w-4xl px-4 py-6">
+    <div class="mb-6 flex items-baseline justify-between">
+      <h1 class="text-2xl font-semibold tracking-tight">Setup</h1>
+      <a href="/" class="text-sm text-zinc-600 hover:text-zinc-900">Home</a>
+    </div>
+
+    <div id="app"></div>
+  </div>
+
+  <script type="module">
+    const CATEGORIES = [
+      { value: 100, label: "A" },
+      { value: 75, label: "B" },
+      { value: 50, label: "C" },
+      { value: 25, label: "D" },
+    ];
+
+    let athletes = [];
+    let disciplines = [];
+    let editAthleteId = null;
+    let editDisciplineKind = null;
+    let nameInput = "";
+    let categoryInput = 100;
+    let targetInput = 4;
+    let saving = false;
+    let message = null;
+
+    async function load() {
+      const data = await fetch('/api/admin/setup').then(r => r.ok ? r.json() : { athletes: [], disciplines: [] }).catch(() => ({ athletes: [], disciplines: [] }));
+      
+      athletes = data.athletes || [];
+      disciplines = data.disciplines || [];
+      
+      render();
+    }
+
+    function getCategoryLabel(score) {
+      if (score === 100) return "A";
+      if (score === 75) return "B";
+      if (score === 50) return "C";
+      return "D";
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      
+      let html = '';
+      
+      html += `
+        <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-4">
+          <h2 class="text-base font-semibold">Strumenti Admin</h2>
+          <p class="mt-1 text-sm text-amber-800">Per generare il calendario o resettare il sistema, usa la pagina dedicata:</p>
+          <a href="/admin-tools.html" class="mt-2 inline-block rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700">Apri Strumenti Admin →</a>
+        </div>
+      `;
+
+      if (message) {
+        html += `<div class="rounded-lg p-3 mb-4 ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">${message.text}</div>`;
+      }
+
+      html += `<div class="rounded-xl border border-zinc-200 bg-white p-4 mb-4">`;
+      html += `<h2 class="text-base font-semibold">Atleti (${athletes.length})</h2>`;
+      html += `<div class="mt-3 space-y-2">`;
+      
+      athletes.forEach(a => {
+        if (editAthleteId === a.id) {
+          html += `
+            <div class="flex items-center justify-between rounded-lg border border-zinc-100 px-3 py-2">
+              <div class="flex flex-1 items-center gap-2">
+                <input type="text" id="nameInput" value="${nameInput}" class="flex-1 rounded border border-zinc-300 px-2 py-1 text-sm" />
+                <select id="categoryInput" class="rounded border border-zinc-300 px-2 py-1 text-sm">
+                  ${CATEGORIES.map(c => `<option value="${c.value}" ${c.value === categoryInput ? 'selected' : ''}>${c.label}</option>`).join('')}
+                </select>
+                <button onclick="saveAthlete()" class="rounded bg-green-600 px-3 py-1 text-sm font-medium text-white hover:bg-green-700">Salva</button>
+                <button onclick="cancelAthlete()" class="rounded bg-zinc-400 px-3 py-1 text-sm font-medium text-white hover:bg-zinc-500">Annulla</button>
+              </div>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="flex items-center justify-between rounded-lg border border-zinc-100 px-3 py-2">
+              <span class="font-medium">${a.name}</span>
+              <div class="flex items-center gap-2">
+                <span class="rounded bg-zinc-100 px-2 py-1 text-sm font-medium text-zinc-600">${getCategoryLabel(a.categoryScore)} (${a.categoryScore})</span>
+                <button onclick="startEditAthlete('${a.id}')" class="rounded bg-zinc-600 px-3 py-1 text-sm font-medium text-white hover:bg-zinc-700">Modifica</button>
+              </div>
+            </div>
+          `;
+        }
+      });
+      html += `</div></div>`;
+
+      html += `<div class="rounded-xl border border-zinc-200 bg-white p-4">`;
+      html += `<h2 class="text-base font-semibold">Discipline (${disciplines.length})</h2>`;
+      html += `<div class="mt-3 space-y-2">`;
+      
+      disciplines.forEach(d => {
+        if (editDisciplineKind === d.kind) {
+          html += `
+            <div class="flex items-center justify-between rounded-lg border border-zinc-100 px-3 py-2">
+              <div class="flex flex-1 items-center gap-2">
+                <span class="font-medium">${d.name}</span>
+                <span class="text-sm text-zinc-500">Target:</span>
+                <input type="number" id="targetInput" value="${targetInput}" min="1" max="1000" class="w-20 rounded border border-zinc-300 px-2 py-1 text-sm" />
+                <button onclick="saveDiscipline()" class="rounded bg-green-600 px-3 py-1 text-sm font-medium text-white hover:bg-green-700">Salva</button>
+                <button onclick="cancelDiscipline()" class="rounded bg-zinc-400 px-3 py-1 text-sm font-medium text-white hover:bg-zinc-500">Annulla</button>
+              </div>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="flex items-center justify-between rounded-lg border border-zinc-100 px-3 py-2">
+              <div class="flex items-center gap-2">
+                <span class="font-medium">${d.name}</span>
+                <span class="rounded bg-blue-100 px-2 py-1 text-sm font-medium text-blue-700">Target: ${d.targetFixed}</span>
+              </div>
+              <button onclick="startEditDiscipline('${d.kind}', ${d.targetFixed})" class="rounded bg-zinc-600 px-3 py-1 text-sm font-medium text-white hover:bg-zinc-700">Modifica</button>
+            </div>
+          `;
+        }
+      });
+      html += `</div></div>`;
+
+      app.innerHTML = html;
+    }
+
+    window.startEditAthlete = (id) => {
+      const a = athletes.find(x => x.id === id);
+      if (!a) return;
+      editAthleteId = id;
+      nameInput = a.name;
+      categoryInput = a.categoryScore;
+      editDisciplineKind = null;
+      message = null;
+      render();
+      
+      setTimeout(() => {
+        const nameEl = document.getElementById('nameInput');
+        const catEl = document.getElementById('categoryInput');
+        if (nameEl) nameEl.addEventListener('input', e => nameInput = e.target.value);
+        if (catEl) catEl.addEventListener('change', e => categoryInput = Number(e.target.value));
+      }, 0);
+    };
+
+    window.startEditDiscipline = (kind, target) => {
+      editDisciplineKind = kind;
+      targetInput = target;
+      editAthleteId = null;
+      message = null;
+      render();
+      
+      setTimeout(() => {
+        const targetEl = document.getElementById('targetInput');
+        if (targetEl) targetEl.addEventListener('input', e => targetInput = Number(e.target.value) || 1);
+      }, 0);
+    };
+
+    window.cancelAthlete = () => { editAthleteId = null; message = null; render(); };
+    window.cancelDiscipline = () => { editDisciplineKind = null; message = null; render(); };
+
+    window.saveAthlete = async () => {
+      if (!editAthleteId || saving) return;
+      saving = true;
+      render();
+
+      try {
+        const res = await fetch('/api/admin/athletes', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ athleteId: editAthleteId, name: nameInput.trim(), categoryScore: categoryInput })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          message = { type: 'error', text: data.error || 'Errore salvataggio' };
+        } else {
+          const idx = athletes.findIndex(x => x.id === editAthleteId);
+          if (idx >= 0) { athletes[idx].name = nameInput.trim(); athletes[idx].categoryScore = categoryInput; }
+          editAthleteId = null;
+          message = { type: 'success', text: 'Salvataggio effettuato!' };
+        }
+      } catch {
+        message = { type: 'error', text: 'Errore di rete' };
+      }
+      saving = false;
+      render();
+    };
+
+    window.saveDiscipline = async () => {
+      if (!editDisciplineKind || saving) return;
+      saving = true;
+      render();
+
+      try {
+        const res = await fetch('/api/admin/discipline', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ disciplineKind: editDisciplineKind, targetFixed: targetInput })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          message = { type: 'error', text: data.error || 'Errore salvataggio' };
+        } else {
+          const idx = disciplines.findIndex(x => x.kind === editDisciplineKind);
+          if (idx >= 0) disciplines[idx].targetFixed = targetInput;
+          editDisciplineKind = null;
+          message = { type: 'success', text: 'Salvataggio effettuato!' };
+        }
+      } catch {
+        message = { type: 'error', text: 'Errore di rete' };
+      }
+      saving = false;
+      render();
+    };
+
+    load();
+  </script>
+</body>
+</html>

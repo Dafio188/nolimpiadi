@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NOLImpiadi Manager
 
-## Getting Started
+Gestione competizioni sportive con 12 atleti e 4 discipline in parallelo.
 
-First, run the development server:
+## Caratteristiche
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **12 atleti** con categorie (100/75/50/25)
+- **4 discipline**: Calcio-balilla, Freccette, Ping-pong, Air Hockey
+- **Qualificazioni**: turni con 4 match paralleli, 2 atleti a riposo
+- **Finali**: tabelloni per disciplina (quarti/semifinali/finale)
+- **Classifica generale**: aggiornata in tempo reale
+
+## Pagine
+
+| Pagina | URL | Descrizione |
+|--------|-----|-------------|
+| Home | `/` | Pagina principale con link |
+| Gare | `/gare` | Programma e risultati live |
+| Classifica | `/classifica` | Classifica generale live |
+| Stampa | `/stampa` | Versione stampabile tabelloni |
+| Finali | `/anteprima.html` | Tabelloni finali |
+| Giudici | `/giudici.html` | Dashboard inserimento risultati |
+| Setup | `/setup.html` | Configurazione |
+| Strumenti Admin | `/admin-tools.html` | Bootstrap e reset |
+
+## Parametri Discipline
+
+| Disciplina | Target | Peso | Team Size | Note |
+|------------|--------|------|----------|------|
+| Calcio-balilla | 4 (configurabile) | 21 | 2 | Target configurable |
+| Freccette | 220 | 1 | 1 | |
+| Ping-pong | 11 | 15 | 1 | |
+| Air Hockey | 4 | 21 | 1 | |
+
+## Punteggio
+
+### Efficienza match
+```
+eff = (Fatti - (Subiti / P)) / Target
+```
+- Fatti = punti segnati
+- Subiti = punti subiti
+- Target = target vittoria disciplina
+- P = divisore malus (default: 1000)
+
+### Punteggio pesato
+```
+weighted = eff * coefficiente_disciplina
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Flusso Operativo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 1. Reset Completo (in un click)
+Vai su `/admin-tools.html` e clicca **Reset Completo**:
+- Cancella tutti i match, slot e turni
+- Esegue bootstrap (discipline + atleti)
+- Genera calendario (24 turni)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. Bootstrap Separato
+Vai su `/admin-tools.html`:
+- **Esegui Bootstrap**: crea/aggiorna discipline e atleti
+- **Genera Calendario**: crea turni qualificazione
+- **Carica Serie**: carica il turno corrente
 
-## Learn More
+### 3. Inserimento Risultati
+Vai su `/giudici.html`:
+- Inserisci i punteggi per ogni disciplina
+- Clicca "Inserisci" per salvare
+- Quando tutti e 4 i match sono inseriti, il pulsante **Prossimo Turno** si abilita
+- Clicca "Prossimo Turno" per andare avanti
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Configurazione
+Vai su `/setup.html`:
+- Modifica categorie atleti
+- Modifica target delle discipline (es. calcio-balilla da 4 a 5)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Carica dati per setup
+GET /api/admin/setup
 
-## Deploy on Vercel
+# Aggiorna atleta
+PATCH /api/admin/athletes
+Body: { athleteId, name, categoryScore }
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Aggiorna target disciplina
+PATCH /api/admin/discipline
+Body: { disciplineKind, targetFixed }
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API Principali
+
+| Metodo | Endpoint | Descrizione |
+|--------|----------|-------------|
+| GET | `/api/gare` | Gare in corso |
+| GET | `/api/classifica` | Classifica generale |
+| GET | `/api/turni/suggest` | Turno successivo |
+| POST | `/api/matches` | Salva match |
+| POST | `/api/admin/bootstrap` | Bootstrap dati |
+| POST | `/api/turni/plan` | Genera calendario |
+
+## Struttura File
+
+```
+src/
+├── app/
+│   ├── page.tsx              # Home
+│   ├── gare/                 # Gare (programma)
+│   ├── classifica/            # Classifica live
+│   ├── stampa/              # Stampa tabelloni
+│   ├── anteprima/           # Finali (Next)
+│   └── api/
+│       ├── admin/
+│       │   ├── athletes/    # PATCH athlete
+│       │   ├── bootstrap/ # POST bootstrap
+│       │   ├── discipline/# PATCH disciplina
+│       │   └── setup/     # GET dati setup
+│       ├── gare/            # GET gare
+│       ├── matches/         # POST match
+│       ├── classifica/      # GET classifica
+│       └── turni/         # Plan/suggest
+└── lib/
+    └── nolimpiadi.ts       # Costanti e seed
+public/
+├── setup.html             # Setup (HTML)
+├── admin-tools.html      # Strumenti admin (HTML)
+├── giudici.html       # Giudici (HTML)
+├── anteprima.html     # Finali (HTML)
+└── reset.html         # Reset (HTML)
+```
+
+## Database
+
+Schema Prisma in `prisma/schema.prisma`:
+
+- **Athlete**: id, name, tier, categoryScore
+- **Discipline**: id, kind, name, coefficient, teamSize, targetFixed
+- **QualificationTurn**: id, index, scheduledAt
+- **QualificationSlot**: turnId, kind, targetVictory, side1AthleteIds, side2AthleteIds
+- **Match**: id, disciplineId, phase, targetVictory
+- **MatchSide**: matchId, side, points
+- **MatchSideAthlete**: sideId, athleteId
+
+## Note
+
+- Il target Calcio-balilla è **4** (configurabile da `/setup.html`)
+- La validazione calcio-balilla usa il target del database (non hardcoded)
+- Air Hockey ha sostituito Basket come disciplina
+- Le pagine admin e giudici sono in HTML (`.html`) per maggiore affidabilità
+- La dashboard giudici ha pulsante "Prossimo Turno" che si abilita dopo 4 match inseriti

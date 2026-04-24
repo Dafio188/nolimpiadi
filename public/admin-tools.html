@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strumenti Admin - NOLImpiadi</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #fafafa; min-height: 100vh; padding: 2rem; }
+    .container { max-width: 500px; margin: 0 auto; background: white; padding: 2rem; border-radius: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p { color: #71717a; margin-bottom: 1.5rem; }
+    h2 { font-size: 1rem; margin-bottom: 0.75rem; }
+    .tool { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e4e4e7; }
+    .tool:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .btn { display: block; padding: 0.75rem 1rem; border: none; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; text-decoration: none; text-align: center; width: fit-content; }
+    .btn-primary { background: #18181b; color: white; }
+    .btn-primary:hover { background: #27272a; }
+    .btn-secondary { background: white; color: #18181b; border: 1px solid #e4e4e7; margin-top: 0.5rem; }
+    .btn-secondary:hover { background: #f4f4f5; }
+    pre { margin-top: 0.75rem; padding: 0.75rem; background: #18181b; color: #a1a1aa; border-radius: 0.5rem; font-size: 0.75rem; overflow-x: auto; }
+    .success { color: #86efac; }
+    .error { color: #fca5a5; }
+    .back-link { display: inline-block; margin-bottom: 1rem; color: #71717a; text-decoration: none; }
+    .back-link:hover { color: #18181b; }
+  </style>
+</head>
+<body>
+  <a href="/setup.html" class="back-link">← Torna a Setup</a>
+  <div class="container">
+    <h1>Strumenti Admin</h1>
+    <p>Operazioni di bootstrap e reset del sistema.</p>
+    
+    <div class="tool">
+      <h2>Reset Completo</h2>
+      <p style="font-size: 0.875rem; margin-bottom: 0.75rem;">Cancella tutto e ricrea da zero (match, calend. bootstrap).</p>
+      <button class="btn btn-primary" onclick="resetCompleto()">Reset Completo</button>
+      <pre id="resetCompletoResult"></pre>
+    </div>
+    
+    <div class="tool">
+      <h2>Bootstrap Dati</h2>
+      <p style="font-size: 0.875rem; margin-bottom: 0.75rem;">Crea/aggiorna discipline e atleti predefiniti.</p>
+      <button class="btn btn-primary" onclick="runBootstrap()">Esegui Bootstrap</button>
+      <pre id="bootstrapResult"></pre>
+    </div>
+    
+    <div class="tool">
+      <h2>Genera Calendario</h2>
+      <p style="font-size: 0.875rem; margin-bottom: 0.75rem;">Crea il calendario delle serie.</p>
+      <button class="btn btn-primary" onclick="generaCalendario()">Genera Calendario</button>
+      <pre id="generaCalendarioResult"></pre>
+    </div>
+    
+    <div class="tool">
+      <h2>Carica Serie (Pianificata)</h2>
+      <p style="font-size: 0.875rem; margin-bottom: 0.75rem;">Carica la prossima serie di partite.</p>
+      <button class="btn btn-primary" onclick="caricaSerie()">Carica Serie</button>
+      <pre id="caricaSerieResult"></pre>
+    </div>
+  </div>
+
+  <script>
+    async function runBootstrap() {
+      const el = document.getElementById('bootstrapResult');
+      el.textContent = 'Esecuzione...';
+      try {
+        const res = await fetch('/api/admin/bootstrap', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action: 'bootstrap'})
+        });
+        const data = await res.json();
+        if (data.ok) {
+          el.innerHTML = '<span class="success">✅ Bootstrap completato!</span>\n' + 
+            'Discipline: ' + data.disciplinesCreatedOrUpdated + '\n' + 
+            'Atleti: ' + data.athletesCreatedOrUpdated;
+        } else {
+          el.innerHTML = '<span class="error">❌ Errore:</span> ' + data.error;
+        }
+      } catch(e) {
+        el.innerHTML = '<span class="error">❌ Errore:</span> ' + e.message;
+      }
+    }
+    
+    async function runReset() {
+      if (!confirm('Confermi il reset? Tutti i dati verranno cancellati.')) return;
+      const el = document.getElementById('resetResult');
+      el.textContent = 'Esecuzione...';
+      try {
+        const res = await fetch('/api/admin/bootstrap', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action: 'reset_results'})
+        });
+        const data = await res.json();
+        if (data.ok) {
+          el.innerHTML = '<span class="success">✅ Reset completato!</span>\n' + 
+            'Match: ' + data.matchesDeleted + '\n' + 
+            'Slot: ' + data.slotsDeleted + '\n' + 
+            'Turni: ' + data.turnsDeleted;
+        } else {
+          el.innerHTML = '<span class="error">❌ Errore:</span> ' + data.error;
+        }
+      } catch(e) {
+        el.innerHTML = '<span class="error">❌ Errore:</span> ' + e.message;
+      }
+    }
+
+    async function generaCalendario() {
+      const el = document.getElementById('generaCalendarioResult');
+      el.textContent = 'Esecuzione...';
+      try {
+        const res = await fetch('/api/turni/plan', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({turns: 24, turnDurationMinutes: 10, overwrite: true})
+        });
+        const data = await res.json();
+        if (data.ok) {
+          el.innerHTML = '<span class="success">✅ OK!</span>\n' + 
+            'TurnsPlanned: ' + data.turnsPlanned + '\n' + 
+            'TurnDurationMinutes: ' + data.turnDurationMinutes;
+        } else {
+          el.innerHTML = '<span class="error">❌ Errore:</span> ' + data.error;
+        }
+      } catch(e) {
+        el.innerHTML = '<span class="error">❌ Errore:</span> ' + e.message;
+      }
+    }
+
+    async function caricaSerie() {
+      const el = document.getElementById('caricaSerieResult');
+      el.textContent = 'Esecuzione...';
+      try {
+        const res = await fetch('/api/turni/suggest', { cache: 'no-store' });
+        const data = await res.json();
+        if (data.ok) {
+          el.innerHTML = '<span class="success">✅ OK!</span>\n' + 
+            'Mode: ' + data.mode + '\n' + 
+            'Message: ' + (data.message || '-') + '\n' +
+            'Turn: ' + JSON.stringify(data.turn) + '\n' +
+            'IdleAthletes: ' + JSON.stringify(data.idleAthletes) + '\n' +
+            'Matches: ' + JSON.stringify(data.matches);
+        } else {
+          el.innerHTML = '<span class="error">❌ Errore:</span> ' + data.error;
+        }
+      } catch(e) {
+        el.innerHTML = '<span class="error">❌ Errore:</span> ' + e.message;
+      }
+    }
+
+    async function resetCompleto() {
+      const el = document.getElementById('resetCompletoResult');
+      el.textContent = 'Esecuzione...';
+      try {
+        const res = await fetch('/api/admin/bootstrap', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action: 'reset_results'})
+        });
+        if (!res.ok) throw new Error('reset failed');
+        
+        const r2 = await fetch('/api/admin/bootstrap', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({action: 'bootstrap'})
+        });
+        const d2 = await r2.json();
+        if (!d2.ok) throw new Error('bootstrap failed');
+        
+        const r3 = await fetch('/api/turni/plan', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({turns: 24, turnDurationMinutes: 10, overwrite: true})
+        });
+        const d3 = await r3.json();
+        if (!d3.ok) throw new Error('plan failed');
+        
+        el.innerHTML = '<span class="success">✅ Reset completo effettuato!</span>\n' + 
+          'Atleti: ' + d2.athletesCreatedOrUpdated + '\n' +
+          'Discipline: ' + d2.disciplinesCreatedOrUpdated + '\n' +
+          'Turni: ' + d3.turnsPlanned;
+      } catch(e) {
+        el.innerHTML = '<span class="error">❌ Errore:</span> ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
