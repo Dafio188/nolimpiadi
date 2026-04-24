@@ -64,7 +64,7 @@ function bestDoubles(
     { teamA: [a, c], teamB: [b, d] },
     { teamA: [a, d], teamB: [b, c] },
   ];
-  const scored = partitions.map((p) => {
+  const scored = partitions.map((p: any) => {
     const sumA = athletesById.get(p.teamA[0])!.categoryScore + athletesById.get(p.teamA[1])!.categoryScore;
     const sumB = athletesById.get(p.teamB[0])!.categoryScore + athletesById.get(p.teamB[1])!.categoryScore;
     const balance = Math.abs(sumA - sumB);
@@ -90,7 +90,7 @@ function planQualificationSeries(args: {
   playedMatchups: Set<string>;
 }) {
   const { seriesCount, athletes, playedPairsByKind, playedTeammates, playedMatchups } = args;
-  const athletesById = new Map(athletes.map((a) => [a.id, a]));
+  const athletesById = new Map(athletes.map((a: any) => [a.id, a]));
   const basePlayedPairsByKind = new Map<DisciplineKind, Set<string>>([
     [DisciplineKind.AIR_HOCKEY, new Set(playedPairsByKind.get(DisciplineKind.AIR_HOCKEY) ?? [])],
     [DisciplineKind.PING_PONG, new Set(playedPairsByKind.get(DisciplineKind.PING_PONG) ?? [])],
@@ -99,7 +99,7 @@ function planQualificationSeries(args: {
   const basePlayedTeammates = new Set(playedTeammates);
   const basePlayedMatchups = new Set(playedMatchups);
 
-  const idsAll = athletes.map((a) => a.id);
+  const idsAll = athletes.map((a: any) => a.id);
 
   function computeScoreSpread(values: Iterable<number>) {
     let min = Number.POSITIVE_INFINITY;
@@ -146,7 +146,7 @@ function planQualificationSeries(args: {
     const { idleCount, singlesByKind, doublesCount, randomRank, used } = args;
     const ranked = athletes
       .filter((a) => !used.has(a.id))
-      .map((a) => {
+      .map((a: any) => {
         const idle = idleCount.get(a.id) ?? 0;
         const total = getTotalMatches(singlesByKind, doublesCount, a.id);
         const rand = randomRank.get(a.id) ?? 0;
@@ -247,10 +247,10 @@ function planQualificationSeries(args: {
     const playedTeammatesTry = new Set(basePlayedTeammates);
     const playedMatchupsTry = new Set(basePlayedMatchups);
 
-    const idleCount = new Map<string, number>(idsAll.map((id) => [id, 0]));
-    const doublesCount = new Map<string, number>(idsAll.map((id) => [id, 0]));
+    const idleCount = new Map<string, number>(idsAll.map((id: any) => [id, 0]));
+    const doublesCount = new Map<string, number>(idsAll.map((id: any) => [id, 0]));
     const singlesByKind = new Map<string, Map<DisciplineKind, number>>(
-      idsAll.map((id) => [
+      idsAll.map((id: any) => [
         id,
         new Map<DisciplineKind, number>([
           [DisciplineKind.AIR_HOCKEY, 0],
@@ -438,7 +438,7 @@ export async function POST(req: Request) {
       },
       select: { id: true, kind: true, targetFixed: true, targetMin: true, targetMax: true },
     });
-    const disciplineByKind = new Map(disciplines.map((d) => [d.kind, d]));
+    const disciplineByKind = new Map(disciplines.map((d: any) => [d.kind, d]));
     for (const k of [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA]) {
       if (!disciplineByKind.get(k)) throw new Error(`Disciplina mancante: ${k}`);
     }

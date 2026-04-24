@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const normalizedSides = sides.map((side) => {
+  const normalizedSides = sides.map((side: any) => {
     if (!isRecord(side)) return null;
     const points = parseIntField(side.points);
     const athleteIds = Array.isArray(side.athleteIds)
@@ -181,12 +181,12 @@ if (plannedSlotId) {
           {
             side: 1,
             points: side1.points,
-            athletes: { create: side1.athleteIds.map((athleteId) => ({ athleteId })) },
+            athletes: { create: side1.athleteIds.map((athleteId: any) => ({ athleteId })) },
           },
           {
             side: 2,
             points: side2.points,
-            athletes: { create: side2.athleteIds.map((athleteId) => ({ athleteId })) },
+            athletes: { create: side2.athleteIds.map((athleteId: any) => ({ athleteId })) },
           },
         ],
       },

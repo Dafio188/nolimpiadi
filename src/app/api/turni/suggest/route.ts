@@ -97,7 +97,7 @@ export async function GET() {
         where: { kind: { in: finalsKinds } },
         select: { kind: true, targetFixed: true, targetMin: true, targetMax: true, teamSize: true },
       });
-      const disciplineByKind = new Map(disciplines.map((d) => [d.kind, d]));
+      const disciplineByKind = new Map(disciplines.map((d: any) => [d.kind, d]));
 
       const finalsMatches = await prisma.match.findMany({
         where: { phase: MatchPhase.FINALI, discipline: { kind: { in: finalsKinds } } },
@@ -119,8 +119,8 @@ export async function GET() {
         const orderedSides = [...m.sides].sort((a, b) => a.side - b.side);
         const sideA = orderedSides[0];
         const sideB = orderedSides[1];
-        const ids0 = sideA?.athletes.map((a) => a.athleteId) ?? [];
-        const ids1 = sideB?.athletes.map((a) => a.athleteId) ?? [];
+        const ids0 = sideA?.athletes.map((a: any) => a.athleteId) ?? [];
+        const ids1 = sideB?.athletes.map((a: any) => a.athleteId) ?? [];
         if (ids0.length !== 1 || ids1.length !== 1) continue;
         const key = matchKeySingles(ids0[0], ids1[0]);
         const playedKey = `${kind}:${stage}:${key}`;
@@ -204,7 +204,7 @@ export async function GET() {
       });
       const playedMatchups = new Set<string>();
       for (const m of calcioMatches) {
-        const sides = m.sides.map((s) => s.athletes.map((a) => a.athleteId));
+        const sides = m.sides.map((s: any) => s.athletes.map((a: any) => a.athleteId));
         if (!(sides.length === 2 && sides[0].length === 2 && sides[1].length === 2)) continue;
         playedMatchups.add(matchupKey(sides[0], sides[1]));
       }
@@ -263,9 +263,9 @@ export async function GET() {
     ` as any,
   ]);
 
-  const disciplineByKind = new Map(disciplines.map((d) => [d.kind, d]));
-  const athleteById = new Map(athletes.map((a) => [a.id, a]));
-  const matchesByAthleteId = new Map<string, number>(matchesPlayed.map((r) => [r.athlete_id, r.matches_played]));
+  const disciplineByKind = new Map(disciplines.map((d: any) => [d.kind, d]));
+  const athleteById = new Map(athletes.map((a: any) => [a.id, a]));
+  const matchesByAthleteId = new Map<string, number>(matchesPlayed.map((r: any) => [r.athlete_id, r.matches_played]));
   const matchesByAthleteKind = new Map<string, Map<DisciplineKind, number>>();
   for (const r of matchesPlayedByKind) {
     const byKind = matchesByAthleteKind.get(r.athlete_id) ?? new Map<DisciplineKind, number>();
@@ -373,7 +373,7 @@ export async function GET() {
       { teamA: [a, d], teamB: [b, c] },
     ];
 
-    const scored = partitions.map((p) => {
+    const scored = partitions.map((p: any) => {
       const sumA = athleteById.get(p.teamA[0])!.categoryScore + athleteById.get(p.teamA[1])!.categoryScore;
       const sumB = athleteById.get(p.teamB[0])!.categoryScore + athleteById.get(p.teamB[1])!.categoryScore;
       const balance = Math.abs(sumA - sumB);
