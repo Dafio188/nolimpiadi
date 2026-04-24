@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   const action = isRecord(body) && typeof body.action === "string" ? body.action : "bootstrap";
 
   if (action === "reset_results") {
-    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       const matchesDeleted = await tx.match.count();
       const slotsDeleted = await tx.qualificationSlot.count();
       const turnsDeleted = await tx.qualificationTurn.count();
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, ...result });
   }
 
-  const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+  const result = await prisma.$transaction(async (tx: any) => {
     await tx.systemSetting.upsert({
       where: { id: 1 },
       create: { id: 1, malusDivisor: 1000, turnDurationMinutes: 10 },
@@ -64,15 +64,11 @@ export async function POST(req: Request) {
         create: {
           name,
           tier: defaultTierByAthleteName[name] ?? Tier.MEDIO,
-          categoryScores: {
-            create: Object.entries(defaultCategoryScoreByAthleteName[name] ?? {}).map(([kind, score]) => ({
-              disciplineKind: kind as DisciplineKind,
-              score,
-            })),
-          },
+          categoryScore: defaultCategoryScoreByAthleteName[name] ?? 100,
         },
         update: {
           tier: defaultTierByAthleteName[name] ?? Tier.MEDIO,
+          categoryScore: defaultCategoryScoreByAthleteName[name] ?? 100,
         },
       });
       athletes.push(athlete);

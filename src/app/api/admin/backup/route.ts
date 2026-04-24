@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     const { athletes, disciplines, systemSettings, turns, slots, matches } = backup.data;
 
     // Eseguiamo tutto in una transazione per sicurezza
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: any) => {
       // 1. Pulizia database (ordine inverso rispetto alle dipendenze)
       await tx.matchSideAthlete.deleteMany();
       await tx.matchSide.deleteMany();

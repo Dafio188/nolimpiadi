@@ -8,15 +8,15 @@ function parseKind(value: string | null): DisciplineKind | null {
   return values.includes(value as DisciplineKind) ? (value as DisciplineKind) : null;
 }
 
-function pairKey(a: string, b: string) {
+function pairKey(a: string, b: string): string {
   return a < b ? `${a}|${b}` : `${b}|${a}`;
 }
 
-function teamKey(ids: string[]) {
+function teamKey(ids: string[]): string {
   return [...ids].sort().join("-");
 }
 
-function matchKey(teamA: string[], teamB: string[]) {
+function matchKey(teamA: string[], teamB: string[]): string {
   const a = teamKey(teamA);
   const b = teamKey(teamB);
   return a < b ? `${a}|${b}` : `${b}|${a}`;
@@ -34,19 +34,19 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false, error: "Disciplina non trovata" }, { status: 404 });
   }
 
-  const athletes = await prisma.athlete.findMany({ orderBy: { name: "asc" } });
+  const athletes = await prisma.athlete.findMany({ orderBy: { name: "asc" } }) as any[];
 
   const playedMatches = await prisma.match.findMany({
     where: { disciplineId: discipline.id, phase: "QUALIFICAZIONE" },
     select: {
       sides: { select: { athletes: { select: { athleteId: true } } } },
     },
-  });
+  }) as any[];
 
   if (discipline.teamSize === 1) {
     const playedPairs = new Set<string>();
     for (const m of playedMatches) {
-      const ids = m.sides.flatMap((s) => s.athletes.map((a) => a.athleteId));
+      const ids = m.sides.flatMap((s: any) => s.athletes.map((a: any) => a.athleteId));
       if (ids.length === 2) playedPairs.add(pairKey(ids[0], ids[1]));
     }
 
@@ -75,7 +75,7 @@ export async function GET(req: Request) {
 
   const played = new Set<string>();
   for (const m of playedMatches) {
-    const teamIds = m.sides.map((s) => s.athletes.map((a) => a.athleteId));
+    const teamIds = m.sides.map((s: any) => s.athletes.map((a: any) => a.athleteId));
     if (teamIds.length === 2 && teamIds[0].length === 2 && teamIds[1].length === 2) {
       played.add(matchKey(teamIds[0], teamIds[1]));
     }
@@ -89,7 +89,7 @@ export async function GET(req: Request) {
     for (let j = i + 1; j < ids.length; j++) {
       const a = ids[i];
       const b = ids[j];
-      const score = categoryById.get(a)! + categoryById.get(b)!;
+      const score = (categoryById.get(a) as number) + (categoryById.get(b) as number);
       teams.push({ ids: [a, b], score });
     }
   }

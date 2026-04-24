@@ -404,7 +404,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "turnDurationMinutes deve essere tra 1 e 120" }, { status: 400 });
   }
 
-  const result = await prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx: any) => {
     const playedQual = await tx.match.count({ where: { phase: MatchPhase.QUALIFICAZIONE } });
     if (playedQual > 0 && !allowOverwrite) {
       throw new Error("Qualificazioni già iniziate: per rigenerare serve overwrite=true");
@@ -450,11 +450,11 @@ export async function POST(req: Request) {
     const pastMatches = await tx.match.findMany({
       where: { phase: MatchPhase.QUALIFICAZIONE, discipline: { kind: { in: [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA] } } },
       select: { discipline: { select: { kind: true } }, sides: { select: { athletes: { select: { athleteId: true } } } } },
-    });
+    }) as any[];
 
     for (const m of pastMatches) {
-      const kind = m.discipline.kind;
-      const sideAthletes = m.sides.map((s) => s.athletes.map((a) => a.athleteId));
+      const kind = m.discipline.kind as DisciplineKind;
+      const sideAthletes = m.sides.map((s: any) => s.athletes.map((a: any) => a.athleteId));
       if (kind !== DisciplineKind.CALCIO_BALILLA) {
         const ids = sideAthletes.flat();
         if (ids.length === 2) {
