@@ -1,13 +1,58 @@
 "use client";
-
+import { Suspense } from "react";
 import { LogIn, Lock, Mail, ArrowLeft, Trophy } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
+  return (
+    <form action="/api/auth/login" method="POST" className="space-y-6">
+      <div className="space-y-2">
+        <label className="text-sm font-bold text-[#1d1d1f] ml-1">Username</label>
+        <div className="relative">
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86868b]" />
+          <input
+            name="username"
+            type="text"
+            className="w-full bg-[#f5f5f7] border-none rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-blue-600 outline-none transition-all font-medium"
+            placeholder="admin"
+            required
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-bold text-[#1d1d1f] ml-1">Password</label>
+        <div className="relative">
+          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86868b]" />
+          <input
+            name="password"
+            type="password"
+            className="w-full bg-[#f5f5f7] border-none rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-blue-600 outline-none transition-all font-medium"
+            placeholder="••••••••"
+            required
+          />
+        </div>
+      </div>
+
+      {error === "credenziali" && (
+        <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-sm font-bold text-center">
+          Credenziali non valide. Riprova.
+        </div>
+      )}
+
+      <button type="submit" className="apple-button w-full py-4 text-lg">
+        <LogIn className="w-5 h-5 mr-2" />
+        Accedi al Sistema
+      </button>
+    </form>
+  );
+}
+
+export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background Decorativo */}
@@ -31,46 +76,9 @@ export default function LoginPage() {
             <p className="text-[#86868b] font-medium">Inserisci le tue credenziali</p>
           </div>
 
-          <form action="/api/auth/login" method="POST" className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[#1d1d1f] ml-1">Username</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86868b]" />
-                <input
-                  name="username"
-                  type="text"
-                  className="w-full bg-[#f5f5f7] border-none rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-blue-600 outline-none transition-all font-medium"
-                  placeholder="admin"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[#1d1d1f] ml-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#86868b]" />
-                <input
-                  name="password"
-                  type="password"
-                  className="w-full bg-[#f5f5f7] border-none rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-blue-600 outline-none transition-all font-medium"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-            </div>
-
-            {error === "credenziali" && (
-              <div className="bg-red-50 text-red-600 p-4 rounded-2xl text-sm font-bold text-center">
-                Credenziali non valide. Riprova.
-              </div>
-            )}
-
-            <button type="submit" className="apple-button w-full py-4 text-lg">
-              <LogIn className="w-5 h-5 mr-2" />
-              Accedi al Sistema
-            </button>
-          </form>
+          <Suspense fallback={<div className="animate-pulse h-64 bg-gray-100 rounded-2xl" />}>
+            <LoginForm />
+          </Suspense>
         </div>
         
         <p className="text-center mt-8 text-sm text-[#86868b] font-medium">
