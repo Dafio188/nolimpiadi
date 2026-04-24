@@ -173,7 +173,7 @@ export async function GET() {
       for (const k of singlesFinalsKinds) {
         const next = nextFinalsForSix(k, seedsByKind.get(k) ?? []);
         if (!next) continue;
-        const d = disciplineByKind.get(k);
+        const d: any = disciplineByKind.get(k);
         matches[k] = {
           kind: k,
           phase: MatchPhase.FINALI,
@@ -210,7 +210,7 @@ export async function GET() {
       }
       const nextMatch = schedule.find((m) => !playedMatchups.has(matchupKey(m.teamA, m.teamB))) ?? null;
 
-      const calcio = disciplineByKind.get(DisciplineKind.CALCIO_BALILLA);
+      const calcio: any = disciplineByKind.get(DisciplineKind.CALCIO_BALILLA);
       matches[DisciplineKind.CALCIO_BALILLA] = {
         kind: DisciplineKind.CALCIO_BALILLA,
         phase: MatchPhase.FINALI,
@@ -356,7 +356,7 @@ export async function GET() {
     if (idxA >= 0) poolForSingles.splice(idxA, 1);
     const idxB = poolForSingles.indexOf(b);
     if (idxB >= 0) poolForSingles.splice(idxB, 1);
-    const d = disciplineByKind.get(kind)!;
+    const d: any = disciplineByKind.get(kind)!;
     picks[kind] = {
       side1: [a],
       side2: [b],
@@ -388,7 +388,7 @@ export async function GET() {
 
     scored.sort((x, y) => y.score - x.score);
     const best = scored[0];
-    const calcio = disciplineByKind.get(DisciplineKind.CALCIO_BALILLA)!;
+    const calcio: any = disciplineByKind.get(DisciplineKind.CALCIO_BALILLA)!;
     picks[DisciplineKind.CALCIO_BALILLA] = {
       side1: [...best.teamA],
       side2: [...best.teamB],

@@ -490,7 +490,7 @@ export async function POST(req: Request) {
       });
 
       const slot = (turnId: string, kind: DisciplineKind, side1: string[], side2: string[]) => {
-        const d = disciplineByKind.get(kind)!;
+        const d: any = disciplineByKind.get(kind)!;
         const targetVictory =
           d.targetFixed !== null
             ? d.targetFixed
