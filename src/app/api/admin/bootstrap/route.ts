@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { defaultCategoryScoreByAthleteName, defaultTierByAthleteName, disciplineSeeds } from "@/lib/nolimpiadi";
-import type { Prisma } from "@prisma/client";
+import { athleteNames, defaultCategoryScoreByAthleteName, defaultTierByAthleteName, disciplineSeeds } from "@/lib/nolimpiadi";
+import { type Prisma, DisciplineKind, Tier } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
@@ -55,6 +55,27 @@ export async function POST(req: Request) {
         },
       });
       disciplines.push(discipline);
+    }
+
+    const athletes = [];
+    for (const name of athleteNames) {
+      const athlete = await tx.athlete.upsert({
+        where: { name },
+        create: {
+          name,
+          tier: defaultTierByAthleteName[name] ?? Tier.MEDIO,
+          categoryScores: {
+            create: Object.entries(defaultCategoryScoreByAthleteName[name] ?? {}).map(([kind, score]) => ({
+              disciplineKind: kind as DisciplineKind,
+              score,
+            })),
+          },
+        },
+        update: {
+          tier: defaultTierByAthleteName[name] ?? Tier.MEDIO,
+        },
+      });
+      athletes.push(athlete);
     }
 
     // Creazione Utente Admin Pietro
