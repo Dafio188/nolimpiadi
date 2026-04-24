@@ -1,4 +1,6 @@
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
+
 import { NextResponse } from "next/server";
 
 function parseCategoryScore(value: unknown): number | null {

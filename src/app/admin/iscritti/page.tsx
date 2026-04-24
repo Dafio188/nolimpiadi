@@ -1,4 +1,6 @@
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
+
 import Link from "next/link";
 import { Users, ArrowLeft, Search, UserPlus, Filter, ShieldCheck, Mail, Phone, Trophy } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
