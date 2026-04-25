@@ -16,6 +16,19 @@ type QualRow = {
 
 type Athlete = { id: string; name: string };
 
+interface QualificationSlot {
+  kind: DisciplineKind;
+  side1AthleteIds: string[];
+  side2AthleteIds: string[];
+}
+
+interface QualificationTurn {
+  id: string;
+  index: number;
+  scheduledAt: Date | null;
+  slots: QualificationSlot[];
+}
+
 function kindLabel(kind: DisciplineKind) {
   switch (kind) {
     case "CALCIO_BALILLA":
@@ -184,7 +197,7 @@ export default async function StampaPage() {
           Nessuna serie pianificata. Vai in Setup per generare il calendario.
         </div>
       ) : (
-        turnChunks.map((chunk: any[], chunkIdx: number) => (
+        turnChunks.map((chunk: QualificationTurn[], chunkIdx: number) => (
 
           <section key={chunkIdx} className="print:page-break-after print:m-0 print:p-0 flex flex-col gap-6">
             <div className="flex items-center justify-between border-b-2 border-zinc-900 pb-2">
@@ -197,7 +210,7 @@ export default async function StampaPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-x-8 gap-y-10">
-              {chunk.map((turn: any) => {
+              {chunk.map((turn: QualificationTurn) => {
 
                 const start = turn.scheduledAt ? new Date(turn.scheduledAt) : null;
                 const timeStr = start ? start.toLocaleTimeString("it-IT", { hour: '2-digit', minute: '2-digit' }) : "--:--";
@@ -211,10 +224,10 @@ export default async function StampaPage() {
 
                     <div className="flex flex-col gap-3">
                       {kinds.map((kind: DisciplineKind) => {
-                        const slot = (turn.slots as any[]).find(s => s.kind === kind);
+                        const slot = turn.slots.find(s => s.kind === kind);
 
-                        const a = slot?.side1AthleteIds.map(id => athleteById.get(id)?.name || "—") || [];
-                        const b = slot?.side2AthleteIds.map(id => athleteById.get(id)?.name || "—") || [];
+                        const a = slot?.side1AthleteIds.map((id: string) => athleteById.get(id)?.name || "—") || [];
+                        const b = slot?.side2AthleteIds.map((id: string) => athleteById.get(id)?.name || "—") || [];
 
                         return (
                           <div key={kind} className="border border-zinc-300 rounded-xl overflow-hidden shadow-sm break-inside-avoid bg-white">
