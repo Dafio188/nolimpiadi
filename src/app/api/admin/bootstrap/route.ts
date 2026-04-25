@@ -1,40 +1,23 @@
 import { prisma } from "@/lib/prisma";
 import { athleteNames, defaultCategoryScoreByAthleteName, defaultTierByAthleteName, disciplineSeeds } from "@/lib/nolimpiadi";
-import { type Prisma, DisciplineKind, Tier } from "@prisma/client";
+import { Tier } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
-export async function POST(req: Request) {
-  const body = (await req.json().catch(() => null)) as unknown;
-  const action = isRecord(body) && typeof body.action === "string" ? body.action : "bootstrap";
-
-  if (action === "reset_results") {
-    const result = await prisma.$transaction(async (tx: any) => {
-      const matchesDeleted = await tx.match.count();
-      const slotsDeleted = await tx.qualificationSlot.count();
-      const turnsDeleted = await tx.qualificationTurn.count();
-      await tx.match.deleteMany();
-      await tx.qualificationSlot.deleteMany();
-      await tx.qualificationTurn.deleteMany();
-      return { matchesDeleted, slotsDeleted, turnsDeleted };
-    });
-    return NextResponse.json({ ok: true, ...result });
-  }
-
-  const result = await prisma.$transaction(async (tx: any) => {
+// Funzione comune per eseguire il bootstrap
+async function runBootstrap() {
+  return await prisma.$transaction(async (tx: any) => {
+    // 1. Impostazioni di sistema
     await tx.systemSetting.upsert({
       where: { id: 1 },
       create: { id: 1, malusDivisor: 1000, turnDurationMinutes: 10 },
       update: { malusDivisor: 1000 },
     });
 
+    // 2. Discipline
     const disciplines = [];
     for (const seed of disciplineSeeds) {
-      const discipline = await tx.discipline.upsert({
+      const d = await tx.discipline.upsert({
         where: { kind: seed.kind },
         create: {
           kind: seed.kind,
@@ -54,12 +37,13 @@ export async function POST(req: Request) {
           targetMax: seed.targetMax,
         },
       });
-      disciplines.push(discipline);
+      disciplines.push(d);
     }
 
+    // 3. Atleti
     const athletes = [];
     for (const name of athleteNames) {
-      const athlete = await tx.athlete.upsert({
+      const a = await tx.athlete.upsert({
         where: { name },
         create: {
           name,
@@ -71,28 +55,44 @@ export async function POST(req: Request) {
           categoryScore: defaultCategoryScoreByAthleteName[name] ?? 100,
         },
       });
-      athletes.push(athlete);
+      athletes.push(a);
     }
 
-    // Creazione Utente Admin Pietro
+    // 4. Admin
     const hashedPassword = await bcrypt.hash("nolimpiadi2026", 10);
     await tx.admin.upsert({
       where: { username: "Pietro" },
-      create: { 
-        username: "Pietro", 
-        password: hashedPassword 
-      },
-      update: { 
-        password: hashedPassword 
-      }
+      create: { username: "Pietro", password: hashedPassword },
+      update: { password: hashedPassword },
     });
 
-    return { 
-      disciplinesCreatedOrUpdated: disciplines.length, 
-      athletesCreatedOrUpdated: athletes.length,
-      adminCreated: "Pietro"
+    return {
+      disciplines: disciplines.length,
+      athletes: athletes.length,
+      admin: "Pietro (creato o aggiornato)"
     };
   });
+}
 
-  return NextResponse.json({ ok: true, ...result });
+export async function GET() {
+  try {
+    const result = await runBootstrap();
+    return NextResponse.json({ ok: true, message: "Bootstrap completato con successo (via GET)", ...result });
+  } catch (e: any) {
+    console.error("Bootstrap error:", e);
+    return NextResponse.json({ 
+      ok: false, 
+      error: e.message,
+      hint: "Hai eseguito 'npx prisma db push' nel terminale?" 
+    }, { status: 500 });
+  }
+}
+
+export async function POST() {
+  try {
+    const result = await runBootstrap();
+    return NextResponse.json({ ok: true, message: "Bootstrap completato via POST", ...result });
+  } catch (e: any) {
+    return NextResponse.json({ ok: false, error: e.message }, { status: 500 });
+  }
 }
