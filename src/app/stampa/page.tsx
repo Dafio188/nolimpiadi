@@ -185,8 +185,8 @@ export default async function StampaPage() {
         </div>
         <div className="flex items-center gap-4">
           <PrintButton />
-          <Link className="px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-sm font-bold transition-colors" href="/">
-            Torna alla Home
+          <Link className="px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-sm font-bold transition-colors" href="/admin">
+            ← Pannello Admin
           </Link>
         </div>
       </div>

@@ -8,9 +8,9 @@ export default function FinaliPage() {
       {/* Hero Header */}
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-accent transition-colors group">
+          <Link href="/admin" className="flex items-center gap-2 text-sm font-bold text-zinc-400 hover:text-accent transition-colors group">
             <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            Dashboard
+            Pannello Admin
           </Link>
           <div className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-zinc-400">
             <Link href="/classifica" className="hover:text-accent transition-colors">Classifica</Link>
