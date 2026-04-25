@@ -249,7 +249,7 @@ export async function GET() {
       FROM v_participations
       WHERE phase = ${MatchPhase.QUALIFICAZIONE}
       GROUP BY athlete_id
-    ` as any,
+    `,
     prisma.$queryRaw<Array<{ athlete_id: string; kind: DisciplineKind; matches_played: number }>>`
       SELECT
         p.athlete_id,
@@ -260,14 +260,16 @@ export async function GET() {
       WHERE p.phase = ${MatchPhase.QUALIFICAZIONE}
         AND d.kind IN (${DisciplineKind.AIR_HOCKEY}, ${DisciplineKind.PING_PONG}, ${DisciplineKind.FRECCETTE}, ${DisciplineKind.CALCIO_BALILLA})
       GROUP BY p.athlete_id, d.kind
-    ` as any,
+    `,
   ]);
 
   const disciplineByKind = new Map(disciplines.map((d) => [d.kind, d]));
   const athleteById = new Map(athletes.map((a) => [a.id, a]));
-  const matchesByAthleteId = new Map<string, number>(matchesPlayed.map((r) => [r.athlete_id, r.matches_played]));
+  const matchesByAthleteId = new Map<string, number>(
+    (matchesPlayed as Array<{ athlete_id: string; matches_played: number }>).map((r: { athlete_id: string; matches_played: number }) => [r.athlete_id, r.matches_played])
+  );
   const matchesByAthleteKind = new Map<string, Map<DisciplineKind, number>>();
-  for (const r of matchesPlayedByKind) {
+  for (const r of (matchesPlayedByKind as Array<{ athlete_id: string; kind: DisciplineKind; matches_played: number }>)) {
     const byKind = matchesByAthleteKind.get(r.athlete_id) ?? new Map<DisciplineKind, number>();
     byKind.set(r.kind, r.matches_played);
     matchesByAthleteKind.set(r.athlete_id, byKind);
