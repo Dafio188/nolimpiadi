@@ -39,15 +39,17 @@ function asSeedLabel(seedIndex: number, seeds: QualRow[], fallback: string) {
 
 function BracketBox({ title, a, b }: { title: string; a: string; b: string }) {
   return (
-    <div className="rounded-lg border border-zinc-900/25 bg-white p-2">
-      <div className="text-[10px] font-medium uppercase tracking-wide text-zinc-600">{title}</div>
-      <div className="mt-1 grid gap-1 text-sm">
-        <div className="rounded border border-zinc-200 px-2 py-1">{a}</div>
-        <div className="rounded border border-zinc-200 px-2 py-1">{b}</div>
-      </div>
-      <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-zinc-600">
-        <div className="rounded border border-zinc-200 px-2 py-1">Punti</div>
-        <div className="rounded border border-zinc-200 px-2 py-1">Punti</div>
+    <div className="rounded-lg border border-zinc-300 bg-white p-3 shadow-sm">
+      <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 border-b border-zinc-100 pb-1 mb-2">{title}</div>
+      <div className="grid gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex-1 rounded border border-zinc-200 px-3 py-2 text-sm font-medium bg-zinc-50/50">{a}</div>
+          <div className="w-16 h-10 border-2 border-zinc-400 rounded flex items-center justify-center font-bold text-lg italic text-zinc-300">PTS</div>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex-1 rounded border border-zinc-200 px-3 py-2 text-sm font-medium bg-zinc-50/50">{b}</div>
+          <div className="w-16 h-10 border-2 border-zinc-400 rounded flex items-center justify-center font-bold text-lg italic text-zinc-300">PTS</div>
+        </div>
       </div>
     </div>
   );
@@ -63,16 +65,16 @@ function BracketTemplate({ kind, seeds }: { kind: DisciplineKind; seeds: QualRow
     const s5 = asSeedLabel(4, seeds, "5) —");
     const s6 = asSeedLabel(5, seeds, "6) —");
     return (
-      <div className="grid gap-4 print-bracket-grid">
-        <div className="grid gap-4">
+      <div className="flex flex-col gap-8">
+        <div className="grid grid-cols-2 gap-4">
           <BracketBox title="Quarti (3 vs 6)" a={s3} b={s6} />
           <BracketBox title="Quarti (4 vs 5)" a={s4} b={s5} />
         </div>
-        <div className="grid gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <BracketBox title="Semifinale 1" a={s1} b="Vincente (4 vs 5)" />
           <BracketBox title="Semifinale 2" a={s2} b="Vincente (3 vs 6)" />
         </div>
-        <div className="grid gap-4">
+        <div className="max-w-sm mx-auto w-full">
           <BracketBox title="Finale" a="Vincente SF1" b="Vincente SF2" />
         </div>
       </div>
@@ -86,15 +88,15 @@ function BracketTemplate({ kind, seeds }: { kind: DisciplineKind; seeds: QualRow
   const s5 = asSeedLabel(4, seeds, "5) —");
 
   return (
-    <div className="grid gap-4 print-bracket-grid">
-      <div className="grid gap-4">
+    <div className="flex flex-col gap-8">
+      <div className="max-w-sm mx-auto w-full">
         <BracketBox title="Play-in (4 vs 5)" a={s4} b={s5} />
       </div>
-      <div className="grid gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <BracketBox title="Semifinale 1" a={s1} b="Vincente play-in" />
         <BracketBox title="Semifinale 2" a={s2} b={s3} />
       </div>
-      <div className="grid gap-4">
+      <div className="max-w-sm mx-auto w-full">
         <BracketBox title="Finale" a="Vincente SF1" b="Vincente SF2" />
       </div>
     </div>
@@ -118,6 +120,14 @@ async function qualificati(kind: DisciplineKind) {
   return rows;
 }
 
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
+
 export default async function StampaPage() {
   const kinds = [
     DisciplineKind.AIR_HOCKEY,
@@ -139,166 +149,161 @@ export default async function StampaPage() {
   const athleteById = new Map<string, Athlete>(athletes.map((a) => [a.id, a]));
   const durationMinutes = settings?.turnDurationMinutes ?? 10;
 
-  const turnHeaders = turns.map((t) => {
-    const start = t.scheduledAt ? new Date(t.scheduledAt) : null;
-    const end = start ? new Date(start.getTime() + durationMinutes * 60_000) : null;
-    return { index: t.index, start, end };
-  });
-
-  const slotByTurnKind = new Map<string, { side1: string[]; side2: string[] }>();
-  for (const t of turns) {
-    for (const s of t.slots) {
-      slotByTurnKind.set(`${t.index}:${s.kind}`, { side1: s.side1AthleteIds, side2: s.side2AthleteIds });
-    }
-  }
+  const turnChunks = chunkArray(turns, 4);
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-6">
-      <div className="print-hidden flex flex-wrap items-center justify-between gap-3">
+    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-4 py-8">
+      {/* HEADER WEB-ONLY */}
+      <div className="print:hidden flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 pb-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Stampa tabelloni</h1>
-          <div className="mt-1 text-sm text-zinc-600">
-            Consigliato: stampa in orizzontale per la Fase 1. La Fase 2 è in più pagine (una per disciplina).
-          </div>
+          <h1 className="text-3xl font-black tracking-tight text-zinc-900">MODULO DI GARA CARTACEO</h1>
+          <p className="mt-2 text-zinc-600">
+            Pagine ottimizzate per la stampa. Ogni foglio contiene 4 serie per una facile compilazione manuale.
+          </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <PrintButton />
-          <Link className="text-sm text-zinc-600 hover:text-zinc-900" href="/">
-            Home
+          <Link className="px-4 py-2 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-sm font-bold transition-colors" href="/">
+            Torna alla Home
           </Link>
         </div>
       </div>
 
-      <section className="rounded-2xl border border-zinc-200 bg-white p-4 print-no-border">
-        <div className="flex items-baseline justify-between gap-4">
-          <div>
-            <div className="text-base font-semibold">Fase 1 · Programmazione serie</div>
-            <div className="mt-1 text-sm text-zinc-600">
-              Gare in verticale · Serie in orizzontale · Durata serie: {durationMinutes} min
-            </div>
-          </div>
-          <div className="text-sm text-zinc-600">
-            Serie pianificate: <span className="font-medium text-zinc-900">{turns.length}</span>
-          </div>
+      {/* FASE 1 - QUALIFICAZIONI (DIVISA IN PAGINE) */}
+      {turnChunks.length === 0 ? (
+        <div className="print:hidden p-10 text-center rounded-3xl border-2 border-dashed border-zinc-200 text-zinc-500 font-medium">
+          Nessuna serie pianificata. Vai in Setup per generare il calendario.
         </div>
-
-        {turns.length === 0 ? (
-          <div className="mt-4 rounded-xl bg-zinc-50 p-3 text-sm text-zinc-700">
-            Nessun turno pianificato. Genera la Fase 1 da Setup → “Fase 1 (Qualificazioni)”.
-          </div>
-        ) : (
-          <div className="mt-4 overflow-x-auto print-no-scroll">
-            <table className="min-w-[900px] w-full border-collapse text-left text-sm print-table">
-              <thead className="bg-zinc-50 print-header">
-                <tr>
-                  <th className="w-40 border border-zinc-200 px-2 py-2 text-xs uppercase tracking-wide text-zinc-500">
-                    Gara
-                  </th>
-                  {turnHeaders.map((t) => (
-                    <th key={t.index} className="border border-zinc-200 px-2 py-2 align-bottom">
-                      <div className="text-sm font-semibold">
-                        Serie {t.index}
-                      </div>
-                      <div className="mt-0.5 text-xs text-zinc-600">
-                        {t.start ? t.start.toLocaleTimeString() : "—"}
-                        {t.end ? `–${t.end.toLocaleTimeString()}` : ""}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {kinds.map((kind) => (
-                  <tr key={kind}>
-                    <td className="border border-zinc-200 px-2 py-2 font-medium">{kindLabel(kind)}</td>
-                    {turnHeaders.map((t) => {
-                      const slot = slotByTurnKind.get(`${t.index}:${kind}`);
-                      const a = slot?.side1.map((id) => athleteById.get(id)?.name ?? "—") ?? [];
-                      const b = slot?.side2.map((id) => athleteById.get(id)?.name ?? "—") ?? [];
-                      return (
-                        <td key={t.index} className="border border-zinc-200 px-2 py-2 align-top">
-                          <div className="text-sm">
-                            {a.length > 0 || b.length > 0 ? (
-                              <>
-                                <div className="font-medium">{joinTeam(a) || "—"}</div>
-                                <div className="text-xs text-zinc-600">vs</div>
-                                <div className="font-medium">{joinTeam(b) || "—"}</div>
-                              </>
-                            ) : (
-                              <div className="text-zinc-500">—</div>
-                            )}
-                          </div>
-                          <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-zinc-600">
-                            <div className="rounded border border-zinc-200 px-2 py-1">Punti</div>
-                            <div className="rounded border border-zinc-200 px-2 py-1">Punti</div>
-                          </div>
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-
-      {phase2.map(({ kind, seeds }, idx) => (
-        <section
-          key={kind}
-          className={`rounded-2xl border border-zinc-200 bg-white p-4 print-no-border ${idx === 0 ? "" : "print-page-break"}`}
-        >
-          <div className="flex items-baseline justify-between gap-4">
-            <div>
-              <div className="text-base font-semibold">Fase 2 · Tabellone {kindLabel(kind)}</div>
-              <div className="mt-1 text-sm text-zinc-600">
-                Modello stampabile con percorso (quarti/semifinali/finale) e spazio risultati.
+      ) : (
+        turnChunks.map((chunk, chunkIdx) => (
+          <section key={chunkIdx} className="print:page-break-after print:m-0 print:p-0 flex flex-col gap-6">
+            <div className="flex items-center justify-between border-b-2 border-zinc-900 pb-2">
+              <h2 className="text-xl font-black uppercase tracking-tighter">
+                NOLImpiadi 2026 <span className="text-zinc-400">/</span> FASE 1 <span className="text-zinc-400">/</span> PAGINA {chunkIdx + 1}
+              </h2>
+              <div className="text-sm font-bold px-3 py-1 bg-zinc-900 text-white rounded-full">
+                SERIE {chunk[0].index} - {chunk[chunk.length - 1].index}
               </div>
             </div>
-            <div className="text-sm text-zinc-600">
-              Qualificati: <span className="font-medium text-zinc-900">{seeds.length}</span> /{" "}
-              <span className="font-medium text-zinc-900">{kind === DisciplineKind.CALCIO_BALILLA ? 5 : 6}</span>
-            </div>
-          </div>
 
-          <div className="mt-4 grid gap-4 md:grid-cols-2 print-phase2-grid">
-            <div className="rounded-xl border border-zinc-200 p-3 print-no-border">
-              <div className="text-xs font-medium uppercase tracking-wide text-zinc-500">Qualificati (seed)</div>
-              <div className="mt-2 overflow-hidden rounded-lg border border-zinc-200">
-                <table className="min-w-full text-left text-sm">
-                  <thead className="bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
-                    <tr>
-                      <th className="px-3 py-2">#</th>
-                      <th className="px-3 py-2">Atleta</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Array.from({ length: kind === DisciplineKind.CALCIO_BALILLA ? 5 : 6 }).map((_, i) => {
-                      const r = seeds[i];
-                      return (
-                        <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-zinc-50/40"}>
-                          <td className="px-3 py-2 font-medium">{i + 1}</td>
-                          <td className="px-3 py-2">{r ? r.name : "—"}</td>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-10">
+              {chunk.map((turn) => {
+                const start = turn.scheduledAt ? new Date(turn.scheduledAt) : null;
+                const timeStr = start ? start.toLocaleTimeString("it-IT", { hour: '2-digit', minute: '2-digit' }) : "--:--";
+
+                return (
+                  <div key={turn.id} className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between bg-zinc-100 px-3 py-1.5 rounded-lg border border-zinc-200">
+                      <span className="font-black text-lg">SERIE {turn.index}</span>
+                      <span className="text-sm font-mono font-bold text-zinc-500 italic">Ore {timeStr}</span>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                      {kinds.map((kind) => {
+                        const slot = turn.slots.find(s => s.kind === kind);
+                        const a = slot?.side1AthleteIds.map(id => athleteById.get(id)?.name || "—") || [];
+                        const b = slot?.side2AthleteIds.map(id => athleteById.get(id)?.name || "—") || [];
+
+                        return (
+                          <div key={kind} className="border border-zinc-300 rounded-xl overflow-hidden shadow-sm">
+                            <div className="bg-zinc-50 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-zinc-500 border-b border-zinc-200">
+                              {kindLabel(kind)}
+                            </div>
+                            <div className="p-2 grid grid-cols-[1fr,auto,1fr] items-center gap-2">
+                              {/* Lato A */}
+                              <div className="flex flex-col gap-1">
+                                <div className="text-sm font-bold leading-tight truncate">{joinTeam(a)}</div>
+                                <div className="w-full h-8 border border-zinc-300 rounded-md bg-white flex items-center justify-center text-[10px] text-zinc-300 font-bold italic">PUNTI</div>
+                              </div>
+                              
+                              <div className="text-[10px] font-black text-zinc-300">VS</div>
+
+                              {/* Lato B */}
+                              <div className="flex flex-col gap-1 items-end">
+                                <div className="text-sm font-bold leading-tight truncate text-right">{joinTeam(b)}</div>
+                                <div className="w-full h-8 border border-zinc-300 rounded-md bg-white flex items-center justify-center text-[10px] text-zinc-300 font-bold italic">PUNTI</div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* SPAZIO NOTE A FINE PAGINA */}
+            <div className="mt-auto pt-6 border-t border-zinc-200">
+              <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Note / Firma Giudice</div>
+              <div className="h-10 border border-zinc-200 rounded-xl bg-zinc-50/30"></div>
+            </div>
+          </section>
+        ))
+      )}
+
+      {/* FASE 2 - TABELLONI (UNA PAGINA PER DISCIPLINA) */}
+      <div className="print:page-break-before mt-10 space-y-20">
+        {phase2.map(({ kind, seeds }, idx) => (
+          <section key={kind} className="print:page-break-after flex flex-col gap-8 min-h-[900px]">
+            <div className="flex items-center justify-between border-b-4 border-zinc-900 pb-4">
+              <h2 className="text-3xl font-black uppercase tracking-tighter">
+                FASE 2 <span className="text-zinc-400">/</span> {kindLabel(kind)}
+              </h2>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-zinc-900 rounded-full"></div>
+                <div className="text-sm font-black uppercase">Tabellone Ufficiale</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-[250px,1fr] gap-10">
+              {/* SEEDING LIST */}
+              <div className="flex flex-col gap-4">
+                <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 bg-zinc-100 p-2 rounded">Ranking Qualificati</h3>
+                <div className="border-2 border-zinc-900 rounded-2xl overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-zinc-900 text-white text-xs uppercase tracking-widest font-black">
+                        <th className="px-3 py-2 text-left">#</th>
+                        <th className="px-3 py-2 text-left">Atleta</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-200">
+                      {Array.from({ length: kind === DisciplineKind.CALCIO_BALILLA ? 5 : 6 }).map((_, i) => (
+                        <tr key={i} className="bg-white">
+                          <td className="px-3 py-3 font-black text-zinc-400 border-r border-zinc-100">{i + 1}</td>
+                          <td className="px-3 py-3 font-bold">{seeds[i]?.name || "________________"}</td>
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="mt-4 p-4 bg-zinc-50 rounded-2xl border border-zinc-200 text-[11px] text-zinc-600 leading-relaxed italic">
+                  Note: In caso di parità nel tabellone, vince chi ha ottenuto la migliore efficienza media nella Fase 1.
+                </div>
               </div>
-              <div className="mt-3 text-xs text-zinc-600">
-                Se vuoi stampare “senza nomi”, lascia questi campi vuoti e compila a penna.
-              </div>
-            </div>
 
-            <div className="rounded-xl border border-zinc-200 p-3 print-no-border">
-              <div className="text-xs font-medium uppercase tracking-wide text-zinc-500">Tabellone</div>
-              <div className="mt-3">
+              {/* BRACKET */}
+              <div className="bg-zinc-50/50 rounded-3xl border border-zinc-200 p-8 shadow-inner">
                 <BracketTemplate kind={kind} seeds={seeds} />
               </div>
             </div>
-          </div>
-        </section>
-      ))}
+          </section>
+        ))}
+      </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          body { background: white !important; }
+          .print-hidden { display: none !important; }
+          .print\\:page-break-after { page-break-after: always !important; }
+          .print\\:page-break-before { page-break-before: always !important; }
+          .print\\:m-0 { margin: 0 !important; }
+          .print\\:p-0 { padding: 0 !important; }
+          section { min-height: 95vh; display: flex; flex-direction: column; }
+          @page { size: portrait; margin: 1.5cm; }
+        }
+      `}} />
     </div>
   );
 }
