@@ -404,7 +404,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "turnDurationMinutes deve essere tra 1 e 120" }, { status: 400 });
   }
 
-  const result = await prisma.$transaction(async (tx: any) => {
+  const result = await prisma.$transaction(
+    async (tx: any) => {
     const playedQual = await tx.match.count({ where: { phase: MatchPhase.QUALIFICAZIONE } });
     if (playedQual > 0 && !allowOverwrite) {
       throw new Error("Qualificazioni già iniziate: per rigenerare serve overwrite=true");
@@ -521,7 +522,7 @@ export async function POST(req: Request) {
       turnDurationMinutes,
       startAt: base.toISOString(),
     };
-  }).catch((e: unknown) => {
+  }, { timeout: 60000 }).catch((e: unknown) => {
     const message = e instanceof Error ? e.message : "Errore pianificazione";
     return { error: message } as const;
   });
