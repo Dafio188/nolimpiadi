@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Trophy, ClipboardList, Target, Crown, LogIn, LayoutDashboard } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const cookieStore = await cookies();
   const isLoggedIn = cookieStore.get("admin_session")?.value === "authenticated";
