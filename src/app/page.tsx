@@ -16,22 +16,33 @@ export default async function Home() {
   ];
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-[#f5f5f7]">
-      {/* Background Decorativo */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-[120px] opacity-50" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-100 rounded-full blur-[120px] opacity-50" />
+    <main className="min-h-screen relative overflow-hidden bg-zinc-50">
+      {/* Background Sportivo Dinamico */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Linee Cinetiche */}
+        <div className="absolute top-0 left-0 w-full h-full opacity-[0.03]" 
+             style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0px, #000 1px, transparent 1px, transparent 100px)' }} />
+        
+        {/* Sfumature Energetiche */}
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-gradient-to-br from-blue-400/20 to-transparent rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-gradient-to-tl from-red-400/20 to-transparent rounded-full blur-[120px]" />
+        
+        {/* Fasce Sportive Diagonali */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[400px] bg-white/40 -rotate-12 blur-3xl" />
+      </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-16">
         {/* Header */}
         <header className="text-center mb-20 animate-in">
-          <div className="inline-flex items-center justify-center p-4 bg-white/50 backdrop-blur-xl rounded-3xl shadow-sm border border-white/50 mb-6">
-            <Trophy className="w-12 h-12 text-blue-600" />
+          <div className="inline-flex items-center justify-center p-5 bg-white rounded-3xl shadow-xl shadow-blue-500/10 border border-zinc-100 mb-8 relative">
+            <Trophy className="w-14 h-14 text-blue-600 relative z-10" />
+            <div className="absolute inset-0 bg-blue-500/5 rounded-3xl blur-xl" />
           </div>
-          <h1 className="text-5xl md:text-6xl font-black tracking-tight text-[#1d1d1f] mb-4">
+          <h1 className="text-6xl md:text-7xl font-black tracking-tighter text-zinc-900 mb-6 uppercase">
             NOLImpiadi <span className="text-blue-600">2026</span>
           </h1>
-          <p className="text-xl text-[#86868b] max-w-2xl mx-auto font-medium">
-            L'eccellenza sportiva incontra l'innovazione digitale.
+          <p className="text-xl text-zinc-500 max-w-2xl mx-auto font-medium leading-relaxed">
+            12 Amici. 4 Discipline. <span className="text-zinc-900 font-bold">Unico Obiettivo: Divertirse!</span>
           </p>
         </header>
 
