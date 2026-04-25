@@ -1,6 +1,10 @@
 "use client";
 
-import { DisciplineKind, FinalStage, MatchPhase } from "@prisma/client";
+// Import di tipi rimosso da @prisma/client per evitare errori nel browser con Turbopack
+export type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
+export type MatchPhase = "QUALIFICAZIONE" | "FINALI";
+export type FinalStage = "QUARTI" | "SEMIFINALI" | "FINALE_34" | "FINALE_12";
+
 import { type ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -68,10 +72,15 @@ const disciplineImages: Record<string, string> = {
 function defaultFormState(discipline: Discipline): FormState {
   const teamSize = Math.max(1, discipline.teamSize);
   const blankSide = (): SideState => ({ points: "", athleteIds: Array.from({ length: teamSize }, () => "") });
-  const defaultTarget = discipline.targetOverride ?? discipline.targetFixed;
+  let defaultTarget = discipline.targetOverride ?? discipline.targetFixed;
+  // Safety fix: se Air Hockey è impostato a 40 per errore, forza a 4
+  if (discipline.kind === "AIR_HOCKEY" && (defaultTarget === 40 || defaultTarget === null)) {
+    defaultTarget = 4;
+  }
   return {
-    phase: MatchPhase.QUALIFICAZIONE,
-    finalStage: FinalStage.QUARTI,
+    phase: "QUALIFICAZIONE",
+    finalStage: "QUARTI",
+
     targetVictory: defaultTarget !== null ? String(defaultTarget) : "",
     plannedSlotId: null,
     sides: [blankSide(), blankSide()],
@@ -168,8 +177,9 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
             const current = next[d.kind] ?? defaultFormState(d);
             next[d.kind] = {
               ...current,
-              phase: MatchPhase.FINALI,
-              finalStage: FinalStage.QUARTI,
+              phase: "FINALI",
+              finalStage: "QUARTI",
+
               plannedSlotId: null,
               sides: current.sides.map((side) => ({ ...side, points: "", athleteIds: side.athleteIds.map(() => "") })) as any,
               busy: false,
@@ -196,13 +206,14 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
             const current = next[d.kind] ?? defaultFormState(d);
             const match = data.matches?.[d.kind];
             if (!match) {
-              next[d.kind] = { ...current, phase: MatchPhase.FINALI, plannedSlotId: null, busy: false, message: null, suggestionsOpen: false };
+              next[d.kind] = { ...current, phase: "FINALI", plannedSlotId: null, busy: false, message: null, suggestionsOpen: false };
               continue;
             }
             next[d.kind] = {
               ...current,
-              phase: MatchPhase.FINALI,
-              finalStage: match.finalStage ?? FinalStage.QUARTI,
+              phase: "FINALI",
+              finalStage: match.finalStage ?? "QUARTI",
+
               targetVictory: String(match.targetVictory),
               plannedSlotId: null,
               sides: [
@@ -245,9 +256,10 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
           }
           next[d.kind] = {
             ...current,
-            phase: MatchPhase.QUALIFICAZIONE,
+            phase: "QUALIFICAZIONE",
             targetVictory: String(match.targetVictory),
             plannedSlotId: match.plannedSlotId ?? null,
+
             sides: [
               { ...current.sides[0], points: "", athleteIds: match.side1 },
               { ...current.sides[1], points: "", athleteIds: match.side2 },
@@ -319,7 +331,8 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
         body: JSON.stringify({
           disciplineKind: kind,
           phase: s.phase,
-          finalStage: s.phase === MatchPhase.FINALI ? s.finalStage : undefined,
+          finalStage: s.phase === "FINALI" ? s.finalStage : undefined,
+
           targetVictory,
           plannedSlotId: s.plannedSlotId ?? undefined,
           sides: [
@@ -447,37 +460,52 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {disciplines.map((d, idx) => {
           const s = stateByKind[d.kind];
-          const disciplineTarget = d.targetOverride ?? d.targetFixed;
           const bgImage = disciplineImages[d.kind];
+          
+          let disciplineTarget = d.targetOverride ?? d.targetFixed;
+          // Safety fix grafico per Air Hockey
+          if (d.kind === "AIR_HOCKEY" && (disciplineTarget === 40 || disciplineTarget === null)) {
+            disciplineTarget = 4;
+          }
+
 
           return (
-            <PremiumCard key={d.id} delay={idx * 0.05} className="flex flex-col p-0 overflow-hidden group/card relative">
-              {/* Background Image with Overlay */}
-              {bgImage && (
-                <div className="absolute inset-0 z-0">
-                  <img src={bgImage} alt="" className="w-full h-full object-cover opacity-20 grayscale group-hover/card:scale-110 group-hover/card:opacity-30 transition-all duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white/95" />
-                </div>
-              )}
-
+            <PremiumCard key={d.id} delay={idx * 0.05} className="flex flex-col p-0 overflow-hidden group/card relative bg-white">
               <div className="relative z-10 flex flex-col h-full">
-                {/* Card Header: Name & Target */}
-                <div className="p-4 border-b border-zinc-100 flex items-center justify-between bg-white/40 backdrop-blur-md rounded-t-[32px]">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-white p-2.5 rounded-2xl shadow-sm text-blue-600 ring-1 ring-zinc-200/50">
-                      {disciplineIcons[d.kind] || <Target className="w-5 h-5" />}
+                {/* Header Grafico con Immagine (Stile Gare) */}
+                <div className="relative h-24 w-full overflow-hidden">
+                  {bgImage && (
+                    <img 
+                      src={bgImage} 
+                      alt={d.name}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-2 left-4 right-4 flex items-center justify-between text-white">
+                    <div className="flex items-center gap-2">
+                      <div className="bg-white/20 backdrop-blur-md p-1.5 rounded-lg">
+                        {disciplineIcons[d.kind] || <Target className="w-4 h-4" />}
+                      </div>
+                      <h3 className="font-black text-sm uppercase tracking-tight">{d.name}</h3>
                     </div>
-                    <div>
-                      <h3 className="font-black text-zinc-900 leading-tight">{d.name}</h3>
-                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
-                        {d.teamSize === 2 ? "Doppio" : "Singolo"}
-                      </p>
+                    <div className="flex flex-col items-end">
+                      <span className="text-[8px] font-black uppercase tracking-widest opacity-70">Target</span>
+                      <span className="text-xs font-black leading-none">{disciplineTarget ?? "—"}</span>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-[9px] font-black text-zinc-400 uppercase tracking-tighter">Target</span>
-                    <span className="text-sm font-black text-blue-600 leading-none">{disciplineTarget ?? "—"}</span>
-                  </div>
+                </div>
+
+                {/* Info Sotto l'Immagine */}
+                <div className="px-5 py-2 border-b border-zinc-100 bg-zinc-50/50 flex justify-between items-center">
+                  <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                    Modalità: {d.teamSize === 2 ? "Doppio" : "Singolo"}
+                  </p>
+                  {s.plannedSlotId && (
+                    <span className="flex items-center gap-1 text-[9px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full uppercase">
+                      <RefreshCw className="w-2.5 h-2.5" /> Programmato
+                    </span>
+                  )}
                 </div>
 
                 {/* Card Body */}

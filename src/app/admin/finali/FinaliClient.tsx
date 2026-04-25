@@ -15,7 +15,9 @@ import {
 import PremiumCard from "@/components/ui/PremiumCard";
 import Link from "next/link";
 
-import { DisciplineKind } from "@prisma/client";
+// Tipo locale per evitare import di Prisma nel browser
+type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
+
 
 type QualRow = {
   athlete_id: string;
@@ -80,16 +82,17 @@ export default function FinaliClient() {
     const name = (i: number) => (seeds[i] ? seeds[i].name : "—");
 
     const getTarget = (phase: "Q" | "SF" | "F") => {
-      if (kind === DisciplineKind.FRECCETTE) {
+      if (kind === "FRECCETTE") {
         if (phase === "Q") return " (ai 100)";
         if (phase === "SF") return " (ai 150)";
         return " (ai 200)";
       }
-      if (kind === DisciplineKind.AIR_HOCKEY) {
+      if (kind === "AIR_HOCKEY") {
         if (phase === "Q") return " (ai 40)";
         if (phase === "SF") return " (ai 60)";
         return " (ai 80)";
       }
+
       // Ping pong e altri
       if (phase === "Q") return " (ai 10)";
       if (phase === "SF") return " (ai 15)";

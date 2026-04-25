@@ -24,7 +24,7 @@ export default async function GiudiciPage() {
   ]);
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-3 px-3 py-4">
+    <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-3 px-3 py-4" suppressHydrationWarning>
       <div className="flex items-center justify-between">
         <Link className="text-sm text-zinc-500 hover:text-zinc-700" href="/">
           ← Home

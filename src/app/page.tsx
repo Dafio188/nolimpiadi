@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { Trophy, ClipboardList, Target, Crown, LogIn, LayoutDashboard } from "lucide-react";
+import { Trophy, ClipboardList, Target, Crown, LogIn, LayoutDashboard, Clock } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
 
 export const dynamic = "force-dynamic";
@@ -16,38 +16,102 @@ export default async function Home() {
   ];
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-zinc-50">
-      {/* Background Sportivo Dinamico */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Linee Cinetiche */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-[0.03]" 
-             style={{ backgroundImage: 'repeating-linear-gradient(45deg, #000 0px, #000 1px, transparent 1px, transparent 100px)' }} />
-        
-        {/* Sfumature Energetiche */}
-        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-gradient-to-br from-blue-400/20 to-transparent rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-gradient-to-tl from-red-400/20 to-transparent rounded-full blur-[120px]" />
-        
-        {/* Fasce Sportive Diagonali */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[400px] bg-white/40 -rotate-12 blur-3xl" />
-      </div>
+    <main className="min-h-screen relative overflow-hidden bg-[#f5f5f7]">
+      {/* Background Decorativo Pulito */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-[120px] opacity-50" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-100 rounded-full blur-[120px] opacity-50" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-16">
-        {/* Header */}
-        <header className="text-center mb-20 animate-in">
-          <div className="inline-flex items-center justify-center p-5 bg-white rounded-3xl shadow-xl shadow-blue-500/10 border border-zinc-100 mb-8 relative">
-            <Trophy className="w-14 h-14 text-blue-600 relative z-10" />
-            <div className="absolute inset-0 bg-blue-500/5 rounded-3xl blur-xl" />
+        {/* Top Navigation / Admin Link */}
+        <div className="absolute top-6 right-6 z-50">
+          <Link 
+            href={isLoggedIn ? "/giudici" : "/login"}
+            className="group flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md border border-white shadow-sm rounded-full text-xs font-bold text-zinc-600 hover:text-blue-600 hover:shadow-md transition-all duration-300"
+          >
+            {isLoggedIn ? (
+              <LayoutDashboard className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-500 transition-colors" />
+            ) : (
+              <LogIn className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-500 transition-colors" />
+            )}
+            <span>{isLoggedIn ? "Pannello Admin" : "Area Riservata"}</span>
+          </Link>
+        </div>
+
+        {/* Header Principale */}
+        <header className="text-center mb-16 animate-in">
+          <div className="inline-flex items-center justify-center p-4 bg-white/50 backdrop-blur-xl rounded-3xl shadow-sm border border-white/50 mb-6">
+            <Trophy className="w-12 h-12 text-blue-600" />
           </div>
-          <h1 className="text-6xl md:text-7xl font-black tracking-tighter text-zinc-900 mb-6 uppercase">
-            NOLImpiadi <span className="text-blue-600">2026</span>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight text-[#1d1d1f] mb-6">
+            NOLImpiadi <span className="text-blue-600 italic">2026</span>
           </h1>
-          <p className="text-xl text-zinc-500 max-w-2xl mx-auto font-medium leading-relaxed">
-            12 Amici. 4 Discipline. <span className="text-zinc-900 font-bold">Unico Obiettivo: Divertirse!</span>
-          </p>
+          
+          <div className="max-w-3xl mx-auto">
+            <p className="text-2xl md:text-3xl font-bold text-[#1d1d1f] leading-tight mb-6">
+              La leggenda continua. <br className="hidden md:block" /> 
+              La <span className="text-blue-600">7ª edizione</span> è ufficialmente indetta!
+            </p>
+            <p className="text-lg text-[#86868b] font-medium leading-relaxed">
+              Sì, avete letto bene: la sfavillante, roboante e fantasmagorica edizione del più prestigioso (e controverso) torneo multisportivo del multiverso sta per tornare. 
+            </p>
+          </div>
         </header>
 
+        {/* Hero Section con Collage e Info */}
+        <section className="mb-20 grid md:grid-cols-2 gap-8 lg:gap-16 items-center animate-in" style={{ animationDelay: '0.1s' }}>
+          {/* Collage Griglia 2x2 */}
+          <div className="grid grid-cols-2 gap-2 p-2 bg-white rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-blue-200/40 ring-1 ring-black/5 rotate-[-1deg] max-w-md mx-auto md:mx-0">
+            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
+              <img src="/immagini/Air Hockey.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Air Hockey" />
+            </div>
+            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
+              <img src="/immagini/Calcio-balilla.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Calcio Balilla" />
+            </div>
+            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
+              <img src="/immagini/Freccette.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Freccette" />
+            </div>
+            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
+              <img src="/immagini/ping pong.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Ping Pong" />
+            </div>
+          </div>
+
+          {/* Info Box */}
+          <div className="flex flex-col gap-6 lg:gap-8">
+            <div className="bg-white/70 backdrop-blur-2xl p-6 lg:p-8 rounded-[1.5rem] lg:rounded-[2rem] border border-white shadow-xl">
+              <h2 className="text-[10px] lg:text-xs font-black uppercase tracking-widest text-blue-600 mb-4 lg:mb-6">Dettagli Ufficiali</h2>
+              <div className="space-y-4 lg:space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className="bg-blue-50 p-2 lg:p-3 rounded-xl lg:rounded-2xl text-blue-600">
+                    <Clock className="w-5 h-5 lg:w-6 lg:h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Quando</p>
+                    <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Domenica 17 Maggio 2026</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="bg-amber-50 p-2 lg:p-3 rounded-xl lg:rounded-2xl text-amber-600">
+                    <Trophy className="w-5 h-5 lg:w-6 lg:h-6" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Ritrovo</p>
+                    <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Ore 13:45 spaccate</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="px-2">
+              <p className="text-sm lg:text-base text-[#86868b] font-medium italic leading-relaxed">
+                Preparate i riflessi, scaldate i muscoli e affilate la strategia. <br className="hidden lg:block" />
+                La gloria vi aspetta.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Grid Pubblica */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in" style={{ animationDelay: '0.1s' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 animate-in" style={{ animationDelay: '0.1s' }}>
           {publicLinks.map((link) => (
             <Link href={link.href} key={link.href}>
               <PremiumCard 
@@ -60,19 +124,10 @@ export default async function Home() {
           ))}
         </div>
 
-        {/* Footer / Link Admin */}
-        <footer className="mt-24 text-center animate-in" style={{ animationDelay: '0.3s' }}>
-          {!isLoggedIn ? (
-            <Link href="/login" className="apple-button gap-2">
-              <LogIn className="w-5 h-5" />
-              Area Riservata
-            </Link>
-          ) : (
-            <Link href="/admin" className="apple-button gap-2 bg-purple-600 hover:bg-purple-700">
-              <LayoutDashboard className="w-5 h-5" />
-              Vai al Pannello Admin
-            </Link>
-          )}
+        <footer className="mt-24 pb-12 text-center animate-in" style={{ animationDelay: '0.3s' }}>
+          <p className="text-[10px] font-bold text-zinc-300 uppercase tracking-[0.2em]">
+            NOLImpiadi 2026 • Official Tournament Dashboard
+          </p>
         </footer>
       </div>
     </main>

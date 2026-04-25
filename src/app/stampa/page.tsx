@@ -2,7 +2,9 @@ export const dynamic = "force-dynamic";
 
 import PrintButton from "./PrintButton";
 import { prisma } from "@/lib/prisma";
-import { DisciplineKind } from "@prisma/client";
+// Tipo locale per evitare import di Prisma nel client/turbopack
+type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
+
 import Link from "next/link";
 
 type QualRow = {
@@ -16,15 +18,18 @@ type Athlete = { id: string; name: string };
 
 function kindLabel(kind: DisciplineKind) {
   switch (kind) {
-    case DisciplineKind.CALCIO_BALILLA:
+    case "CALCIO_BALILLA":
       return "Calcio-balilla";
-    case DisciplineKind.FRECCETTE:
+    case "FRECCETTE":
       return "Freccette";
-    case DisciplineKind.PING_PONG:
+    case "PING_PONG":
       return "Ping-pong";
-    case DisciplineKind.AIR_HOCKEY:
+    case "AIR_HOCKEY":
       return "Air Hockey";
+    default:
+      return kind;
   }
+
 }
 
 function joinTeam(names: string[]) {
@@ -56,7 +61,8 @@ function BracketBox({ title, a, b }: { title: string; a: string; b: string }) {
 }
 
 function BracketTemplate({ kind, seeds }: { kind: DisciplineKind; seeds: QualRow[] }) {
-  const limit = kind === DisciplineKind.CALCIO_BALILLA ? 5 : 6;
+  const limit = kind === "CALCIO_BALILLA" ? 5 : 6;
+
   if (limit === 6) {
     const s1 = asSeedLabel(0, seeds, "1) —");
     const s2 = asSeedLabel(1, seeds, "2) —");
@@ -104,7 +110,8 @@ function BracketTemplate({ kind, seeds }: { kind: DisciplineKind; seeds: QualRow
 }
 
 async function qualificati(kind: DisciplineKind) {
-  const limit = kind === DisciplineKind.CALCIO_BALILLA ? 5 : 6;
+  const limit = kind === "CALCIO_BALILLA" ? 5 : 6;
+
   const rows = await prisma.$queryRaw<QualRow[]>`
     SELECT
       q.athlete_id,
@@ -129,12 +136,13 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 }
 
 export default async function StampaPage() {
-  const kinds = [
-    DisciplineKind.AIR_HOCKEY,
-    DisciplineKind.PING_PONG,
-    DisciplineKind.FRECCETTE,
-    DisciplineKind.CALCIO_BALILLA,
+  const kinds: DisciplineKind[] = [
+    "AIR_HOCKEY",
+    "PING_PONG",
+    "FRECCETTE",
+    "CALCIO_BALILLA",
   ];
+
 
   const [settings, turns, athletes, phase2] = await Promise.all([
     prisma.systemSetting.findUnique({ where: { id: 1 } }),
@@ -146,7 +154,8 @@ export default async function StampaPage() {
     Promise.all(kinds.map(async (kind) => ({ kind, seeds: await qualificati(kind) }))),
   ]);
 
-  const athleteById = new Map<string, Athlete>(athletes.map((a) => [a.id, a]));
+  const athleteById = new Map<string, Athlete>(athletes.map((a: Athlete) => [a.id, a]));
+
   const durationMinutes = settings?.turnDurationMinutes ?? 10;
 
   const turnChunks = chunkArray(turns, 4);
@@ -175,7 +184,8 @@ export default async function StampaPage() {
           Nessuna serie pianificata. Vai in Setup per generare il calendario.
         </div>
       ) : (
-        turnChunks.map((chunk, chunkIdx) => (
+        turnChunks.map((chunk: any[], chunkIdx: number) => (
+
           <section key={chunkIdx} className="print:page-break-after print:m-0 print:p-0 flex flex-col gap-6">
             <div className="flex items-center justify-between border-b-2 border-zinc-900 pb-2">
               <h2 className="text-xl font-black uppercase tracking-tighter">
@@ -187,7 +197,8 @@ export default async function StampaPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-x-8 gap-y-10">
-              {chunk.map((turn) => {
+              {chunk.map((turn: any) => {
+
                 const start = turn.scheduledAt ? new Date(turn.scheduledAt) : null;
                 const timeStr = start ? start.toLocaleTimeString("it-IT", { hour: '2-digit', minute: '2-digit' }) : "--:--";
 
@@ -199,8 +210,9 @@ export default async function StampaPage() {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                      {kinds.map((kind) => {
-                        const slot = turn.slots.find(s => s.kind === kind);
+                      {kinds.map((kind: DisciplineKind) => {
+                        const slot = (turn.slots as any[]).find(s => s.kind === kind);
+
                         const a = slot?.side1AthleteIds.map(id => athleteById.get(id)?.name || "—") || [];
                         const b = slot?.side2AthleteIds.map(id => athleteById.get(id)?.name || "—") || [];
 
@@ -244,7 +256,8 @@ export default async function StampaPage() {
 
       {/* FASE 2 - TABELLONI (UNA PAGINA PER DISCIPLINA) */}
       <div className="print:page-break-before mt-10 space-y-20">
-        {phase2.map(({ kind, seeds }, idx) => (
+        {phase2.map(({ kind, seeds }: { kind: DisciplineKind, seeds: QualRow[] }, idx: number) => (
+
           <section key={kind} className="print:page-break-after flex flex-col gap-8 min-h-[900px]">
             <div className="flex items-center justify-between border-b-4 border-zinc-900 pb-4">
               <h2 className="text-3xl font-black uppercase tracking-tighter">
@@ -269,7 +282,8 @@ export default async function StampaPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-200">
-                      {Array.from({ length: kind === DisciplineKind.CALCIO_BALILLA ? 5 : 6 }).map((_, i) => (
+                      {Array.from({ length: kind === "CALCIO_BALILLA" ? 5 : 6 }).map((_, i: number) => (
+
                         <tr key={i} className="bg-white">
                           <td className="px-3 py-3 font-black text-zinc-400 border-r border-zinc-100">{i + 1}</td>
                           <td className="px-3 py-3 font-bold">{seeds[i]?.name || "________________"}</td>
