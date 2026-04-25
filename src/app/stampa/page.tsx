@@ -39,7 +39,7 @@ function asSeedLabel(seedIndex: number, seeds: QualRow[], fallback: string) {
 
 function BracketBox({ title, a, b }: { title: string; a: string; b: string }) {
   return (
-    <div className="rounded-lg border border-zinc-300 bg-white p-3 shadow-sm">
+    <div className="rounded-lg border border-zinc-300 bg-white p-3 shadow-sm break-inside-avoid">
       <div className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 border-b border-zinc-100 pb-1 mb-2">{title}</div>
       <div className="grid gap-2">
         <div className="flex items-center justify-between gap-3">
@@ -205,7 +205,7 @@ export default async function StampaPage() {
                         const b = slot?.side2AthleteIds.map(id => athleteById.get(id)?.name || "—") || [];
 
                         return (
-                          <div key={kind} className="border border-zinc-300 rounded-xl overflow-hidden shadow-sm">
+                          <div key={kind} className="border border-zinc-300 rounded-xl overflow-hidden shadow-sm break-inside-avoid bg-white">
                             <div className="bg-zinc-50 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-zinc-500 border-b border-zinc-200">
                               {kindLabel(kind)}
                             </div>
@@ -296,11 +296,12 @@ export default async function StampaPage() {
         @media print {
           body { background: white !important; }
           .print-hidden { display: none !important; }
+          .break-inside-avoid { break-inside: avoid !important; page-break-inside: avoid !important; }
           .print\\:page-break-after { page-break-after: always !important; }
           .print\\:page-break-before { page-break-before: always !important; }
           .print\\:m-0 { margin: 0 !important; }
           .print\\:p-0 { padding: 0 !important; }
-          section { min-height: 95vh; display: flex; flex-direction: column; }
+          section { min-height: auto; display: block; }
           @page { size: portrait; margin: 1.5cm; }
         }
       `}} />
