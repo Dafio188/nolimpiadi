@@ -12,12 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Tier {
-  ALTO
-  MEDIO
-  BASSO
-}
-
 enum DisciplineKind {
   CALCIO_BALILLA
   FRECCETTE
@@ -39,8 +33,7 @@ enum FinalStage {
 model Athlete {
   id        String   @id @default(cuid())
   name      String   @unique
-  tier      Tier
-  categoryScore Int  @default(100) @map("category_score")
+  letter    String?  @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -85,8 +78,8 @@ model QualificationSlot {
   disciplineId   String        @map("discipline_id")
   kind           DisciplineKind
   targetVictory  Int           @map("target_victory")
-  side1AthleteIds String[]     @map("side1_athlete_ids")
-  side2AthleteIds String[]     @map("side2_athlete_ids")
+  side1Letters   String[]      @map("side1_letters")
+  side2Letters   String[]      @map("side2_letters")
   createdAt      DateTime      @default(now()) @map("created_at")
   updatedAt      DateTime      @updatedAt @map("updated_at")
 
@@ -167,3 +160,4 @@ model MatchSideAthlete {
 
   @@map("match_side_athletes")
 }
+

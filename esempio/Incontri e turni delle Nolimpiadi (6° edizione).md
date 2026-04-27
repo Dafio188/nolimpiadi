@@ -83,7 +83,7 @@ Posizione	Giocatore	Punti	Percent.*	Qualificato
 5° classificato	Pietro	734,70	87,46%	= Giocatore P5	
 6° classificato	Massimo	674,57	80,31%	= Giocatore P6	
 
-Classifica basket
+Classifica air Hoky
 Posizione	Giocatore	Punti	Percent.*	Qualificato
 1° classificato	Alberto	839,34	99,92%	= Giocatore B1
 2° classificato	Gianni	827,83	98,55%	= Giocatore B2

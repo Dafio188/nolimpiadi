@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Trophy, Settings, Users, Calendar, ArrowLeft, LogOut, LayoutDashboard, ShieldCheck, Printer, Gauge, Database } from "lucide-react";
+import { Trophy, Settings, Calendar, ArrowLeft, LogOut, LayoutDashboard, ShieldCheck, Gauge, Database, ListOrdered, Medal } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
 
 export default async function AdminDashboard() {
@@ -13,13 +13,12 @@ export default async function AdminDashboard() {
   }
 
   const adminActions = [
-    { href: "/giudici", title: "Area Giudici", desc: "Inserisci i punteggi e gestisci i match", icon: Gauge, color: "blue" },
-    { href: "/stampa", title: "Stampa Report", desc: "Genera PDF e stampe del torneo", icon: Printer, color: "green" },
-    { href: "/admin/setup", title: "Configurazione", desc: "Gestisci discipline e parametri", icon: Settings, color: "purple" },
-    { href: "/admin/finali", title: "Gestione Finali", desc: "Controlla i tabelloni decisivi", icon: Trophy, color: "amber" },
-    { href: "/admin/iscritti", title: "Atleti Iscritti", desc: "Database completo partecipanti", icon: Users, color: "cyan" },
-    { href: "/admin/calendario", title: "Programma", desc: "Pianifica serie e orari", icon: Calendar, color: "red" },
+    { href: "/admin/programma", title: "Live Scoreboard (VAR)", desc: "Inserisci punteggi, visualizza i turni e i riposi", icon: Gauge, color: "green" },
+    { href: "/admin/setup", title: "Configurazione", desc: "Definisci atleti, lettere e azzera il sistema", icon: Settings, color: "purple" },
     { href: "/admin/backup", title: "Backup e Dati", desc: "Esporta e ripristina il database", icon: Database, color: "indigo" },
+    { href: "/admin/classifiche/fase1", title: "Classifica Prima Fase", desc: "Qualificazioni: Generale e Singole Discipline", icon: ListOrdered, color: "cyan" },
+    { href: "/admin/classifiche/fase2", title: "Classifica Seconda Fase", desc: "Playoff, tabelloni e piazzamenti definitivi", icon: Medal, color: "amber" },
+    { href: "/admin/classifiche/generale", title: "Classifica Assoluta", desc: "Vincitore finale e punteggio totale", icon: Trophy, color: "yellow" },
   ];
 
   return (

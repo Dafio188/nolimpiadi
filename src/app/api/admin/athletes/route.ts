@@ -3,13 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 import { NextResponse } from "next/server";
 
-function parseCategoryScore(value: unknown): number | null {
-  const n = typeof value === "number" ? value : typeof value === "string" ? Number(value) : NaN;
-  if (!Number.isFinite(n)) return null;
-  const allowed = new Set([100, 75, 50, 25]);
-  return allowed.has(n) ? n : null;
-}
-
 function parseName(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
@@ -25,30 +18,44 @@ export async function PATCH(req: Request) {
   }
 
   const athleteId = (body as { athleteId?: unknown }).athleteId;
-  const categoryScore = parseCategoryScore((body as { categoryScore?: unknown }).categoryScore);
   const name = parseName((body as { name?: unknown }).name);
+  const letter = (body as { letter?: unknown }).letter;
 
-  if (typeof athleteId !== "string" || (!name && categoryScore === null)) {
+  if (typeof athleteId !== "string" || (!name && letter === undefined)) {
     return NextResponse.json(
-      { ok: false, error: "Campi obbligatori: athleteId e almeno uno tra name o categoryScore (100/75/50/25)" },
+      { ok: false, error: "Campi obbligatori: athleteId e almeno uno tra name o letter" },
       { status: 400 },
     );
   }
 
   try {
-    const athlete = await prisma.athlete.update({
-      where: { id: athleteId },
-      data: {
-        ...(name ? { name } : {}),
-        ...(categoryScore !== null ? { categoryScore } : {}),
-      },
-      select: { id: true, name: true, categoryScore: true },
-    });
+    let athlete;
+    if (athleteId === "new") {
+      if (!name) {
+        return NextResponse.json({ ok: false, error: "Il nome è obbligatorio per i nuovi atleti" }, { status: 400 });
+      }
+      athlete = await prisma.athlete.create({
+        data: {
+          name,
+          letter: letter === "" ? null : (letter as string),
+        },
+        select: { id: true, name: true, letter: true },
+      });
+    } else {
+      athlete = await prisma.athlete.update({
+        where: { id: athleteId },
+        data: {
+          ...(name ? { name } : {}),
+          ...(letter !== undefined ? { letter: letter === "" ? null : (letter as string) } : {}),
+        },
+        select: { id: true, name: true, letter: true },
+      });
+    }
     return NextResponse.json({ ok: true, athlete });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Errore salvataggio atleta";
     if (message.toLowerCase().includes("unique") || message.toLowerCase().includes("duplicate")) {
-      return NextResponse.json({ ok: false, error: "Nome atleta già esistente" }, { status: 409 });
+      return NextResponse.json({ ok: false, error: "Nome o lettera atleta già esistente" }, { status: 409 });
     }
     return NextResponse.json({ ok: false, error: "Errore salvataggio atleta" }, { status: 500 });
   }

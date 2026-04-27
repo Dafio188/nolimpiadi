@@ -1,16 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { DisciplineKind, MatchPhase } from "@prisma/client";
+import { DisciplineKind } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const kinds = [
-      DisciplineKind.AIR_HOCKEY,
-      DisciplineKind.PING_PONG,
-      DisciplineKind.FRECCETTE,
-      DisciplineKind.CALCIO_BALILLA,
-    ];
-
     const plannedTurns = await prisma.qualificationTurn.findMany({
       where: { slots: { some: { match: { is: null } } } },
       orderBy: { index: "asc" },
@@ -22,9 +15,9 @@ export async function GET() {
       },
     });
 
-    const athleteMap = new Map(
-      (await prisma.athlete.findMany({ select: { id: true, name: true } })).map((a) => [a.id, a.name])
-    );
+    const athletes = await prisma.athlete.findMany({ select: { id: true, name: true, letter: true } });
+    const letterToName = new Map<string, string>(athletes.filter(a => a.letter).map(a => [a.letter!, a.name]));
+    const athleteMap = new Map(athletes.map((a) => [a.id, a.name]));
 
     const disciplineMap = new Map(
       (await prisma.discipline.findMany({ select: { id: true, kind: true, name: true, teamSize: true } })).map(
@@ -33,12 +26,12 @@ export async function GET() {
     );
 
     const upcoming = plannedTurns.map((turn) => {
-      const activeAthleteIds = new Set<string>();
+      const activeLetters = new Set<string>();
       const matches: any[] = [];
 
       for (const slot of turn.slots) {
-        slot.side1AthleteIds.forEach((id) => activeAthleteIds.add(id));
-        slot.side2AthleteIds.forEach((id) => activeAthleteIds.add(id));
+        slot.side1Letters.forEach((l) => activeLetters.add(l));
+        slot.side2Letters.forEach((l) => activeLetters.add(l));
 
         if (!slot.match) {
           const d = disciplineMap.get(slot.kind);
@@ -47,16 +40,17 @@ export async function GET() {
               discipline: d.name,
               disciplineKind: slot.kind,
               target: slot.targetVictory,
-              side1: slot.side1AthleteIds.map((id) => athleteMap.get(id) ?? id),
-              side2: slot.side2AthleteIds.map((id) => athleteMap.get(id) ?? id),
+              side1: slot.side1Letters.map((l) => letterToName.get(l) || `Atleta ${l}`),
+              side2: slot.side2Letters.map((l) => letterToName.get(l) || `Atleta ${l}`),
             });
           }
         }
       }
 
-      const standby = Array.from(athleteMap.entries())
-        .filter(([id]) => !activeAthleteIds.has(id))
-        .map(([_, name]) => name)
+      // Standby: atleti la cui lettera non è tra quelle attive nel turno
+      const standby = athletes
+        .filter(a => a.letter && !activeLetters.has(a.letter))
+        .map(a => a.name)
         .sort((a, b) => a.localeCompare(b));
 
       return {

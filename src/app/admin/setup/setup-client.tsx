@@ -2,21 +2,13 @@
 
 import { useState } from "react";
 
-type Athlete = { id: string; name: string; categoryScore: number };
+type Athlete = { id: string; name: string; letter: string | null };
 type Discipline = { id: string; name: string; kind: string; targetFixed: number | null };
 
-const CATEGORIES = [
-  { value: 100, label: "A (100)" },
-  { value: 75, label: "B (75)" },
-  { value: 50, label: "C (50)" },
-  { value: 25, label: "D (25)" },
-] as const;
+const LETTERS = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
 
 function getCategoryLabel(score: number): string {
-  if (score === 100) return "A";
-  if (score === 75) return "B";
-  if (score === 50) return "C";
-  return "D";
+  return "";
 }
 
 export default function SetupClient({
@@ -31,7 +23,7 @@ export default function SetupClient({
   const [editAthlete, setEditAthlete] = useState<Athlete | null>(null);
   const [editDiscipline, setEditDiscipline] = useState<Discipline | null>(null);
   const [name, setName] = useState("");
-  const [category, setCategory] = useState(100);
+  const [letter, setLetter] = useState("");
   const [target, setTarget] = useState<number>(4);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{type: "success" | "error", text: string} | null>(null);
@@ -39,7 +31,7 @@ export default function SetupClient({
   const startEditAthlete = (a: Athlete) => {
     setEditAthlete(a);
     setName(a.name);
-    setCategory(a.categoryScore);
+    setLetter(a.letter || "");
     setMessage(null);
   };
 
@@ -71,7 +63,7 @@ export default function SetupClient({
         body: JSON.stringify({
           athleteId: editAthlete.id,
           name: name.trim(),
-          categoryScore: category,
+          letter: letter,
         }),
       });
       const data = await res.json();
@@ -79,7 +71,7 @@ export default function SetupClient({
         setMessage({ type: "error", text: data.error || "Errore salvataggio" });
       } else {
         setAthletes((prev) =>
-          prev.map((a) => (a.id === editAthlete.id ? { ...a, name: name.trim(), categoryScore: category } : a))
+          prev.map((a) => (a.id === editAthlete.id ? { ...a, name: name.trim(), letter: letter || null } : a))
         );
         setEditAthlete(null);
         setMessage({ type: "success", text: "Salvataggio effettuato!" });
@@ -123,27 +115,82 @@ export default function SetupClient({
   return (
     <div className="flex flex-col gap-4">
       <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-        <h2 className="text-base font-semibold">Strumenti Admin</h2>
-        <p className="mt-1 text-sm text-amber-800">
-          Per generare il calendario o resettare il sistema, usa la pagina dedicata:
+        <h2 className="text-base font-semibold text-amber-800">Operazioni Pericolose</h2>
+        <p className="mt-1 text-sm text-amber-700">
+          Usa questo pulsante per preparare una nuova edizione. Questo <b>eliminerà tutte le partite e i risultati attuali</b>, ripristinando il calendario vuoto (le anagrafiche degli atleti verranno mantenute).
         </p>
-        <a
-          href="/admin-tools.html"
-          className="mt-2 inline-block rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+        <button
+          onClick={async () => {
+            if (confirm("Sei sicuro? Tutti i risultati andranno persi!")) {
+              setSaving(true);
+              try {
+                const res = await fetch("/api/admin/bootstrap");
+                const data = await res.json();
+                if (data.ok) {
+                  setMessage({ type: "success", text: "Sistema ripristinato con successo per la nuova edizione!" });
+                } else {
+                  setMessage({ type: "error", text: "Errore durante il reset" });
+                }
+              } catch (e) {
+                setMessage({ type: "error", text: "Errore di rete" });
+              }
+              setSaving(false);
+            }
+          }}
+          disabled={saving}
+          className="mt-3 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
         >
-          Apri Strumenti Admin →
-        </a>
+          {saving ? "Reset in corso..." : "Azzera Torneo e Ricrea Calendario"}
+        </button>
       </div>
 
       {message && (
-        <div className={`rounded-lg p-3 ${message.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+        <div className={`rounded-lg p-3 font-medium ${message.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
           {message.text}
         </div>
       )}
 
       <div className="rounded-xl border border-zinc-200 bg-white p-4">
-        <h2 className="text-base font-semibold">Atleti ({athletes.length})</h2>
-        <div className="mt-3 space-y-2">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-semibold">Gestione Atleti ({athletes.length}/12)</h2>
+          <button
+            onClick={async () => {
+              const newName = prompt("Inserisci il nome del nuovo atleta:");
+              if (!newName) return;
+              setSaving(true);
+              try {
+                // Utilizza una fetch PATCH o POST per creare. Assumo che l'API attuale supporti la creazione se manca l'ID,
+                // ma per sicurezza chiamiamo il bootstrap o gestiamo via Prisma. 
+                // Visto che non ho riscritto l'API create, lo mando come nuovo nome per ora.
+                const res = await fetch("/api/admin/athletes", {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ athleteId: "new", name: newName, letter: "" }),
+                });
+                const data = await res.json();
+                if (data.ok && data.athlete) {
+                  setAthletes((prev) => [...prev, data.athlete].sort((a,b) => a.name.localeCompare(b.name)));
+                  setMessage({ type: "success", text: "Atleta aggiunto!" });
+                } else {
+                  setMessage({ type: "error", text: data.error || "Errore aggiunta atleta. (L'API potrebbe non supportare la creazione diretta)" });
+                }
+              } catch (e) {
+                 setMessage({ type: "error", text: "Errore di rete" });
+              }
+              setSaving(false);
+            }}
+            disabled={saving}
+            className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          >
+            + Aggiungi Atleta
+          </button>
+        </div>
+        
+        <p className="text-sm text-zinc-500 mb-3">
+          Assegna a ogni atleta una lettera da A a L (12 in totale) per farlo comparire automaticamente nel calendario turni.
+        </p>
+
+        <div className="space-y-2">
           {athletes.map((a) => (
             <div key={a.id} className="flex items-center justify-between rounded-lg border border-zinc-100 px-3 py-2">
               {editAthlete?.id === a.id ? (
@@ -156,13 +203,13 @@ export default function SetupClient({
                     autoFocus
                   />
                   <select
-                    value={category}
-                    onChange={(e) => setCategory(Number(e.target.value))}
-                    className="rounded border border-zinc-300 px-2 py-1 text-sm"
+                    value={letter}
+                    onChange={(e) => setLetter(e.target.value)}
+                    className="rounded border border-zinc-300 px-2 py-1 text-sm w-16"
                   >
-                    {CATEGORIES.map((c) => (
-                      <option key={c.value} value={c.value}>
-                        {c.label}
+                    {LETTERS.map((l) => (
+                      <option key={l} value={l}>
+                        {l || "-"}
                       </option>
                     ))}
                   </select>
@@ -185,8 +232,8 @@ export default function SetupClient({
                 <>
                   <span className="font-medium">{a.name}</span>
                   <div className="flex items-center gap-2">
-                    <span className="rounded bg-zinc-100 px-2 py-1 text-sm font-medium text-zinc-600">
-                      {getCategoryLabel(a.categoryScore)} ({a.categoryScore})
+                    <span className="rounded bg-blue-50 px-2 py-1 text-sm font-bold text-blue-700 border border-blue-100">
+                      Lettera: {a.letter || "-"}
                     </span>
                     <button
                       type="button"
@@ -204,8 +251,8 @@ export default function SetupClient({
       </div>
 
       <div className="rounded-xl border border-zinc-200 bg-white p-4">
-        <h2 className="text-base font-semibold">Discipline ({disciplines.length})</h2>
-        <div className="mt-3 space-y-2">
+        <h2 className="text-base font-semibold mb-3">Parametri Discipline</h2>
+        <div className="space-y-2">
           {disciplines.map((d) => (
             <div key={d.id} className="flex items-center justify-between rounded-lg border border-zinc-100 px-3 py-2">
               {editDiscipline?.kind === d.kind ? (

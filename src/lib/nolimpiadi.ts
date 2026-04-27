@@ -1,4 +1,4 @@
-import { DisciplineKind, Tier } from "@prisma/client";
+import { DisciplineKind } from "@prisma/client";
 
 export const athleteNames = [
   "Pietro",
@@ -14,38 +14,6 @@ export const athleteNames = [
   "Emma T.",
   "Matheus I. C.",
 ] as const;
-
-export const defaultTierByAthleteName: Record<(typeof athleteNames)[number], Tier> =
-  {
-    "Pietro": Tier.ALTO,
-    "Gustavo B. V.": Tier.ALTO,
-    "Valentino B. E.": Tier.ALTO,
-    "Claudia B.": Tier.ALTO,
-    "Massimo R.": Tier.MEDIO,
-    "Alessandro R.": Tier.MEDIO,
-    "Alberto R.": Tier.MEDIO,
-    "Gianni T.": Tier.MEDIO,
-    "Gianluca B.": Tier.BASSO,
-    "Stefano M.": Tier.BASSO,
-    "Emma T.": Tier.BASSO,
-    "Matheus I. C.": Tier.BASSO,
-  };
-
-export const defaultCategoryScoreByAthleteName: Record<(typeof athleteNames)[number], number> =
-  {
-    "Pietro": 100,
-    "Gustavo B. V.": 100,
-    "Valentino B. E.": 100,
-    "Claudia B.": 75,
-    "Massimo R.": 75,
-    "Alessandro R.": 75,
-    "Alberto R.": 50,
-    "Gianni T.": 50,
-    "Gianluca B.": 50,
-    "Stefano M.": 25,
-    "Emma T.": 25,
-    "Matheus I. C.": 25,
-  };
 
 export const disciplineSeeds = [
   {
@@ -78,7 +46,7 @@ export const disciplineSeeds = [
   {
     kind: DisciplineKind.AIR_HOCKEY,
     name: "Air Hockey",
-    coefficient: 21,
+    coefficient: 1,
     teamSize: 1,
     targetFixed: 4,
     targetMin: null,

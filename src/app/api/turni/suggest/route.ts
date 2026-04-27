@@ -23,7 +23,7 @@ function matchupKey(teamA: string[], teamB: string[]) {
 function defaultTargetVictory(kind: DisciplineKind, targetFixed: number | null, targetMin: number | null, targetMax: number | null) {
   if (targetFixed !== null) return targetFixed;
   if (targetMin !== null && targetMax !== null) return Math.round((targetMin + targetMax) / 2);
-  if (kind === DisciplineKind.AIR_HOCKEY) return 4;
+  if (kind === DisciplineKind.BASKET) return 10;
   return 1;
 }
 
@@ -41,7 +41,7 @@ async function qualificatiIds(kind: DisciplineKind, limit: number) {
 
 export async function GET() {
   const kinds = [
-    DisciplineKind.AIR_HOCKEY,
+    DisciplineKind.BASKET,
     DisciplineKind.PING_PONG,
     DisciplineKind.FRECCETTE,
     DisciplineKind.CALCIO_BALILLA,
@@ -55,29 +55,36 @@ export async function GET() {
 
   if (plannedTurn) {
     const athletes = await prisma.athlete.findMany({
-      select: { id: true, name: true },
+      select: { id: true, name: true, letter: true },
       orderBy: { name: "asc" },
     });
 
+    const letterToId = new Map(athletes.filter(a => a.letter).map(a => [a.letter, a.id]));
+    
+    const resolveLetters = (letters: string[]) => letters.map(l => letterToId.get(l) || "").filter(Boolean);
+
     const used = new Set<string>();
-    for (const s of plannedTurn.slots) {
-      for (const id of s.side1AthleteIds) used.add(id);
-      for (const id of s.side2AthleteIds) used.add(id);
-    }
+    const matches = Object.fromEntries(
+      plannedTurn.slots.map((s) => {
+        const side1 = resolveLetters(s.side1Letters);
+        const side2 = resolveLetters(s.side2Letters);
+        for (const id of side1) used.add(id);
+        for (const id of side2) used.add(id);
+        
+        return [
+          s.kind,
+          {
+            kind: s.kind,
+            plannedSlotId: s.id,
+            side1,
+            side2,
+            targetVictory: s.targetVictory,
+          },
+        ];
+      }),
+    );
 
     const idleAthletes = athletes.filter((a) => !used.has(a.id));
-    const matches = Object.fromEntries(
-      plannedTurn.slots.map((s) => [
-        s.kind,
-        {
-          kind: s.kind,
-          plannedSlotId: s.id,
-          side1: s.side1AthleteIds,
-          side2: s.side2AthleteIds,
-          targetVictory: s.targetVictory,
-        },
-      ]),
-    );
 
     return NextResponse.json({
       ok: true,
@@ -92,7 +99,7 @@ export async function GET() {
   if (plannedTurnsCount > 0) {
     const remainingSlots = await prisma.qualificationSlot.count({ where: { match: { is: null } } });
     if (remainingSlots === 0) {
-      const finalsKinds: DisciplineKind[] = [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA];
+      const finalsKinds: DisciplineKind[] = [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA];
       const disciplines = await prisma.discipline.findMany({
         where: { kind: { in: finalsKinds } },
         select: { kind: true, targetFixed: true, targetMin: true, targetMax: true, teamSize: true },
@@ -163,7 +170,7 @@ export async function GET() {
         return null;
       }
 
-      const singlesFinalsKinds: DisciplineKind[] = [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
+      const singlesFinalsKinds: DisciplineKind[] = [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
       const seedsByKind = new Map<DisciplineKind, string[]>();
       for (const k of singlesFinalsKinds) {
         seedsByKind.set(k, await qualificatiIds(k, 6));
@@ -237,7 +244,7 @@ export async function GET() {
   }
 
   const [athletes, disciplines, matchesPlayed, matchesPlayedByKind] = await Promise.all([
-    prisma.athlete.findMany({ select: { id: true, name: true, categoryScore: true }, orderBy: { name: "asc" } }),
+    prisma.athlete.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
     prisma.discipline.findMany({
       where: { kind: { in: kinds } },
       select: { id: true, kind: true, teamSize: true, targetFixed: true, targetMin: true, targetMax: true },
@@ -258,7 +265,7 @@ export async function GET() {
       FROM v_participations p
       INNER JOIN disciplines d ON d.id = p.discipline_id
       WHERE p.phase = ${MatchPhase.QUALIFICAZIONE}
-        AND d.kind IN (${DisciplineKind.AIR_HOCKEY}, ${DisciplineKind.PING_PONG}, ${DisciplineKind.FRECCETTE}, ${DisciplineKind.CALCIO_BALILLA})
+        AND d.kind IN (${DisciplineKind.BASKET}, ${DisciplineKind.PING_PONG}, ${DisciplineKind.FRECCETTE}, ${DisciplineKind.CALCIO_BALILLA})
       GROUP BY p.athlete_id, d.kind
     `,
   ]);
@@ -328,9 +335,7 @@ export async function GET() {
         const a = pool[i];
         const b = pool[j];
         const key = pairKey(a, b);
-        const ca = athleteById.get(a)!.categoryScore;
-        const cb = athleteById.get(b)!.categoryScore;
-        const categoryDiff = Math.abs(ca - cb);
+        const categoryDiff = 0;
         const matchesPenalty = (matchesByAthleteId.get(a) ?? 0) + (matchesByAthleteId.get(b) ?? 0);
         const kindPenalty =
           (matchesByAthleteKind.get(a)?.get(kind) ?? 0) + (matchesByAthleteKind.get(b)?.get(kind) ?? 0);
@@ -346,7 +351,7 @@ export async function GET() {
     return [best.a, best.b] as [string, string];
   }
 
-  const singlesKinds: DisciplineKind[] = [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
+  const singlesKinds: DisciplineKind[] = [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
   const picks: Record<string, { side1: string[]; side2: string[]; targetVictory: number }> = {};
 
   const poolForSingles = [...remaining];
@@ -376,9 +381,7 @@ export async function GET() {
     ];
 
     const scored = partitions.map((p) => {
-      const sumA = athleteById.get(p.teamA[0])!.categoryScore + athleteById.get(p.teamA[1])!.categoryScore;
-      const sumB = athleteById.get(p.teamB[0])!.categoryScore + athleteById.get(p.teamB[1])!.categoryScore;
-      const balance = Math.abs(sumA - sumB);
+      const balance = 0;
       const teammateA = pairKey(p.teamA[0], p.teamA[1]);
       const teammateB = pairKey(p.teamB[0], p.teamB[1]);
       const matchup = matchupKey(p.teamA, p.teamB);

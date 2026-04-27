@@ -7,7 +7,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
     const athlete = await prisma.athlete.findUnique({
       where: { id },
-      select: { id: true, name: true, tier: true, categoryScore: true }
+      select: { id: true, name: true }
     });
 
     if (!athlete) {

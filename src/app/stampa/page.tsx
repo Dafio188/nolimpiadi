@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import PrintButton from "./PrintButton";
 import { prisma } from "@/lib/prisma";
 // Tipo locale per evitare import di Prisma nel client/turbopack
-type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
+type DisciplineKind = "BASKET" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
 
 import Link from "next/link";
 
@@ -14,12 +14,12 @@ type QualRow = {
   matches_played: number;
 };
 
-type Athlete = { id: string; name: string };
+type Athlete = { id: string; name: string; letter: string | null };
 
 interface QualificationSlot {
   kind: DisciplineKind;
-  side1AthleteIds: string[];
-  side2AthleteIds: string[];
+  side1Letters: string[];
+  side2Letters: string[];
 }
 
 interface QualificationTurn {
@@ -37,8 +37,8 @@ function kindLabel(kind: DisciplineKind) {
       return "Freccette";
     case "PING_PONG":
       return "Ping-pong";
-    case "AIR_HOCKEY":
-      return "Air Hockey";
+    case "BASKET":
+      return "Basket";
     default:
       return kind;
   }
@@ -133,7 +133,7 @@ async function qualificati(kind: DisciplineKind) {
       q.matches_played
     FROM classifica_qualificazione_disciplina q
     INNER JOIN athletes a ON a.id = q.athlete_id
-    WHERE q.kind = ${kind}
+    WHERE q.kind::text = ${kind}
     ORDER BY q.qualification_weighted DESC, q.matches_played DESC, a.name ASC
     LIMIT ${limit}
   `;
@@ -150,7 +150,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 
 export default async function StampaPage() {
   const kinds: DisciplineKind[] = [
-    "AIR_HOCKEY",
+    "BASKET",
     "PING_PONG",
     "FRECCETTE",
     "CALCIO_BALILLA",
@@ -163,11 +163,11 @@ export default async function StampaPage() {
       orderBy: { index: "asc" },
       include: { slots: { orderBy: { kind: "asc" } } },
     }),
-    prisma.athlete.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.athlete.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, letter: true } }),
     Promise.all(kinds.map(async (kind) => ({ kind, seeds: await qualificati(kind) }))),
   ]);
 
-  const athleteById = new Map<string, Athlete>(athletes.map((a: Athlete) => [a.id, a]));
+  const letterToName = new Map<string, string>(athletes.filter(a => a.letter).map(a => [a.letter!, a.name]));
 
   const durationMinutes = settings?.turnDurationMinutes ?? 10;
 
@@ -226,8 +226,8 @@ export default async function StampaPage() {
                       {kinds.map((kind: DisciplineKind) => {
                         const slot = turn.slots.find(s => s.kind === kind);
 
-                        const a = slot?.side1AthleteIds.map((id: string) => athleteById.get(id)?.name || "—") || [];
-                        const b = slot?.side2AthleteIds.map((id: string) => athleteById.get(id)?.name || "—") || [];
+                        const a = slot?.side1Letters.map((l: string) => letterToName.get(l) || `Atleta ${l}`) || [];
+                        const b = slot?.side2Letters.map((l: string) => letterToName.get(l) || `Atleta ${l}`) || [];
 
                         return (
                           <div key={kind} className="border border-zinc-300 rounded-xl overflow-hidden shadow-sm break-inside-avoid bg-white">

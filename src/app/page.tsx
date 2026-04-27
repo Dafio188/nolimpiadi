@@ -4,6 +4,7 @@ import { Trophy, ClipboardList, Target, Crown, LogIn, LayoutDashboard, Clock, Ma
 import PremiumCard from "@/components/ui/PremiumCard";
 import FantaNoliInvitation from "@/components/ui/FantaNoliInvitation";
 import FantaNoliBanner from "@/components/ui/FantaNoliBanner";
+import MenuNolimpicoCard from "@/components/ui/MenuNolimpicoCard";
 
 export const dynamic = "force-dynamic";
 
@@ -128,6 +129,11 @@ export default async function Home() {
         <section className="mb-20 space-y-8">
           <FantaNoliBanner />
           <FantaNoliInvitation formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfL65wUBiXLybCVxkkYNBd2-H_jC5CoAyqugaJqHdzHpa8z0w/viewform" />
+        </section>
+
+        {/* Menù Nolimpico */}
+        <section className="mb-20">
+          <MenuNolimpicoCard pdfUrl="/documenti/Menu%20Nolimpico.pdf" />
         </section>
 
         <footer className="mt-24 pb-12 text-center animate-in" style={{ animationDelay: '0.3s' }}>

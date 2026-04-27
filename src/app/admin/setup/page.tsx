@@ -6,7 +6,7 @@ import SetupClient from "@/app/admin/setup/setup-client";
 
 export default async function SetupPage() {
   const [athletes, disciplines] = await Promise.all([
-    prisma.athlete.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, categoryScore: true } }),
+    prisma.athlete.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, letter: true } }),
     prisma.discipline.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, kind: true, targetFixed: true } }),
   ]);
 
