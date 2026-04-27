@@ -26,10 +26,7 @@ Modernizzare il sistema mantenendo l’idea di base:
 - Peso: 1
 - Team size: 1
 
-### Basket (Singolo)
-- Target vittoria: 10 (fisso)
-- Peso: 15
-- Team size: 1
+admincalendar
 
 ## Punteggio (efficienza + peso)
 

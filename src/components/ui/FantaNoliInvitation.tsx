@@ -23,18 +23,18 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
       <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-cyan-400 to-amber-400 rounded-[36px] blur-xl opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
       
       <div className="relative bg-white/80 backdrop-blur-3xl border border-white/50 rounded-[32px] p-8 lg:p-10 shadow-2xl overflow-hidden">
-        {/* Decorative elements - High visibility mascot */}
-        <div className="absolute -top-6 -right-6 w-56 h-56 opacity-40 group-hover:opacity-100 transition-all duration-700 pointer-events-none">
+        {/* Decorative elements - High visibility mascot in the background */}
+        <div className="absolute top-1/2 -right-10 -translate-y-1/2 w-[400px] h-[400px] opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none overflow-hidden">
           <img 
             src="/immagini/logo_con%20la%20mascot.jpeg" 
             alt="Mascot Logo" 
-            className="w-full h-full object-contain rotate-6 scale-110 group-hover:rotate-0 group-hover:scale-125 transition-transform duration-700 drop-shadow-2xl"
+            className="w-full h-full object-contain rotate-6 scale-125 group-hover:rotate-0 group-hover:scale-150 transition-transform duration-700 drop-shadow-2xl opacity-80"
           />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* Text Content */}
-          <div className="flex-1 space-y-6">
+          <div className="flex-1 space-y-6 relative z-10">
             <div className="flex items-center gap-4 mb-2">
               <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm border border-white bg-white">
                 <img src="/immagini/logo_senza%20mascot.jpeg" alt="Logo" className="w-full h-full object-cover p-1" />
@@ -77,12 +77,12 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
             </div>
           </div>
 
-          {/* QR Code Section - Positioned Lower with mt-20 */}
-          <div className="relative group/qr flex flex-col items-center mt-12 lg:mt-24">
-            <div className="absolute -inset-10 bg-gradient-to-br from-blue-400/20 to-cyan-300/20 rounded-full blur-3xl opacity-0 group-hover/qr:opacity-100 transition-opacity duration-700" />
+          {/* QR Code Section - Shrunk and positioned lower */}
+          <div className="relative group/qr flex flex-col items-center mt-12 lg:mt-32 relative z-10">
+            <div className="absolute -inset-10 bg-gradient-to-br from-blue-400/10 to-cyan-300/10 rounded-full blur-3xl opacity-0 group-hover/qr:opacity-100 transition-opacity duration-700" />
             
-            <div className="relative p-6 bg-white rounded-[3rem] shadow-2xl border border-zinc-100 rotate-[2deg] group-hover:rotate-0 transition-transform duration-500">
-              <div className="w-40 h-40 lg:w-48 lg:h-48 rounded-[2rem] overflow-hidden bg-white flex items-center justify-center p-3 border-2 border-dashed border-blue-100 group-hover:border-blue-400 transition-colors">
+            <div className="relative p-4 bg-white rounded-[2.5rem] shadow-xl border border-zinc-100 rotate-[2deg] group-hover:rotate-0 transition-transform duration-500">
+              <div className="w-32 h-32 lg:w-36 lg:h-36 rounded-2xl overflow-hidden bg-white flex items-center justify-center p-2 border-2 border-dashed border-blue-100 group-hover:border-blue-400 transition-colors">
                 <img 
                   src={qrUrl} 
                   alt="QR Code FantaNolimpiadi" 
@@ -90,15 +90,15 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
                 />
               </div>
               
-              <div className="absolute -top-3 -right-3 bg-amber-400 text-white p-3 rounded-2xl shadow-lg rotate-12 scale-0 group-hover:scale-100 transition-transform delay-200">
-                <Sparkles size={20} />
+              <div className="absolute -top-3 -right-3 bg-amber-400 text-white p-2.5 rounded-xl shadow-lg rotate-12 scale-0 group-hover:scale-100 transition-transform delay-200">
+                <Sparkles size={16} />
               </div>
             </div>
 
             {/* Scansione Label improved */}
-            <div className="mt-8 px-5 py-2.5 bg-zinc-100/80 backdrop-blur-sm rounded-full border border-zinc-200/50 flex items-center gap-2 group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors">
-              <QrCode size={14} className="text-zinc-400 group-hover:text-blue-500" />
-              <span className="text-[10px] font-black text-zinc-500 group-hover:text-blue-700 uppercase tracking-widest">Scansiona per i pronostici</span>
+            <div className="mt-6 px-4 py-2 bg-zinc-100/80 backdrop-blur-sm rounded-full border border-zinc-200/50 flex items-center gap-2 group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors">
+              <QrCode size={12} className="text-zinc-400 group-hover:text-blue-500" />
+              <span className="text-[9px] font-black text-zinc-500 group-hover:text-blue-700 uppercase tracking-widest">Scansiona per i pronostici</span>
             </div>
           </div>
         </div>
