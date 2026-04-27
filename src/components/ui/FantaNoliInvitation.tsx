@@ -23,16 +23,16 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
       <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-cyan-400 to-amber-400 rounded-[36px] blur-xl opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
       
       <div className="relative bg-white/80 backdrop-blur-3xl border border-white/50 rounded-[32px] p-8 lg:p-10 shadow-2xl overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute -top-10 -right-10 w-48 h-48 opacity-20 group-hover:opacity-50 transition-all duration-700 pointer-events-none">
+        {/* Decorative elements - High visibility mascot */}
+        <div className="absolute -top-6 -right-6 w-56 h-56 opacity-40 group-hover:opacity-100 transition-all duration-700 pointer-events-none">
           <img 
             src="/immagini/logo_con%20la%20mascot.jpeg" 
             alt="Mascot Logo" 
-            className="w-full h-full object-contain rotate-12 scale-110 group-hover:rotate-0 group-hover:scale-125 transition-transform duration-700"
+            className="w-full h-full object-contain rotate-6 scale-110 group-hover:rotate-0 group-hover:scale-125 transition-transform duration-700 drop-shadow-2xl"
           />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-10 items-center">
+        <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* Text Content */}
           <div className="flex-1 space-y-6">
             <div className="flex items-center gap-4 mb-2">
@@ -77,8 +77,8 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
             </div>
           </div>
 
-          {/* QR Code Section */}
-          <div className="relative group/qr flex flex-col items-center">
+          {/* QR Code Section - Positioned Lower with mt-20 */}
+          <div className="relative group/qr flex flex-col items-center mt-12 lg:mt-24">
             <div className="absolute -inset-10 bg-gradient-to-br from-blue-400/20 to-cyan-300/20 rounded-full blur-3xl opacity-0 group-hover/qr:opacity-100 transition-opacity duration-700" />
             
             <div className="relative p-6 bg-white rounded-[3rem] shadow-2xl border border-zinc-100 rotate-[2deg] group-hover:rotate-0 transition-transform duration-500">
@@ -90,17 +90,6 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
                 />
               </div>
               
-              {/* Pulsating Heart Icon at the bottom of QR */}
-              <motion.div 
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-red-500 text-white p-3 rounded-full shadow-lg border-4 border-white"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </motion.div>
-
               <div className="absolute -top-3 -right-3 bg-amber-400 text-white p-3 rounded-2xl shadow-lg rotate-12 scale-0 group-hover:scale-100 transition-transform delay-200">
                 <Sparkles size={20} />
               </div>
