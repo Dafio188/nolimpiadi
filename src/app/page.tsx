@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { Trophy, ClipboardList, Target, Crown, LogIn, LayoutDashboard, Clock } from "lucide-react";
+import { Trophy, ClipboardList, Target, Crown, LogIn, LayoutDashboard, Clock, MapPin } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
 import FantaNoliInvitation from "@/components/ui/FantaNoliInvitation";
-import FantaNoliFeatures from "@/components/ui/FantaNoliFeatures";
+import FantaNoliBanner from "@/components/ui/FantaNoliBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -13,8 +13,6 @@ export default async function Home() {
 
   const publicLinks = [
     { href: "/gare", title: "Gare", desc: "Programma e risultati live", icon: ClipboardList, color: "blue" },
-    { href: "/classifica", title: "Classifica", desc: "Ranking in tempo reale", icon: Crown, color: "amber" },
-    { href: "/admin/finali", title: "Finali", desc: "Scontri diretti e tabelloni", icon: Target, color: "red" },
   ];
 
   return (
@@ -41,8 +39,8 @@ export default async function Home() {
 
         {/* Header Principale */}
         <header className="text-center mb-16 animate-in">
-          <div className="inline-flex items-center justify-center p-4 bg-white/50 backdrop-blur-xl rounded-3xl shadow-sm border border-white/50 mb-6">
-            <Trophy className="w-12 h-12 text-blue-600" />
+          <div className="inline-flex items-center justify-center p-0 overflow-hidden bg-white/50 backdrop-blur-xl rounded-3xl shadow-sm border border-white/50 mb-6 w-24 h-24">
+            <img src="/immagini/stemma.jpeg" alt="Stemma Nolimpiadi" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-5xl md:text-7xl font-black tracking-tight text-[#1d1d1f] mb-6">
             NOLImpiadi <span className="text-blue-600 italic">2026</span>
@@ -64,7 +62,7 @@ export default async function Home() {
           {/* Collage Griglia 2x2 */}
           <div className="grid grid-cols-2 gap-2 p-2 bg-white rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-blue-200/40 ring-1 ring-black/5 rotate-[-1deg] max-w-md mx-auto md:mx-0">
             <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
-              <img src="/immagini/Air Hockey.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Air Hockey" />
+              <img src="/immagini/ping%20pong.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Ping Pong" />
             </div>
             <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
               <img src="/immagini/Calcio-balilla.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Calcio Balilla" />
@@ -73,7 +71,7 @@ export default async function Home() {
               <img src="/immagini/Freccette.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Freccette" />
             </div>
             <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
-              <img src="/immagini/ping pong.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Ping Pong" />
+              <img src="/immagini/Air%20Hockey.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Air Hockey" />
             </div>
           </div>
 
@@ -88,16 +86,16 @@ export default async function Home() {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Quando</p>
-                    <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Domenica 17 Maggio 2026</p>
+                    <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Domenica 17 Maggio 2026, ore 13:45</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="bg-amber-50 p-2 lg:p-3 rounded-xl lg:rounded-2xl text-amber-600">
-                    <Trophy className="w-5 h-5 lg:w-6 lg:h-6" />
+                    <MapPin className="w-5 h-5 lg:w-6 lg:h-6" />
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Ritrovo</p>
-                    <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Ore 13:45 spaccate</p>
+                    <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Sacro Tempio Nolimpico, alias Casa Mia</p>
                   </div>
                 </div>
               </div>
@@ -126,12 +124,10 @@ export default async function Home() {
           ))}
         </div>
 
-        {/* FantaNolimpiadi Invitation Card */}
-        <section className="mb-20">
+        {/* FantaNolimpiadi Invitation Section */}
+        <section className="mb-20 space-y-8">
+          <FantaNoliBanner />
           <FantaNoliInvitation formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfL65wUBiXLybCVxkkYNBd2-H_jC5CoAyqugaJqHdzHpa8z0w/viewform" />
-          <div className="mt-8">
-            <FantaNoliFeatures />
-          </div>
         </section>
 
         <footer className="mt-24 pb-12 text-center animate-in" style={{ animationDelay: '0.3s' }}>

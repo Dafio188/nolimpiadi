@@ -24,30 +24,27 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
       
       <div className="relative bg-white/80 backdrop-blur-3xl border border-white/50 rounded-[32px] p-8 lg:p-10 shadow-2xl overflow-hidden">
         {/* Decorative elements - High visibility mascot in the background */}
-        <div className="absolute top-1/2 -right-10 -translate-y-1/2 w-[400px] h-[400px] opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none overflow-hidden">
-          <img 
-            src="/immagini/logo_con%20la%20mascot.jpeg" 
-            alt="Mascot Logo" 
-            className="w-full h-full object-contain rotate-6 scale-125 group-hover:rotate-0 group-hover:scale-150 transition-transform duration-700 drop-shadow-2xl opacity-80"
-          />
-        </div>
+
 
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* Text Content */}
           <div className="flex-1 space-y-6 relative z-10">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm border border-white bg-white">
-                <img src="/immagini/logo_senza%20mascot.jpeg" alt="Logo" className="w-full h-full object-cover p-1" />
+            <div className="flex items-center justify-between w-full mb-4">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-md border border-white bg-white p-2">
+                <img src="/immagini/logo_senza%20mascot.jpeg" alt="Logo" className="w-full h-full object-contain" />
               </div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full text-blue-600 text-xs font-black uppercase tracking-wider">
-                <Users size={14} />
-                <span>Chiamata alle Armi per ex Atleti</span>
-              </div>
+              <img 
+                src="/immagini/mascot/Nolimpius%20vincitore.png" 
+                alt="Mascot Vincitore" 
+                className="w-24 h-24 lg:w-32 lg:h-32 object-contain drop-shadow-xl animate-bounce-slow" 
+              />
             </div>
             
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#1d1d1f] leading-tight">
-              Ehi, <span className="text-blue-600 italic">Ammico</span> Atleta! 🏟️
-            </h2>
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#1d1d1f] leading-tight">
+                Gioca E Vinci alle <span className="text-blue-600 italic">fantaNolimpiadi</span> 2026
+              </h2>
+            </div>
             
             <p className="text-lg text-[#86868b] font-medium leading-relaxed max-w-xl">
               Hai ancora quel fuoco sacro (o è solo un leggero bruciore di stomaco)? Le vecchie glorie non muoiono mai, si trasferiscono solo alle <span className="text-zinc-900 font-bold underline decoration-blue-500/30">FantaNolimpiadi 2026</span>. 
@@ -69,36 +66,23 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
               <a 
                 href="/documenti/regolamento-fanta.pdf"
                 target="_blank"
-                className="flex items-center gap-3 px-6 py-4 bg-white text-zinc-600 rounded-2xl font-bold border border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300 transition-all duration-300"
+                className="flex items-center gap-3 px-6 py-4 bg-amber-400 text-zinc-900 rounded-2xl font-bold border border-amber-500 shadow-lg shadow-amber-200/50 hover:bg-amber-500 hover:shadow-xl transition-all duration-300"
               >
-                <Users className="w-5 h-5 text-zinc-400" />
+                <Users className="w-5 h-5 text-zinc-900/50" />
                 <span>Leggi il Regolamento</span>
               </a>
             </div>
           </div>
 
-          {/* QR Code Section - Shrunk and positioned lower */}
-          <div className="relative group/qr flex flex-col items-center mt-12 lg:mt-32 relative z-10">
-            <div className="absolute -inset-10 bg-gradient-to-br from-blue-400/10 to-cyan-300/10 rounded-full blur-3xl opacity-0 group-hover/qr:opacity-100 transition-opacity duration-700" />
-            
-            <div className="relative p-4 bg-white rounded-[2.5rem] shadow-xl border border-zinc-100 rotate-[2deg] group-hover:rotate-0 transition-transform duration-500">
-              <div className="w-32 h-32 lg:w-36 lg:h-36 rounded-2xl overflow-hidden bg-white flex items-center justify-center p-2 border-2 border-dashed border-blue-100 group-hover:border-blue-400 transition-colors">
-                <img 
-                  src={qrUrl} 
-                  alt="QR Code FantaNolimpiadi" 
-                  className="w-full h-full object-contain mix-blend-multiply"
-                />
-              </div>
-              
-              <div className="absolute -top-3 -right-3 bg-amber-400 text-white p-2.5 rounded-xl shadow-lg rotate-12 scale-0 group-hover:scale-100 transition-transform delay-200">
-                <Sparkles size={16} />
-              </div>
-            </div>
-
-            {/* Scansione Label improved */}
-            <div className="mt-6 px-4 py-2 bg-zinc-100/80 backdrop-blur-sm rounded-full border border-zinc-200/50 flex items-center gap-2 group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors">
-              <QrCode size={12} className="text-zinc-400 group-hover:text-blue-500" />
-              <span className="text-[9px] font-black text-zinc-500 group-hover:text-blue-700 uppercase tracking-widest">Scansiona per i pronostici</span>
+          {/* Main Logo Image - Moved from background to right side */}
+          <div className="hidden lg:flex flex-1 items-center justify-center relative z-10">
+            <div className="w-[300px] h-[300px] relative">
+              <div className="absolute -inset-4 bg-blue-50 rounded-full blur-3xl opacity-50" />
+              <img 
+                src="/immagini/logo_con%20la%20mascot.jpeg" 
+                alt="Logo FantaNolimpiadi" 
+                className="relative w-full h-full object-contain drop-shadow-2xl"
+              />
             </div>
           </div>
         </div>
