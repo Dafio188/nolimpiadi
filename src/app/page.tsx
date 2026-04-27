@@ -112,16 +112,8 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* FantaNolimpiadi Invitation Card */}
-        <section className="mb-20">
-          <FantaNoliInvitation formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfL65wUBiXLybCVxkkYNBd2-H_jC5CoAyqugaJqHdzHpa8z0w/viewform" />
-          <div className="mt-8">
-            <FantaNoliFeatures />
-          </div>
-        </section>
-
         {/* Grid Pubblica */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 animate-in" style={{ animationDelay: '0.1s' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 animate-in mb-20" style={{ animationDelay: '0.1s' }}>
           {publicLinks.map((link) => (
             <Link href={link.href} key={link.href}>
               <PremiumCard 
@@ -133,6 +125,14 @@ export default async function Home() {
             </Link>
           ))}
         </div>
+
+        {/* FantaNolimpiadi Invitation Card */}
+        <section className="mb-20">
+          <FantaNoliInvitation formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfL65wUBiXLybCVxkkYNBd2-H_jC5CoAyqugaJqHdzHpa8z0w/viewform" />
+          <div className="mt-8">
+            <FantaNoliFeatures />
+          </div>
+        </section>
 
         <footer className="mt-24 pb-12 text-center animate-in" style={{ animationDelay: '0.3s' }}>
           <p className="text-[10px] font-bold text-zinc-300 uppercase tracking-[0.2em]">
