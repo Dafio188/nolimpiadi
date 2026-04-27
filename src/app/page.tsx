@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { Trophy, ClipboardList, Target, Crown, LogIn, LayoutDashboard, Clock } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
+import FantaNoliInvitation from "@/components/ui/FantaNoliInvitation";
+import FantaNoliFeatures from "@/components/ui/FantaNoliFeatures";
 
 export const dynamic = "force-dynamic";
 
@@ -107,6 +109,14 @@ export default async function Home() {
                 La gloria vi aspetta.
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* FantaNolimpiadi Invitation Card */}
+        <section className="mb-20">
+          <FantaNoliInvitation formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfL65wUBiXLybCVxkkYNBd2-H_jC5CoAyqugaJqHdzHpa8z0w/viewform" />
+          <div className="mt-8">
+            <FantaNoliFeatures />
           </div>
         </section>
 

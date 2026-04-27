@@ -132,6 +132,11 @@ async function runBootstrap() {
       create: { username: "Pietro", password: hashedPassword },
       update: { password: hashedPassword },
     });
+    await tx.admin.upsert({
+      where: { username: "Davide" },
+      create: { username: "Davide", password: hashedPassword },
+      update: { password: hashedPassword },
+    });
 
     // 5. Creazione Viste (SQL Raw)
     // Nota: $executeRawUnsafe non può stare dentro una transazione in alcuni casi con Prisma,
@@ -144,7 +149,7 @@ async function runBootstrap() {
       disciplinesCreatedOrUpdated: disciplines.length,
       athletesCreatedOrUpdated: athletes.length,
       viewsCreated: true,
-      admin: "Pietro (creato o aggiornato)"
+      admin: "Pietro e Davide (creati o aggiornati)"
     };
   });
 }

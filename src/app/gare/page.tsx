@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Trophy, Clock, Target as TargetIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trophy, Clock, Target as TargetIcon, Coffee } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
 
 const disciplineImages: Record<string, string> = {
@@ -14,7 +14,10 @@ const disciplineImages: Record<string, string> = {
 };
 
 export default function GarePage() {
-  const [data, setData] = useState<{ scheduled: any[]; played: any[] }>({ scheduled: [], played: [] });
+  const [data, setData] = useState<{ upcoming: any[]; played: any[] }>({ 
+    upcoming: [], 
+    played: [], 
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,7 +35,8 @@ export default function GarePage() {
     fetchData();
   }, []);
 
-  const { scheduled, played } = data;
+  const upcoming = data.upcoming || [];
+  const played = data.played || [];
 
   return (
     <div className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -78,63 +82,109 @@ export default function GarePage() {
           ))}
         </div>
       ) : (
-        <div className="space-y-16">
-          {/* In Programma */}
-          <section>
-            <div className="mb-6 flex items-center gap-3">
-              <div className="bg-accent/10 p-2 rounded-lg">
-                <Clock className="w-5 h-5 text-accent" />
-              </div>
-              <h2 className="text-2xl font-bold">Prossimi Match</h2>
-              {scheduled.length > 0 && (
-                <span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-xs font-bold text-zinc-500">
-                  SERIE {scheduled[0]?.turnIndex}
-                </span>
-              )}
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <AnimatePresence mode="popLayout">
-                {scheduled.map((match: any, idx: number) => (
-                  <PremiumCard key={`sched-${idx}`} className="p-0 border-none ring-1 ring-zinc-200/50 dark:ring-zinc-800/50" delay={idx * 0.05}>
-                    <div className="relative h-32 w-full overflow-hidden">
-                      <img 
-                        src={disciplineImages[match.disciplineKind] || "/placeholder.png"} 
-                        alt={match.discipline}
-                        className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                        <span className="font-bold tracking-tight">{match.discipline}</span>
-                        <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                          <TargetIcon className="w-3 h-3" />
-                          {match.target}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2">
-                        <div className="text-center">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">TEAM A</p>
-                          <p className="text-sm font-bold leading-tight">{match.side1.join(" + ")}</p>
-                        </div>
-                        <div className="text-zinc-300 font-black italic text-xl">VS</div>
-                        <div className="text-center">
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">TEAM B</p>
-                          <p className="text-sm font-bold leading-tight">{match.side2.join(" + ")}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </PremiumCard>
-                ))}
-              </AnimatePresence>
-              {scheduled.length === 0 && (
-                <div className="col-span-full rounded-3xl border-2 border-dashed border-zinc-200 p-12 text-center">
-                  <p className="text-zinc-400 font-medium italic">Nessun match programmato per questa serie.</p>
+        <div className="space-y-20">
+          {/* Serie In Programma */}
+          {upcoming.map((turn, turnIdx) => (
+            <div key={turn.index} className="space-y-10">
+              <section>
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="bg-accent/10 p-2 rounded-lg">
+                    <Clock className="w-5 h-5 text-accent" />
+                  </div>
+                  <h2 className="text-2xl font-bold">
+                    {turnIdx === 0 ? "Serie Attuale" : "Prossima Serie"}
+                  </h2>
+                  <span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-xs font-bold text-zinc-500">
+                    SERIE {turn.index}
+                  </span>
                 </div>
+
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                  <AnimatePresence mode="popLayout">
+                    {turn.matches.map((match: any, idx: number) => (
+                      <PremiumCard key={`match-${turn.index}-${idx}`} className="p-0 border-none ring-1 ring-zinc-200/50 dark:ring-zinc-800/50" delay={idx * 0.05}>
+                        <div className="relative h-32 w-full overflow-hidden">
+                          <img 
+                            src={disciplineImages[match.disciplineKind] || "/placeholder.png"} 
+                            alt={match.discipline}
+                            className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                          <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+                            <span className="font-bold tracking-tight">{match.discipline}</span>
+                            <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                              <TargetIcon className="w-3 h-3" />
+                              {match.target}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-5">
+                          <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2">
+                            <div className="text-center">
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">TEAM A</p>
+                              <p className="text-sm font-bold leading-tight">{match.side1.join(" + ")}</p>
+                            </div>
+                            <div className="text-zinc-300 font-black italic text-xl">VS</div>
+                            <div className="text-center">
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">TEAM B</p>
+                              <p className="text-sm font-bold leading-tight">{match.side2.join(" + ")}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </PremiumCard>
+                    ))}
+                  </AnimatePresence>
+                  {turn.matches.length === 0 && (
+                    <div className="col-span-full rounded-3xl border-2 border-dashed border-zinc-200 p-8 text-center">
+                      <p className="text-zinc-400 font-medium italic">Serie quasi completata, in attesa degli ultimi risultati.</p>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              {/* Atleti in Standby per questa serie */}
+              {turn.standby && turn.standby.length > 0 && (
+                <section>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="mb-6 flex items-center gap-3"
+                  >
+                    <div className="bg-orange-500/10 p-2 rounded-lg">
+                      <Coffee className="w-5 h-5 text-orange-600" />
+                    </div>
+                    <h2 className="text-xl font-bold">A Riposo <span className="text-zinc-400 font-medium">Serie {turn.index}</span></h2>
+                    <span className="rounded-full bg-orange-100 dark:bg-orange-900/30 px-3 py-1 text-[10px] font-black text-orange-600 uppercase tracking-tight">
+                      {turn.standby.length} Atleti
+                    </span>
+                  </motion.div>
+
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                    <AnimatePresence>
+                      {turn.standby.map((name: string, idx: number) => (
+                        <motion.div
+                          key={`${turn.index}-${name}`}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: idx * 0.02 }}
+                          className="group relative overflow-hidden rounded-2xl bg-white/50 dark:bg-zinc-900/50 p-3 ring-1 ring-zinc-200/50 dark:ring-zinc-800/50 backdrop-blur-sm transition-all hover:ring-orange-500/30 hover:shadow-lg hover:shadow-orange-500/5"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-900/20 dark:to-orange-800/20 flex items-center justify-center text-orange-600 font-bold text-xs shadow-sm">
+                              {name.charAt(0)}
+                            </div>
+                            <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 truncate">{name}</span>
+                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-orange-500/5 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-full group-hover:translate-x-full duration-1000" />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </section>
               )}
             </div>
-          </section>
+          ))}
 
           {/* Risultati Recenti */}
           {played.length > 0 && (
