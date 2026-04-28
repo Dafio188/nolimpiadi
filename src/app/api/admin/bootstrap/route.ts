@@ -58,8 +58,8 @@ export async function GET() {
         const letter = letters[i];
         const a = await tx.athlete.upsert({
           where: { name },
-          create: { name, letter },
-          update: { letter }, // Forza l'allineamento della lettera se il nome esiste già
+          create: { name, letter } as any,
+          update: { letter } as any, // Forza l'allineamento della lettera se il nome esiste già
         });
         athletes.push(a);
       }
@@ -117,7 +117,7 @@ export async function GET() {
                 targetVictory: disc.targetFixed || 10,
                 side1Letters: item.letters[0],
                 side2Letters: item.letters[1],
-              },
+              } as any,
             });
           }
         }
