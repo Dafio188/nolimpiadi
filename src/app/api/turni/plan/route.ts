@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       }
 
       const athletes = await tx.athlete.findMany({
-        select: { id: true, name: true, letter: true },
+        select: { id: true, name: true, letter: true } as any,
       });
 
       if (athletes.length !== 12) {
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
       }
 
       const letterToId = new Map<string, string>();
-      for (const a of athletes) {
+      for (const a of athletes as any[]) {
         if (!a.letter) {
           throw new Error(`L'atleta '${a.name}' non ha una lettera assegnata (A-L)`);
         }

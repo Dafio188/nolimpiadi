@@ -55,19 +55,19 @@ export async function GET() {
 
   if (plannedTurn) {
     const athletes = await prisma.athlete.findMany({
-      select: { id: true, name: true, letter: true },
+      select: { id: true, name: true, letter: true } as any,
       orderBy: { name: "asc" },
     });
 
-    const letterToId = new Map(athletes.filter(a => a.letter).map(a => [a.letter, a.id]));
+    const letterToId = new Map(athletes.filter((a: any) => a.letter).map((a: any) => [a.letter, a.id]));
     
     const resolveLetters = (letters: string[]) => letters.map(l => letterToId.get(l) || "").filter(Boolean);
 
     const used = new Set<string>();
     const matches = Object.fromEntries(
-      plannedTurn.slots.map((s) => {
-        const side1 = resolveLetters(s.side1Letters);
-        const side2 = resolveLetters(s.side2Letters);
+      plannedTurn.slots.map((s: any) => {
+        const side1 = resolveLetters(s.side1Letters || []);
+        const side2 = resolveLetters(s.side2Letters || []);
         for (const id of side1) used.add(id);
         for (const id of side2) used.add(id);
         
@@ -84,7 +84,7 @@ export async function GET() {
       }),
     );
 
-    const idleAthletes = athletes.filter((a) => !used.has(a.id));
+    const idleAthletes = (athletes as any[]).filter((a: any) => !used.has(a.id));
 
     return NextResponse.json({
       ok: true,

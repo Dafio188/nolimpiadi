@@ -163,11 +163,11 @@ export default async function StampaPage() {
       orderBy: { index: "asc" },
       include: { slots: { orderBy: { kind: "asc" } } },
     }),
-    prisma.athlete.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, letter: true } }),
+    prisma.athlete.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true, letter: true } as any }),
     Promise.all(kinds.map(async (kind) => ({ kind, seeds: await qualificati(kind) }))),
   ]);
 
-  const letterToName = new Map<string, string>(athletes.filter(a => a.letter).map(a => [a.letter!, a.name]));
+  const letterToName = new Map<string, string>((athletes as any[]).filter(a => a.letter).map(a => [a.letter!, a.name]));
 
   const durationMinutes = settings?.turnDurationMinutes ?? 10;
 
@@ -197,7 +197,7 @@ export default async function StampaPage() {
           Nessuna serie pianificata. Vai in Setup per generare il calendario.
         </div>
       ) : (
-        turnChunks.map((chunk: QualificationTurn[], chunkIdx: number) => (
+        (turnChunks as any[]).map((chunk: any[], chunkIdx: number) => (
 
           <section key={chunkIdx} className="print:page-break-after print:m-0 print:p-0 flex flex-col gap-6">
             <div className="flex items-center justify-between border-b-2 border-zinc-900 pb-2">
@@ -224,10 +224,10 @@ export default async function StampaPage() {
 
                     <div className="flex flex-col gap-3">
                       {kinds.map((kind: DisciplineKind) => {
-                        const slot = turn.slots.find(s => s.kind === kind);
+                        const slot = (turn.slots as any[]).find(s => s.kind === kind);
 
-                        const a = slot?.side1Letters.map((l: string) => letterToName.get(l) || `Atleta ${l}`) || [];
-                        const b = slot?.side2Letters.map((l: string) => letterToName.get(l) || `Atleta ${l}`) || [];
+                        const a = slot?.side1Letters?.map((l: string) => letterToName.get(l) || `Atleta ${l}`) || [];
+                        const b = slot?.side2Letters?.map((l: string) => letterToName.get(l) || `Atleta ${l}`) || [];
 
                         return (
                           <div key={kind} className="border border-zinc-300 rounded-xl overflow-hidden shadow-sm break-inside-avoid bg-white">
