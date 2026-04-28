@@ -57,11 +57,11 @@ export default async function Home() {
             <div className="relative group">
               <div className="absolute -inset-4 bg-blue-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition duration-1000" />
               <img 
-                src="/immagini/mascot/mascot_hero_clean.png" 
+                src="/immagini/mascot/Mascotte Nolimpius (2).png" 
                 className="relative w-64 h-64 lg:w-80 lg:h-80 object-contain group-hover:scale-105 transition-all duration-500" 
                 alt="Mascot Nolimpius Hero" 
               />
-              <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 hidden lg:block animate-bounce">
+              <div className="absolute -top-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 hidden lg:block animate-bounce z-30">
                 <span className="text-xs font-black text-blue-600">BENVENUTI NEL MITO!</span>
               </div>
             </div>
@@ -86,7 +86,7 @@ export default async function Home() {
                   <div>
                     <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Quando</p>
                     <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Domenica 17 Maggio 2026</p>
-                    <p className="text-lg lg:text-xl font-black text-blue-600/60 uppercase">Ore 13:45 Sharp</p>
+                    <p className="text-lg lg:text-xl font-black text-blue-600/60 uppercase">Ore 13:45</p>
                   </div>
                 </div>
 
@@ -123,10 +123,17 @@ export default async function Home() {
                     <Target className="w-4 h-4" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Le GARE 2026</span>
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-black text-[#1d1d1f] tracking-tight">
-                    Le Quattro Discipline <br />
-                    <span className="text-blue-600 italic">della Gloria.</span>
-                  </h2>
+                  <div className="flex flex-col md:flex-row md:items-end gap-4">
+                    <h2 className="text-4xl md:text-5xl font-black text-[#1d1d1f] tracking-tight">
+                      Le Quattro Discipline <br />
+                      <span className="text-blue-600 italic">della Gloria.</span>
+                    </h2>
+                    <img 
+                      src="/immagini/mascot/Nolimpius giudice con fischietto.png" 
+                      alt="Nolimpius Giudice" 
+                      className="h-24 md:h-32 object-contain drop-shadow-xl -mb-4 animate-bounce-slow"
+                    />
+                  </div>
                   <p className="text-lg text-[#86868b] font-medium leading-relaxed">
                     Dalle freccette millimetriche alla velocità pura dell&apos;air hockey. Ogni disciplina mette alla prova un talento diverso. Sei pronto a dominarle tutte?
                   </p>
@@ -135,7 +142,7 @@ export default async function Home() {
                       href="/gare"
                       className="group/btn flex items-center gap-3 w-fit px-8 py-4 bg-zinc-900 text-white rounded-2xl font-bold hover:bg-blue-600 hover:shadow-xl hover:shadow-blue-200 transition-all duration-300"
                     >
-                      SCOPRI IL REGOLAMENTO GARE
+                      VEDI LE GARE
                       <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                   </div>
@@ -143,16 +150,32 @@ export default async function Home() {
 
                 <div className="flex-1 grid grid-cols-2 gap-4 w-full">
                   {[
-                    { name: "Ping Pong", img: "/immagini/ping%20pong.png", color: "bg-blue-50" },
-                    { name: "Calcio Balilla", img: "/immagini/Calcio-balilla.png", color: "bg-amber-50" },
-                    { name: "Freccette", img: "/immagini/Freccette.png", color: "bg-red-50" },
-                    { name: "Air Hockey", img: "/immagini/Air%20Hockey.png", color: "bg-cyan-50" },
+                    { name: "Ping Pong", img: "/immagini/ping%20pong.png", mascot: "/immagini/mascot/Nolimpius che gioca a ping-pong.png" },
+                    { name: "Calcio Balilla", img: "/immagini/Calcio-balilla.png", mascot: "/immagini/mascot/Nolimpius che gioca a calcio-balilla.png" },
+                    { name: "Freccette", img: "/immagini/Freccette.png", mascot: "/immagini/mascot/Nolimpius che gioca a freccette.png" },
+                    { name: "Air Hockey", img: "/immagini/Air%20Hockey.png", mascot: "/immagini/mascot/Nolimpius che gioca ad air hockey.png" },
                   ].map((gara, i) => (
-                    <Link key={i} href="/gare" className="group/card relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-white hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-                      <img src={gara.img} className="w-full h-full object-cover" alt={gara.name} />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover/card:translate-y-0 transition-transform duration-300">
-                        <p className="text-white text-xs font-black uppercase tracking-widest">{gara.name}</p>
+                    <Link key={i} href="/gare" className="group/card relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-white hover:shadow-xl hover:-translate-y-1 transition-all duration-500 bg-zinc-100">
+                      {/* Real Photo Background */}
+                      <img src={gara.img} className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110" alt={gara.name} />
+                      
+                      {/* Mascot Overlay (Top Left) with Glassmorphic Circle */}
+                      <div className="absolute top-2 left-2 z-20 group-hover/card:scale-110 group-hover/card:rotate-[-5deg] transition-all duration-500">
+                        <div className="relative p-2 flex items-center justify-center">
+                          {/* Glass Circle - More Transparent */}
+                          <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-full border border-white/30 shadow-lg" />
+                          
+                          <img 
+                            src={gara.mascot} 
+                            className="relative w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-md" 
+                            alt={`Mascot ${gara.name}`} 
+                          />
+                        </div>
+                      </div>
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover/card:opacity-90 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-0 lg:translate-y-2 group-hover/card:translate-y-0 transition-transform duration-300">
+                        <p className="text-white text-[10px] md:text-xs font-black uppercase tracking-widest text-center">{gara.name}</p>
                       </div>
                     </Link>
                   ))}
@@ -178,7 +201,7 @@ export default async function Home() {
                     <Trophy className="w-4 h-4" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Albo d'Oro</span>
                   </div>
-                  <img src="/immagini/mascot/Nolimpius vincitore.png" className="w-12 h-12 object-contain" alt="Nolimpius Vincitore" />
+                  <img src="/immagini/mascot/Nolimpius vincitore.png" className="w-24 h-24 object-contain drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]" alt="Nolimpius Vincitore" />
                 </div>
                 <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
                   Entra nel <span className="text-amber-400">Mito.</span>

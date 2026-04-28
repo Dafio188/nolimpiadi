@@ -26,62 +26,60 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
         {/* Decorative elements - High visibility mascot in the background */}
 
 
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
-          {/* Text Content */}
-          <div className="flex-1 space-y-6 relative z-10">
-            {/* Banner integrato nel riquadro come richiesto - Sostituito con Oracolo */}
-            <div className="mb-8 flex justify-center lg:justify-start">
+        <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-center">
+          {/* Left Column: Veggente (Oracolo) + Text */}
+          <div className="flex-1 flex flex-col items-center gap-6 relative z-10">
+            {/* Veggente Centered Above Text */}
+            <div className="w-full flex justify-center">
               <img 
                 src="/immagini/mascot/mascot_oracolo.jpeg" 
                 alt="FantaNolimpiadi Oracolo" 
-                className="h-20 md:h-24 lg:h-32 object-contain rounded-2xl shadow-xl border-4 border-white rotate-[-2deg]"
+                className="h-32 md:h-40 object-contain rounded-full shadow-2xl border-4 border-white ring-4 ring-blue-500/10"
               />
             </div>
-
-            <div className="flex flex-col md:flex-row md:items-center gap-4">
+            
+            <div className="space-y-4 text-center">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#1d1d1f] leading-tight">
                 Gioca e Vinci<br />
                 alle FantaNolimpiadi 2026!
               </h2>
+              <p className="text-lg text-[#86868b] font-medium leading-relaxed max-w-xl mx-auto">
+                Hai ancora quel fuoco sacro? Le vecchie glorie non muoiono mai, si trasferiscono solo alle <span className="text-zinc-900 font-bold underline decoration-blue-500/30">FantaNolimpiadi 2026</span>.
+              </p>
             </div>
-            
-            <p className="text-lg text-[#86868b] font-medium leading-relaxed max-w-xl">
-              Hai ancora quel fuoco sacro (o è solo un leggero bruciore di stomaco)? Le vecchie glorie non muoiono mai, si trasferiscono solo alle <span className="text-zinc-900 font-bold underline decoration-blue-500/30">FantaNolimpiadi 2026</span>. 
-              <br /><br />
-              Non importa se il tuo unico sport ormai è il sollevamento forchetta: torna in pista e dimostra agli sbarbatelli come si vince con stile!
-            </p>
+          </div>
 
-            <div className="flex flex-wrap gap-4 items-center pt-4">
+          {/* Right Column: New Fanta-Expert + Buttons Stack */}
+          <div className="w-full lg:w-[450px] flex flex-col items-center gap-6">
+            {/* New Custom Fanta Mascot - ENLARGED with multiply blend */}
+            <div className="relative w-full aspect-square max-w-[320px] lg:max-w-full">
+              <div className="absolute inset-0 bg-amber-100/50 rounded-full blur-3xl" />
+              <img 
+                src="/immagini/mascot/nolimpius_fanta_expert.png" 
+                alt="Nolimpius Fanta Expert" 
+                className="relative w-full h-full object-contain rounded-full shadow-2xl border-4 border-white ring-4 ring-amber-500/10"
+              />
+            </div>
+
+            {/* Vertically Stacked Buttons */}
+            <div className="flex flex-col w-full gap-3 max-w-[300px]">
               <a 
                 href={formUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/btn flex items-center gap-3 px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                className="group/btn flex items-center justify-center gap-3 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black shadow-xl shadow-blue-200 hover:bg-blue-700 hover:scale-[1.03] active:scale-[0.97] transition-all duration-300"
               >
-                <span>Gioca alle FantaNolimpiadi!</span>
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                <span>Gioca Ora!</span>
+                <ArrowRight className="w-6 h-6 group-hover/btn:translate-x-1 transition-transform" />
               </a>
 
               <a 
                 href="/documenti/regolamento-fanta.pdf"
                 target="_blank"
-                className="flex items-center gap-3 px-6 py-4 bg-amber-400 text-zinc-900 rounded-2xl font-bold border border-amber-500 shadow-lg shadow-amber-200/50 hover:bg-amber-500 hover:shadow-xl transition-all duration-300"
+                className="flex items-center justify-center gap-3 px-8 py-4 bg-amber-400 text-zinc-900 rounded-2xl font-black border-2 border-amber-500 shadow-xl shadow-amber-200/50 hover:bg-amber-500 hover:scale-[1.03] active:scale-[0.97] transition-all duration-300"
               >
-                <Users className="w-5 h-5 text-zinc-900/50" />
-                <span>Leggi il Regolamento</span>
+                <span>Regolamento</span>
               </a>
-            </div>
-          </div>
-
-          {/* Main Logo Image - Moved from background to right side */}
-          <div className="hidden lg:flex flex-1 items-center justify-center relative z-10">
-            <div className="w-[300px] h-[300px] relative">
-              <div className="absolute -inset-4 bg-blue-50 rounded-full blur-3xl opacity-50" />
-              <img 
-                src="/immagini/logo_con%20la%20mascot.jpeg" 
-                alt="Logo FantaNolimpiadi" 
-                className="relative w-full h-full object-contain drop-shadow-2xl"
-              />
             </div>
           </div>
         </div>
