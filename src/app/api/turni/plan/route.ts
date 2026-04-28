@@ -97,12 +97,12 @@ export async function POST(req: Request) {
 
       const disciplines = await tx.discipline.findMany({
         where: {
-          kind: { in: [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA] },
+          kind: { in: [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA] },
         },
         select: { id: true, kind: true, targetFixed: true, targetMin: true, targetMax: true },
       });
       const disciplineByKind = new Map(disciplines.map((d: any) => [d.kind, d]));
-      for (const k of [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA]) {
+      for (const k of [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA]) {
         if (!disciplineByKind.get(k)) throw new Error(`Disciplina mancante nel database: ${k}`);
       }
 
@@ -144,7 +144,7 @@ export async function POST(req: Request) {
         await createSlot(DisciplineKind.CALCIO_BALILLA, calcio.teamA, calcio.teamB);
         await createSlot(DisciplineKind.FRECCETTE, [template[DisciplineKind.FRECCETTE][0]], [template[DisciplineKind.FRECCETTE][1]]);
         await createSlot(DisciplineKind.PING_PONG, [template[DisciplineKind.PING_PONG][0]], [template[DisciplineKind.PING_PONG][1]]);
-        await createSlot(DisciplineKind.BASKET, [template[DisciplineKind.BASKET][0]], [template[DisciplineKind.BASKET][1]]);
+        await createSlot(DisciplineKind.AIR_HOCKEY, [template[DisciplineKind.AIR_HOCKEY][0]], [template[DisciplineKind.AIR_HOCKEY][1]]);
       }
 
       return {

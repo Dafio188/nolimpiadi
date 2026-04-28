@@ -48,7 +48,7 @@ export const disciplineSeeds = [
     name: "Air Hockey",
     coefficient: 1,
     teamSize: 1,
-    targetFixed: 4,
+    targetFixed: 10,
     targetMin: null,
     targetMax: null,
   },

@@ -23,7 +23,7 @@ function matchupKey(teamA: string[], teamB: string[]) {
 function defaultTargetVictory(kind: DisciplineKind, targetFixed: number | null, targetMin: number | null, targetMax: number | null) {
   if (targetFixed !== null) return targetFixed;
   if (targetMin !== null && targetMax !== null) return Math.round((targetMin + targetMax) / 2);
-  if (kind === DisciplineKind.BASKET) return 10;
+  if (kind === DisciplineKind.AIR_HOCKEY) return 10;
   return 1;
 }
 
@@ -41,7 +41,7 @@ async function qualificatiIds(kind: DisciplineKind, limit: number) {
 
 export async function GET() {
   const kinds = [
-    DisciplineKind.BASKET,
+    DisciplineKind.AIR_HOCKEY,
     DisciplineKind.PING_PONG,
     DisciplineKind.FRECCETTE,
     DisciplineKind.CALCIO_BALILLA,
@@ -99,7 +99,7 @@ export async function GET() {
   if (plannedTurnsCount > 0) {
     const remainingSlots = await prisma.qualificationSlot.count({ where: { match: { is: null } } });
     if (remainingSlots === 0) {
-      const finalsKinds: DisciplineKind[] = [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA];
+      const finalsKinds: DisciplineKind[] = [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE, DisciplineKind.CALCIO_BALILLA];
       const disciplines = await prisma.discipline.findMany({
         where: { kind: { in: finalsKinds } },
         select: { kind: true, targetFixed: true, targetMin: true, targetMax: true, teamSize: true },
@@ -170,7 +170,7 @@ export async function GET() {
         return null;
       }
 
-      const singlesFinalsKinds: DisciplineKind[] = [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
+      const singlesFinalsKinds: DisciplineKind[] = [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
       const seedsByKind = new Map<DisciplineKind, string[]>();
       for (const k of singlesFinalsKinds) {
         seedsByKind.set(k, await qualificatiIds(k, 6));
@@ -265,7 +265,7 @@ export async function GET() {
       FROM v_participations p
       INNER JOIN disciplines d ON d.id = p.discipline_id
       WHERE p.phase = ${MatchPhase.QUALIFICAZIONE}
-        AND d.kind IN (${DisciplineKind.BASKET}, ${DisciplineKind.PING_PONG}, ${DisciplineKind.FRECCETTE}, ${DisciplineKind.CALCIO_BALILLA})
+        AND d.kind IN (${DisciplineKind.AIR_HOCKEY}, ${DisciplineKind.PING_PONG}, ${DisciplineKind.FRECCETTE}, ${DisciplineKind.CALCIO_BALILLA})
       GROUP BY p.athlete_id, d.kind
     `,
   ]);
@@ -351,7 +351,7 @@ export async function GET() {
     return [best.a, best.b] as [string, string];
   }
 
-  const singlesKinds: DisciplineKind[] = [DisciplineKind.BASKET, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
+  const singlesKinds: DisciplineKind[] = [DisciplineKind.AIR_HOCKEY, DisciplineKind.PING_PONG, DisciplineKind.FRECCETTE];
   const picks: Record<string, { side1: string[]; side2: string[]; targetVictory: number }> = {};
 
   const poolForSingles = [...remaining];

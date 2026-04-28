@@ -61,15 +61,15 @@ export default async function IscrittiPage() {
           </div>
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-white/50">
             <p className="text-[#86868b] text-xs font-black uppercase tracking-widest mb-2 text-red-500">Tier Alto</p>
-            <h3 className="text-3xl font-black text-[#1d1d1f]">{athletes.filter(a => a.tier === "ALTO").length}</h3>
+            <h3 className="text-3xl font-black text-[#1d1d1f]">{(athletes as any[]).filter(a => a.tier === "ALTO").length}</h3>
           </div>
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-white/50">
             <p className="text-[#86868b] text-xs font-black uppercase tracking-widest mb-2 text-amber-500">Tier Medio</p>
-            <h3 className="text-3xl font-black text-[#1d1d1f]">{athletes.filter(a => a.tier === "MEDIO").length}</h3>
+            <h3 className="text-3xl font-black text-[#1d1d1f]">{(athletes as any[]).filter(a => a.tier === "MEDIO").length}</h3>
           </div>
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-white/50">
             <p className="text-[#86868b] text-xs font-black uppercase tracking-widest mb-2 text-green-500">Tier Basso</p>
-            <h3 className="text-3xl font-black text-[#1d1d1f]">{athletes.filter(a => a.tier === "BASSO").length}</h3>
+            <h3 className="text-3xl font-black text-[#1d1d1f]">{(athletes as any[]).filter(a => a.tier === "BASSO").length}</h3>
           </div>
         </div>
 
@@ -97,7 +97,7 @@ export default async function IscrittiPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {athletes.map((athlete) => (
+                {athletes.map((athlete: any) => (
                   <tr key={athlete.id} className="hover:bg-[#f5f5f7]/50 transition-colors group">
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">

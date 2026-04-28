@@ -16,7 +16,7 @@ import PremiumCard from "@/components/ui/PremiumCard";
 import Link from "next/link";
 
 // Tipo locale per evitare import di Prisma nel browser
-type DisciplineKind = "BASKET" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
+type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
 
 
 type QualRow = {
@@ -36,21 +36,21 @@ const disciplineIcons: Record<string, any> = {
   CALCIO_BALILLA: Shield,
   FRECCETTE: Target,
   PING_PONG: Activity,
-  BASKET: Zap,
+  AIR_HOCKEY: Zap,
 };
 
 const disciplineColors: Record<string, string> = {
   CALCIO_BALILLA: "text-blue-500",
   FRECCETTE: "text-red-500",
   PING_PONG: "text-emerald-500",
-  BASKET: "text-orange-500",
+  AIR_HOCKEY: "text-orange-500",
 };
 
 export default function FinaliClient() {
   const [data, setData] = useState<DisciplineData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const kinds = ["CALCIO_BALILLA", "FRECCETTE", "PING_PONG", "BASKET"];
+  const kinds = ["CALCIO_BALILLA", "FRECCETTE", "PING_PONG", "AIR_HOCKEY"];
 
   useEffect(() => {
     async function fetchData() {
@@ -87,7 +87,7 @@ export default function FinaliClient() {
         if (phase === "SF") return " (ai 150)";
         return " (ai 200)";
       }
-      if (kind === "BASKET") {
+      if (kind === "AIR_HOCKEY") {
         if (phase === "Q") return " (ai 10)";
         if (phase === "SF") return " (ai 15)";
         return " (ai 20)";

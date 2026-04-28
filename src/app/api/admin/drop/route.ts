@@ -9,12 +9,12 @@ export async function GET() {
     await prisma.$executeRawUnsafe("DROP VIEW IF EXISTS classifica_complessiva CASCADE;");
     await prisma.$executeRawUnsafe("DROP VIEW IF EXISTS v_participations CASCADE;");
     
-    // Eliminiamo eventuali record 'BASKET' rimasti incastrati nel DB
+    // Eliminiamo record per pulizia
     await prisma.$executeRawUnsafe("DELETE FROM match_side_athletes WHERE athlete_id IN (SELECT id FROM athletes);");
     await prisma.$executeRawUnsafe("DELETE FROM match_sides;");
     await prisma.$executeRawUnsafe("DELETE FROM matches;");
-    await prisma.$executeRawUnsafe("DELETE FROM qualification_slots WHERE kind = 'BASKET';");
-    await prisma.$executeRawUnsafe("DELETE FROM disciplines WHERE kind = 'BASKET';");
+    await prisma.$executeRawUnsafe("DELETE FROM qualification_slots WHERE kind IN ('BASKET', 'AIR_HOCKEY');");
+    await prisma.$executeRawUnsafe("DELETE FROM disciplines WHERE kind IN ('BASKET', 'AIR_HOCKEY');");
     
     return NextResponse.json({ 
       success: true, 

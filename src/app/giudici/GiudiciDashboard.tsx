@@ -1,7 +1,7 @@
 "use client";
 
 // Import di tipi rimosso da @prisma/client per evitare errori nel browser con Turbopack
-export type DisciplineKind = "BASKET" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
+export type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
 export type MatchPhase = "QUALIFICAZIONE" | "FINALI";
 export type FinalStage = "QUARTI" | "SEMIFINALI" | "FINALE_34" | "FINALE_12";
 
@@ -56,14 +56,14 @@ type FormState = {
 };
 
 const disciplineIcons: Record<string, any> = {
-  BASKET: <Sword className="w-5 h-5" />,
+  AIR_HOCKEY: <Sword className="w-5 h-5" />,
   PING_PONG: <Dices className="w-5 h-5" />,
   FRECCETTE: <Target className="w-5 h-5" />,
   CALCIO_BALILLA: <Users className="w-5 h-5" />,
 };
 
 const disciplineImages: Record<string, string> = {
-  BASKET: "/immagini/basket.png",
+  AIR_HOCKEY: "/immagini/air-hockey.png",
   PING_PONG: "/immagini/ping pong.png",
   FRECCETTE: "/immagini/Freccette.png",
   CALCIO_BALILLA: "/immagini/Calcio-balilla.png",
@@ -74,7 +74,7 @@ function defaultFormState(discipline: Discipline): FormState {
   const blankSide = (): SideState => ({ points: "", athleteIds: Array.from({ length: teamSize }, () => "") });
   let defaultTarget = discipline.targetOverride ?? discipline.targetFixed;
   // Safety fix: se Basket è impostato a 4 per errore, forza a 10
-  if (discipline.kind === "BASKET" && (defaultTarget === 4 || defaultTarget === null)) {
+  if (discipline.kind === "AIR_HOCKEY" && (defaultTarget === 4 || defaultTarget === null)) {
     defaultTarget = 10;
   }
   return {
@@ -464,7 +464,7 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
           
           let disciplineTarget = d.targetOverride ?? d.targetFixed;
           // Safety fix grafico per Basket
-          if (d.kind === "BASKET" && (disciplineTarget === 4 || disciplineTarget === null)) {
+          if (d.kind === "AIR_HOCKEY" && (disciplineTarget === 4 || disciplineTarget === null)) {
             disciplineTarget = 10;
           }
 

@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import PrintButton from "./PrintButton";
 import { prisma } from "@/lib/prisma";
 // Tipo locale per evitare import di Prisma nel client/turbopack
-type DisciplineKind = "BASKET" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
+type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
 
 import Link from "next/link";
 
@@ -37,8 +37,8 @@ function kindLabel(kind: DisciplineKind) {
       return "Freccette";
     case "PING_PONG":
       return "Ping-pong";
-    case "BASKET":
-      return "Basket";
+    case "AIR_HOCKEY":
+      return "Air Hockey";
     default:
       return kind;
   }
@@ -150,7 +150,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 
 export default async function StampaPage() {
   const kinds: DisciplineKind[] = [
-    "BASKET",
+    "AIR_HOCKEY",
     "PING_PONG",
     "FRECCETTE",
     "CALCIO_BALILLA",
