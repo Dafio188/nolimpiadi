@@ -29,12 +29,12 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* Text Content */}
           <div className="flex-1 space-y-6 relative z-10">
-            {/* Banner integrato nel riquadro come richiesto */}
+            {/* Banner integrato nel riquadro come richiesto - Sostituito con Oracolo */}
             <div className="mb-8 flex justify-center lg:justify-start">
               <img 
-                src="/immagini/Scritta%20con%20logo%20e%20mascot.jpeg" 
-                alt="FantaNolimpiadi Banner" 
-                className="h-16 md:h-20 object-contain drop-shadow-lg"
+                src="/immagini/mascot/mascot_oracolo.jpeg" 
+                alt="FantaNolimpiadi Oracolo" 
+                className="h-20 md:h-24 lg:h-32 object-contain rounded-2xl shadow-xl border-4 border-white rotate-[-2deg]"
               />
             </div>
 

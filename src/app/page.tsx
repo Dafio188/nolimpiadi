@@ -23,9 +23,21 @@ export default async function Home() {
         {/* Navigazione spostata nella Navbar globale */}
 
         <header className="text-center mb-16 animate-in">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight text-[#1d1d1f] mb-6">
-            NOLImpiadi <span className="text-blue-600 italic">2026</span>
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <img 
+              src="/immagini/mascot/Nolimpius che accende la fiaccola nolimpica.png" 
+              className="hidden md:block w-20 h-20 object-contain scale-x-[-1]" 
+              alt="Nolimpius Fiaccola Sinistra" 
+            />
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight text-[#1d1d1f]">
+              NOLImpiadi <span className="text-blue-600 italic">2026</span>
+            </h1>
+            <img 
+              src="/immagini/mascot/Nolimpius che accende la fiaccola nolimpica.png" 
+              className="hidden md:block w-20 h-20 object-contain" 
+              alt="Nolimpius Fiaccola Destra" 
+            />
+          </div>
           
           <div className="max-w-3xl mx-auto">
             <p className="text-2xl md:text-3xl font-bold text-[#1d1d1f] leading-tight mb-6">
@@ -38,56 +50,63 @@ export default async function Home() {
           </div>
         </header>
 
-        {/* Hero Section con Collage e Info */}
-        <section className="mb-20 grid md:grid-cols-2 gap-8 lg:gap-16 items-center animate-in" style={{ animationDelay: '0.1s' }}>
-          {/* Collage Griglia 2x2 */}
-          <div className="grid grid-cols-2 gap-2 p-2 bg-white rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-blue-200/40 ring-1 ring-black/5 rotate-[-1deg] max-w-md mx-auto md:mx-0">
-            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
-              <img src="/immagini/ping%20pong.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Ping Pong" />
-            </div>
-            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
-              <img src="/immagini/Calcio-balilla.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Calcio Balilla" />
-            </div>
-            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
-              <img src="/immagini/Freccette.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Freccette" />
-            </div>
-            <div className="aspect-square rounded-xl lg:rounded-2xl overflow-hidden">
-              <img src="/immagini/Air%20Hockey.png" className="w-full h-full object-cover hover:scale-110 transition-transform duration-700" alt="Air Hockey" />
+        {/* Hero Section: Dettagli Ufficiali & Mascot */}
+        <section className="mb-24 flex flex-col md:flex-row items-center gap-8 lg:gap-16 animate-in" style={{ animationDelay: '0.1s' }}>
+          {/* Mascot Oracolo - Benvenuto Iconico */}
+          <div className="flex-1 flex justify-center md:justify-end order-2 md:order-1">
+            <div className="relative group">
+              <div className="absolute -inset-4 bg-blue-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition duration-1000" />
+              <img 
+                src="/immagini/mascot/mascot_hero_clean.png" 
+                className="relative w-64 h-64 lg:w-80 lg:h-80 object-contain group-hover:scale-105 transition-all duration-500" 
+                alt="Mascot Nolimpius Hero" 
+              />
+              <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 hidden lg:block animate-bounce">
+                <span className="text-xs font-black text-blue-600">BENVENUTI NEL MITO!</span>
+              </div>
             </div>
           </div>
 
-          {/* Info Box */}
-          <div className="flex flex-col gap-6 lg:gap-8">
-            <div className="bg-white/70 backdrop-blur-2xl p-6 lg:p-8 rounded-[1.5rem] lg:rounded-[2rem] border border-white shadow-xl shadow-blue-500/5">
-              <h2 className="text-[10px] lg:text-xs font-black uppercase tracking-widest text-blue-600 mb-4 lg:mb-6">Dettagli Ufficiali</h2>
-              <div className="space-y-4 lg:space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="bg-blue-50 p-2 lg:p-3 rounded-xl lg:rounded-2xl text-blue-600">
-                    <Clock className="w-5 h-5 lg:w-6 lg:h-6" />
+          {/* Info Box - I Dettagli Ufficiali sono Protagonisti */}
+          <div className="flex-1 flex flex-col gap-6 lg:gap-8 order-1 md:order-2">
+            <div className="bg-white/70 backdrop-blur-2xl p-8 lg:p-10 rounded-[2.5rem] border border-white shadow-2xl shadow-blue-500/10 relative overflow-hidden">
+              {/* Decorazione */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16" />
+              
+              <h2 className="text-[10px] lg:text-xs font-black uppercase tracking-[0.2em] text-blue-600 mb-8 flex items-center gap-2">
+                <div className="w-8 h-[2px] bg-blue-600/20" />
+                Dettagli Ufficiali
+              </h2>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-5 group">
+                  <div className="bg-blue-50 p-4 rounded-2xl text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <Clock className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Quando</p>
+                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Quando</p>
                     <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Domenica 17 Maggio 2026</p>
-                    <p className="text-sm font-medium text-zinc-500">Ore 13:45</p>
+                    <p className="text-lg lg:text-xl font-black text-blue-600/60 uppercase">Ore 13:45 Sharp</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="bg-amber-50 p-2 lg:p-3 rounded-xl lg:rounded-2xl text-amber-600">
-                    <MapPin className="w-5 h-5 lg:w-6 lg:h-6" />
+
+                <div className="flex items-center gap-5 group">
+                  <div className="bg-amber-50 p-4 rounded-2xl text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+                    <MapPin className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wide">Ritrovo</p>
+                    <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Dove</p>
                     <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Sacro Tempio Nolimpico</p>
-                    <p className="text-sm font-medium text-zinc-500">(alias casa di Pietro)</p>
+                    <p className="text-lg lg:text-xl font-black text-zinc-400 italic">(alias casa di Pietro)</p>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="px-2">
-              <p className="text-sm lg:text-base text-[#86868b] font-medium italic leading-relaxed">
+            <div className="px-4">
+              <p className="text-base lg:text-lg text-[#86868b] font-medium italic leading-relaxed">
                 Preparate i riflessi, scaldate i muscoli e affilate la strategia. <br className="hidden lg:block" />
-                La gloria vi aspetta.
+                La gloria è un piatto che va servito freddo... o con un birrino.
               </p>
             </div>
           </div>
@@ -147,16 +166,19 @@ export default async function Home() {
 
         {/* Hall of Fame Teaser */}
         <section className="mb-20">
-          <div className="bg-gradient-to-br from-zinc-900 to-black rounded-[3rem] p-8 md:p-16 relative overflow-hidden group">
+          <div className="bg-gradient-to-br from-zinc-900 to-black rounded-[3rem] p-8 md:p-16 relative overflow-hidden group shadow-2xl shadow-blue-900/40">
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] group-hover:bg-blue-500/30 transition-all duration-700" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-600/10 rounded-full blur-[80px]" />
             
             <div className="relative z-10 flex flex-col md:flex-row items-center gap-12">
               <div className="flex-1 text-center md:text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-amber-400 mb-6">
-                  <Trophy className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Albo d'Oro</span>
+                <div className="inline-flex items-center gap-4 mb-6">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/10 text-amber-400">
+                    <Trophy className="w-4 h-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Albo d'Oro</span>
+                  </div>
+                  <img src="/immagini/mascot/Nolimpius vincitore.png" className="w-12 h-12 object-contain" alt="Nolimpius Vincitore" />
                 </div>
                 <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
                   Entra nel <span className="text-amber-400">Mito.</span>

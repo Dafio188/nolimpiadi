@@ -37,9 +37,9 @@ interface TurnoBlock {
 
 const DISCIPLINE_TITLES: Record<string, string> = {
   CALCIO_BALILLA: "Calcio-balilla (doppio)",
-  FRECCETTE: "Freccette (singolare)",
-  PING_PONG: "Ping-pong (singolare)",
-  AIR_HOCKEY: "Air Hockey (singolare)",
+  FRECCETTE: "Freccette\n(singolare)",
+  PING_PONG: "Ping-pong\n(singolare)",
+  AIR_HOCKEY: "Air Hockey\n(singolare)",
 };
 
 const DISCIPLINE_ORDER = ["CALCIO_BALILLA", "FRECCETTE", "PING_PONG", "AIR_HOCKEY"];
@@ -106,7 +106,7 @@ export default function GarePage() {
             {/* Layout a Griglia: Intestazioni Colonne */}
             <div className="sticky top-[84px] xl:top-[92px] z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-3 bg-white/95 backdrop-blur-md border-b shadow-sm rounded-t-lg -mx-2 px-2">
               {DISCIPLINE_ORDER.map(disciplineKey => (
-                <div key={disciplineKey} className="bg-gray-100 p-4 rounded-lg border text-center font-black text-lg text-gray-700 shadow-sm uppercase tracking-tight">
+                <div key={disciplineKey} className="bg-gray-100 p-4 rounded-lg border text-center font-black text-lg text-gray-700 shadow-sm uppercase tracking-tight whitespace-pre-line leading-tight">
                   {DISCIPLINE_TITLES[disciplineKey]}
                 </div>
               ))}
@@ -157,13 +157,13 @@ export default function GarePage() {
                                 </div>
                                 
                                 {/* Players */}
-                                <div className="flex justify-between items-center text-lg lg:text-xl font-black mb-auto leading-tight">
-                                  <div className="flex flex-col flex-1">
-                                    {p1Names.map((n, i) => <span key={i} className="whitespace-nowrap">{n}</span>)}
+                                <div className="flex justify-between items-center text-sm md:text-base lg:text-lg font-black mb-auto leading-tight">
+                                  <div className="flex flex-col flex-1 min-w-0">
+                                    {p1Names.map((n, i) => <span key={i} className="truncate">{n}</span>)}
                                   </div>
-                                  <span className="text-gray-300 mx-4 text-xs italic shrink-0">vs</span>
-                                  <div className="flex flex-col text-right flex-1">
-                                    {p2Names.map((n, i) => <span key={i} className="whitespace-nowrap">{n}</span>)}
+                                  <span className="text-gray-300 mx-2 text-[10px] italic shrink-0">vs</span>
+                                  <div className="flex flex-col text-right flex-1 min-w-0">
+                                    {p2Names.map((n, i) => <span key={i} className="truncate">{n}</span>)}
                                   </div>
                                 </div>
 

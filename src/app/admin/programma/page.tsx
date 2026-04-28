@@ -178,9 +178,9 @@ export default function ProgrammaPage() {
             </div>
 
             {/* Layout a Griglia: Intestazioni Colonne */}
-            <div className="sticky top-[84px] z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-4 bg-white/95 backdrop-blur-md border-b shadow-sm rounded-t-lg -mx-2 px-2">
+            <div className="sticky top-[84px] z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-6 bg-white/95 backdrop-blur-md border-b shadow-md rounded-t-lg -mx-2 px-4">
               {DISCIPLINE_ORDER.map(disciplineKey => (
-                <div key={disciplineKey} className="bg-gray-100 p-4 rounded-lg border text-center font-black text-lg text-gray-700 shadow-sm uppercase tracking-tight">
+                <div key={disciplineKey} className="bg-zinc-900 p-4 rounded-xl text-center font-black text-xl lg:text-2xl text-white shadow-lg uppercase tracking-tighter">
                   {DISCIPLINE_TITLES[disciplineKey]}
                 </div>
               ))}
@@ -225,20 +225,20 @@ export default function ProgrammaPage() {
                             </div>
                             <div className="p-4 flex flex-col flex-1">
                               {/* Titolo Disciplina (Visibile solo su mobile/tablet) */}
-                              <div className="xl:hidden mb-3">
-                                <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-black uppercase tracking-wider border border-blue-100">
+                              <div className="xl:hidden mb-4">
+                                <span className="inline-block px-4 py-2 rounded-xl bg-zinc-900 text-white text-base font-black uppercase tracking-tighter shadow-md">
                                   {DISCIPLINE_TITLES[disciplineKey]}
                                 </span>
                               </div>
                               
                               {/* Players */}
-                              <div className="flex justify-between items-center text-lg lg:text-xl font-black mb-auto leading-tight">
-                                <div className="flex flex-col flex-1">
-                                  {p1Names.map((n, i) => <span key={i} className="whitespace-nowrap">{n}</span>)}
+                              <div className="flex justify-between items-center text-2xl lg:text-3xl font-black mb-auto leading-none tracking-tighter">
+                                <div className="flex flex-col flex-1 min-w-0">
+                                  {p1Names.map((n, i) => <span key={i} className="truncate">{n}</span>)}
                                 </div>
-                                <span className="text-gray-300 mx-4 text-xs italic shrink-0">vs</span>
-                                <div className="flex flex-col text-right flex-1">
-                                  {p2Names.map((n, i) => <span key={i} className="whitespace-nowrap">{n}</span>)}
+                                <span className="text-gray-300 mx-4 text-sm italic shrink-0">vs</span>
+                                <div className="flex flex-col text-right flex-1 min-w-0">
+                                  {p2Names.map((n, i) => <span key={i} className="truncate text-right w-full">{n}</span>)}
                                 </div>
                               </div>
 
@@ -251,17 +251,17 @@ export default function ProgrammaPage() {
                                       initial={{ opacity: 0, scale: 0.95 }}
                                       animate={{ opacity: 1, scale: 1 }}
                                       exit={{ opacity: 0 }}
-                                      className="flex items-center justify-center relative w-full py-1"
+                                      className="flex items-center justify-center relative w-full py-4 bg-green-50 rounded-2xl border border-green-100"
                                     >
-                                      <div className="text-4xl font-black text-green-600 dark:text-green-400 tracking-tighter">
+                                      <div className="text-5xl font-black text-green-600 dark:text-green-400 tracking-tighter">
                                         {slot.points1} - {slot.points2}
                                       </div>
                                       <button 
-                                        className="absolute right-0 inline-flex items-center justify-center h-9 w-9 rounded-full text-zinc-400 hover:text-green-600 hover:bg-green-500/10 transition-colors" 
+                                        className="absolute right-3 inline-flex items-center justify-center h-10 w-10 rounded-full text-zinc-400 hover:text-green-600 hover:bg-green-500/10 transition-colors" 
                                         onClick={() => initEditMode(slot)} 
                                         title="VAR (Modifica)"
                                       >
-                                        <Edit3 className="w-4 h-4" />
+                                        <Edit3 className="w-5 h-5" />
                                       </button>
                                     </motion.div>
                                   ) : (
@@ -270,26 +270,26 @@ export default function ProgrammaPage() {
                                       initial={{ opacity: 0, scale: 0.95 }}
                                       animate={{ opacity: 1, scale: 1 }}
                                       exit={{ opacity: 0 }}
-                                      className="flex items-center justify-between gap-2"
+                                      className="flex items-center justify-between gap-3"
                                     >
                                         <input 
                                           type="number" 
-                                          className="flex h-12 w-20 rounded-xl border border-gray-300 bg-white px-2 py-1 text-xl text-center font-black shadow-sm transition-all focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 outline-none disabled:opacity-50" 
+                                          className="flex h-14 w-24 rounded-2xl border-2 border-zinc-200 bg-white px-2 py-1 text-2xl text-center font-black shadow-sm transition-all focus:ring-4 focus:ring-blue-500/20 focus:border-blue-600 outline-none disabled:opacity-50" 
                                         placeholder="0"
                                         value={inputs[slot.slotId]?.p1 ?? ""}
                                         onChange={(e) => handleInputChange(slot.slotId, 1, e.target.value)}
                                         disabled={isSaving}
                                       />
                                       <button 
-                                        className="inline-flex h-12 flex-1 items-center justify-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-black text-white shadow-lg hover:bg-blue-700 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+                                        className="inline-flex h-14 flex-1 items-center justify-center rounded-2xl bg-blue-600 px-4 py-2 text-base font-black text-white shadow-lg shadow-blue-200 hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none"
                                         disabled={isSaving || !inputs[slot.slotId]?.p1 || !inputs[slot.slotId]?.p2}
                                         onClick={() => handleSave(slot.slotId)}
                                       >
-                                        {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-6 h-6" />}
+                                        {isSaving ? <Loader2 className="w-6 h-6 animate-spin" /> : <Save className="w-7 h-7" />}
                                       </button>
                                       <input 
                                         type="number" 
-                                        className="flex h-10 w-16 rounded-md border border-gray-300 bg-white px-2 py-1 text-base text-center font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50" 
+                                        className="flex h-14 w-24 rounded-2xl border-2 border-zinc-200 bg-white px-2 py-1 text-2xl text-center font-black shadow-sm transition-all focus:ring-4 focus:ring-blue-500/20 focus:border-blue-600 outline-none disabled:opacity-50" 
                                         placeholder="0"
                                         value={inputs[slot.slotId]?.p2 ?? ""}
                                         onChange={(e) => handleInputChange(slot.slotId, 2, e.target.value)}

@@ -136,10 +136,22 @@ export default async function AlboDoroPage() {
             <Trophy className="w-4 h-4" />
             <span className="text-[10px] font-black uppercase tracking-widest">Hall of Fame</span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-black text-[#1d1d1f] tracking-tight mb-8">
-            Albo d'Oro <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">NOLImpiadi</span>
-          </h1>
+          <div className="flex items-center justify-center gap-6 mb-8">
+            <img 
+              src="/immagini/mascot/Nolimpius vincitore.png" 
+              className="hidden md:block w-24 h-24 object-contain scale-x-[-1]" 
+              alt="Winner Left" 
+            />
+            <h1 className="text-6xl md:text-8xl font-black text-[#1d1d1f] tracking-tight">
+              Albo d'Oro <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">NOLImpiadi</span>
+            </h1>
+            <img 
+              src="/immagini/mascot/Nolimpius vincitore.png" 
+              className="hidden md:block w-24 h-24 object-contain" 
+              alt="Winner Right" 
+            />
+          </div>
           <p className="text-xl md:text-2xl text-[#86868b] font-medium max-w-3xl mx-auto">
             La storia, i campioni e le leggende che hanno reso indimenticabile ogni singola edizione.
           </p>
@@ -189,10 +201,12 @@ export default async function AlboDoroPage() {
               <div className="flex flex-col gap-12">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                   <div>
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1d1d1f] mb-2">{edition.title}</h2>
-                    <p className="text-xl text-blue-600 font-bold">{edition.date}</p>
+                    <h2 className="text-4xl md:text-5xl font-black text-[#1d1d1f] mb-2">
+                      NOLImpiadi <span className="text-blue-600 italic">{edition.date.split(' ').pop()}</span>
+                    </h2>
+                    <p className="text-xl text-[#86868b] font-bold">{edition.title}</p>
                   </div>
-                  <div className="px-6 py-2 bg-white rounded-2xl border border-zinc-100 shadow-sm text-sm font-bold text-[#86868b]">
+                  <div className="px-6 py-2 bg-white rounded-2xl border border-zinc-100 shadow-lg shadow-zinc-200/50 text-sm font-bold text-[#86868b]">
                     Podio Ufficiale
                   </div>
                 </div>
