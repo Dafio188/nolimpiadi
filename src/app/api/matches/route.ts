@@ -153,15 +153,15 @@ if (plannedSlotId) {
     // Recuperiamo le lettere degli atleti coinvolti nel match per confrontarle con lo slot
     const athletesInMatch = await prisma.athlete.findMany({
       where: { id: { in: [...side1.athleteIds, ...side2.athleteIds] } },
-      select: { id: true, letter: true }
+      select: { id: true, letter: true } as any
     });
-    const idToLetter = new Map(athletesInMatch.map(a => [a.id, a.letter]));
+    const idToLetter = new Map(athletesInMatch.map((a: any) => [a.id, a.letter]));
 
     const sortStrings = (strs: (string | null)[]) => [...strs].map(s => s || "").sort();
     const s1L = sortStrings(side1.athleteIds.map(id => idToLetter.get(id) || ""));
     const s2L = sortStrings(side2.athleteIds.map(id => idToLetter.get(id) || ""));
-    const p1L = sortStrings(slot.side1Letters);
-    const p2L = sortStrings(slot.side2Letters);
+    const p1L = sortStrings((slot as any).side1Letters || []);
+    const p2L = sortStrings((slot as any).side2Letters || []);
 
     const okDirect = s1L.join("|") === p1L.join("|") && s2L.join("|") === p2L.join("|");
     const okSwap = s1L.join("|") === p2L.join("|") && s2L.join("|") === p1L.join("|");
