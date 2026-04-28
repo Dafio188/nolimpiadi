@@ -144,11 +144,11 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
 
         {/* Header con mascot su entrambi i lati */}
         <div className="flex flex-row items-center gap-4 mb-8">
-          {/* Mascot SINISTRA — si lecca i baffi */}
+          {/* Mascot SINISTRA — con il MENU in mano */}
           <div className="hidden sm:flex flex-shrink-0 w-28 lg:w-36 self-end">
             <img
-              src="/immagini/mascot/Chef Nolimpius che si lecca i baffi.png"
-              alt="Chef Nolimpius soddisfatto"
+              src="/immagini/mascot/Chef Nolimpius nobg.png"
+              alt="Chef Nolimpius con il Menù"
               className="w-full h-auto object-contain"
               style={{
                 filter: "drop-shadow(0 12px 24px rgba(251,146,60,0.3))",
@@ -171,7 +171,8 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
               Menù <span className="text-amber-500 italic">Nolimpico</span>
             </h2>
             <p className="text-sm text-zinc-500 font-medium max-w-lg mx-auto">
-              L&apos;aperitivo ufficiale più paradossale del multiverso sportivo. Ogni piatto è un&apos;esperienza esistenziale.
+              L&apos;aperitivo ufficiale più paradossale del multiverso sportivo.<br />
+              Ogni piatto è un&apos;esperienza esistenziale.
             </p>
             {pdfUrl && (
               <a
@@ -187,11 +188,11 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
             )}
           </div>
 
-          {/* Mascot DESTRA — con il MENU in mano */}
+          {/* Mascot DESTRA — si lecca i baffi */}
           <div className="hidden sm:flex flex-shrink-0 w-28 lg:w-36 self-end">
             <img
-              src="/immagini/mascot/Chef Nolimpius nobg.png"
-              alt="Chef Nolimpius con il Menù"
+              src="/immagini/mascot/Chef Nolimpius che si lecca i baffi.png"
+              alt="Chef Nolimpius soddisfatto"
               className="w-full h-auto object-contain scale-x-[-1]"
               style={{
                 filter: "drop-shadow(0 12px 24px rgba(251,146,60,0.3))",

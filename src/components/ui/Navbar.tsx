@@ -20,6 +20,7 @@ export default function Navbar({ isLoggedIn }: NavbarProps) {
 
   const navLinks = [
     { name: "GARE", href: "/gare" },
+    { name: "ALBO D'ORO", href: "/albo-doro" },
     { name: "FANTA", href: isHome ? "#fanta" : "/#fanta" },
     { name: "MENÙ", href: isHome ? "#menu" : "/#menu" },
   ];

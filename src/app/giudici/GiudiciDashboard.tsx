@@ -487,7 +487,7 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
                       <div className="bg-white/20 backdrop-blur-md p-1.5 rounded-lg">
                         {disciplineIcons[d.kind] || <Target className="w-4 h-4" />}
                       </div>
-                      <h3 className="font-black text-sm uppercase tracking-tight">{d.name}</h3>
+                      <h3 className="font-black text-lg uppercase tracking-tight">{d.name}</h3>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-[8px] font-black uppercase tracking-widest opacity-70">Target</span>
@@ -649,7 +649,7 @@ function SideInput({ title, color, points, athleteIds, athletes, onChange }: {
           placeholder="Pts"
           value={points}
           onChange={(e) => onChange({ points: e.target.value, athleteIds })}
-          className={`w-12 h-10 rounded-xl text-center font-black text-base bg-white/80 ring-1 ring-zinc-200 focus:ring-blue-500 focus:outline-none transition-all shadow-sm`}
+          className={`w-16 h-12 rounded-xl text-center font-black text-xl bg-white/80 ring-1 ring-zinc-200 focus:ring-blue-500 focus:outline-none transition-all shadow-sm`}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -662,7 +662,7 @@ function SideInput({ title, color, points, athleteIds, athletes, onChange }: {
               next[i] = e.target.value;
               onChange({ points, athleteIds: next });
             }}
-            className="w-full h-10 rounded-xl text-xs font-black bg-white ring-1 ring-zinc-200 px-2 focus:ring-blue-500 focus:outline-none transition-all hover:bg-zinc-50 shadow-sm appearance-none cursor-pointer"
+            className="w-full h-11 rounded-xl text-sm font-black bg-white ring-1 ring-zinc-200 px-3 focus:ring-blue-500 focus:outline-none transition-all hover:bg-zinc-50 shadow-sm appearance-none cursor-pointer"
           >
             <option value="">Atleta...</option>
             {athletes.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}

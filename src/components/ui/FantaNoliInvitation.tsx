@@ -29,20 +29,19 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* Text Content */}
           <div className="flex-1 space-y-6 relative z-10">
-            <div className="flex items-center justify-between w-full mb-4">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-md border border-white bg-white p-2">
-                <img src="/immagini/logo_senza%20mascot.jpeg" alt="Logo" className="w-full h-full object-contain" />
-              </div>
+            {/* Banner integrato nel riquadro come richiesto */}
+            <div className="mb-8 flex justify-center lg:justify-start">
               <img 
-                src="/immagini/mascot/Nolimpius%20vincitore.png" 
-                alt="Mascot Vincitore" 
-                className="w-24 h-24 lg:w-32 lg:h-32 object-contain drop-shadow-xl animate-bounce-slow" 
+                src="/immagini/Scritta%20con%20logo%20e%20mascot.jpeg" 
+                alt="FantaNolimpiadi Banner" 
+                className="h-16 md:h-20 object-contain drop-shadow-lg"
               />
             </div>
-            
+
             <div className="flex flex-col md:flex-row md:items-center gap-4">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#1d1d1f] leading-tight">
-                Gioca E Vinci alle <span className="text-blue-600 italic">fantaNolimpiadi</span> 2026
+                Gioca e Vinci<br />
+                alle FantaNolimpiadi 2026!
               </h2>
             </div>
             
@@ -59,7 +58,7 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
                 rel="noopener noreferrer"
                 className="group/btn flex items-center gap-3 px-8 py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
-                <span>Gioca con Noi!</span>
+                <span>Gioca alle FantaNolimpiadi!</span>
                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
               </a>
 

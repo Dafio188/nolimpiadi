@@ -106,7 +106,7 @@ export default function GarePage() {
             {/* Layout a Griglia: Intestazioni Colonne */}
             <div className="sticky top-[84px] xl:top-[92px] z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-3 bg-white/95 backdrop-blur-md border-b shadow-sm rounded-t-lg -mx-2 px-2">
               {DISCIPLINE_ORDER.map(disciplineKey => (
-                <div key={disciplineKey} className="bg-gray-100 p-3 rounded-lg border text-center font-bold text-sm text-gray-700 shadow-sm">
+                <div key={disciplineKey} className="bg-gray-100 p-4 rounded-lg border text-center font-black text-lg text-gray-700 shadow-sm uppercase tracking-tight">
                   {DISCIPLINE_TITLES[disciplineKey]}
                 </div>
               ))}
@@ -148,31 +148,37 @@ export default function GarePage() {
                               <span className="font-semibold">Partita {partita.partitaIndex}</span>
                               {slot.targetVictory > 0 && <span>Target: {slot.targetVictory}</span>}
                             </div>
-                            <div className="p-4 flex flex-col flex-1">
-                              
-                              {/* Players */}
-                              <div className="flex justify-between items-center text-sm font-medium mb-auto">
-                                <div className="flex flex-col">
-                                  {p1Names.map((n, i) => <span key={i} className="truncate max-w-[100px]">{n}</span>)}
+                             <div className="p-4 flex flex-col flex-1">
+                                {/* Titolo Disciplina (Visibile solo su mobile/tablet) */}
+                                <div className="xl:hidden mb-3">
+                                  <span className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-black uppercase tracking-wider border border-blue-100">
+                                    {DISCIPLINE_TITLES[disciplineKey]}
+                                  </span>
                                 </div>
-                                <span className="text-gray-400 mx-2 text-xs">vs</span>
-                                <div className="flex flex-col text-right">
-                                  {p2Names.map((n, i) => <span key={i} className="truncate max-w-[100px]">{n}</span>)}
+                                
+                                {/* Players */}
+                                <div className="flex justify-between items-center text-lg lg:text-xl font-black mb-auto leading-tight">
+                                  <div className="flex flex-col flex-1">
+                                    {p1Names.map((n, i) => <span key={i} className="whitespace-nowrap">{n}</span>)}
+                                  </div>
+                                  <span className="text-gray-300 mx-4 text-xs italic shrink-0">vs</span>
+                                  <div className="flex flex-col text-right flex-1">
+                                    {p2Names.map((n, i) => <span key={i} className="whitespace-nowrap">{n}</span>)}
+                                  </div>
                                 </div>
-                              </div>
 
-                              {/* Interactive Score Area */}
-                              <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-                                {isDone ? (
-                                  <div className="text-3xl font-black text-green-600 dark:text-green-400 tracking-tight">
-                                    {slot.points1} - {slot.points2}
-                                  </div>
-                                ) : (
-                                  <div className="text-sm font-bold text-gray-400 uppercase tracking-widest py-1.5">
-                                    Da disputare
-                                  </div>
-                                )}
-                              </div>
+                                {/* Interactive Score Area */}
+                                <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+                                  {isDone ? (
+                                    <div className="text-4xl font-black text-green-600 dark:text-green-400 tracking-tighter">
+                                      {slot.points1} - {slot.points2}
+                                    </div>
+                                  ) : (
+                                    <div className="text-xs font-black text-zinc-300 uppercase tracking-[0.2em] py-2">
+                                      In Attesa
+                                    </div>
+                                  )}
+                                </div>
                             </div>
                           </div>
                         </motion.div>
