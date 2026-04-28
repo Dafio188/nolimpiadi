@@ -5,22 +5,26 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    // Eliminiamo le viste
     await prisma.$executeRawUnsafe("DROP VIEW IF EXISTS classifica_qualificazione_disciplina CASCADE;");
     await prisma.$executeRawUnsafe("DROP VIEW IF EXISTS classifica_complessiva CASCADE;");
     await prisma.$executeRawUnsafe("DROP VIEW IF EXISTS v_participations CASCADE;");
     
-    // Eliminiamo record per pulizia
-    await prisma.$executeRawUnsafe("DELETE FROM match_side_athletes WHERE athlete_id IN (SELECT id FROM athletes);");
-    await prisma.$executeRawUnsafe("DELETE FROM match_sides;");
-    await prisma.$executeRawUnsafe("DELETE FROM matches;");
-    await prisma.$executeRawUnsafe("DELETE FROM qualification_slots WHERE kind IN ('BASKET', 'AIR_HOCKEY');");
-    await prisma.$executeRawUnsafe("DELETE FROM disciplines WHERE kind IN ('BASKET', 'AIR_HOCKEY');");
+    // Pulizia totale tabelle (ordine corretto per FK)
+    await prisma.matchSideAthlete.deleteMany({});
+    await prisma.matchSide.deleteMany({});
+    await prisma.match.deleteMany({});
+    await prisma.qualificationSlot.deleteMany({});
+    await prisma.qualificationTurn.deleteMany({});
+    await prisma.athlete.deleteMany({});
+    await prisma.discipline.deleteMany({});
     
     return NextResponse.json({ 
       success: true, 
-      message: "VISTE ELIMINATE CON SUCCESSO! Ora vai nel terminale ed esegui npx prisma db push --accept-data-loss" 
+      message: "DATABASE RESETTATO COMPLETAMENTE! Ora puoi procedere con il Bootstrap." 
     });
   } catch(e: any) {
-    return NextResponse.json({ success: false, error: e.message });
+    console.error("Drop error:", e);
+    return NextResponse.json({ success: false, error: e.message }, { status: 500 });
   }
 }
