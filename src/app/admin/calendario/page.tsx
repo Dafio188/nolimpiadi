@@ -70,19 +70,8 @@ export default function CalendarioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f5f5f7] py-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-12">
-          <Link href="/admin" className="inline-flex items-center gap-2 text-[#86868b] hover:text-[#1d1d1f] font-medium transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Torna alla Centrale
-          </Link>
-          <div className="flex items-center gap-3 bg-white/80 backdrop-blur-md py-2 px-4 rounded-2xl border border-white/50 shadow-sm">
-            <Calendar className="w-5 h-5 text-red-600" />
-            <span className="text-sm font-bold text-[#1d1d1f]">Programma Torneo</span>
-          </div>
-        </div>
+    <div className="relative">
+      <div className="max-w-4xl mx-auto py-8">
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -205,6 +194,6 @@ export default function CalendarioPage() {
           )}
         </motion.div>
       </div>
-    </main>
+    </div>
   );
 }

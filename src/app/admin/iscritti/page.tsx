@@ -21,18 +21,7 @@ export default async function IscrittiPage() {
 
   return (
     <main className="min-h-screen bg-[#f5f5f7] py-12 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-12">
-          <Link href="/admin" className="inline-flex items-center gap-2 text-[#86868b] hover:text-[#1d1d1f] font-medium transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Torna alla Centrale
-          </Link>
-          <div className="flex items-center gap-3 bg-white/80 backdrop-blur-md py-2 px-4 rounded-2xl border border-white/50 shadow-sm">
-            <Users className="w-5 h-5 text-cyan-600" />
-            <span className="text-sm font-bold text-[#1d1d1f]">Database Atleti</span>
-          </div>
-        </div>
+      <div className="max-w-6xl mx-auto py-8">
 
         <header className="mb-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -133,6 +122,6 @@ export default async function IscrittiPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

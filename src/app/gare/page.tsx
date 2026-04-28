@@ -104,7 +104,7 @@ export default function GarePage() {
             </div>
 
             {/* Layout a Griglia: Intestazioni Colonne */}
-            <div className="sticky top-0 z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-3 bg-white/95 backdrop-blur-md border-b shadow-sm rounded-t-lg -mx-2 px-2">
+            <div className="sticky top-[84px] xl:top-[92px] z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-3 bg-white/95 backdrop-blur-md border-b shadow-sm rounded-t-lg -mx-2 px-2">
               {DISCIPLINE_ORDER.map(disciplineKey => (
                 <div key={disciplineKey} className="bg-gray-100 p-3 rounded-lg border text-center font-bold text-sm text-gray-700 shadow-sm">
                   {DISCIPLINE_TITLES[disciplineKey]}

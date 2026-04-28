@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 // Shadcn UI components sostituiti da tag HTML con Tailwind
 // perché non installati nel progetto.
-import { Loader2, Save, Edit3, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, Save, Edit3, CheckCircle, AlertCircle, Gauge } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -156,13 +156,11 @@ export default function ProgrammaPage() {
     <div className="space-y-12 pb-24">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <a href="/admin" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-gray-200 h-9 px-3 border bg-white shadow-sm">
-              &larr; Torna alla Dashboard
-            </a>
-            <h1 className="text-4xl font-extrabold tracking-tight">Live Scoreboard</h1>
-          </div>
-          <p className="text-gray-500 mt-2">Pannello di controllo giudici e gestione punteggi VAR.</p>
+          <h1 className="text-4xl font-extrabold tracking-tight flex items-center gap-4">
+            <Gauge className="w-10 h-10 text-green-500" />
+            LIVE SCORE
+          </h1>
+          <p className="text-gray-500 mt-2">Inserimento punteggi e gestione VAR.</p>
         </div>
         <a href="/admin/classifiche/fase2" className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-sm font-bold text-white shadow hover:bg-indigo-700 transition-colors">
           Vai alla Seconda Fase &rarr;
@@ -180,7 +178,7 @@ export default function ProgrammaPage() {
             </div>
 
             {/* Layout a Griglia: Intestazioni Colonne */}
-            <div className="sticky top-0 z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-3 bg-white/95 backdrop-blur-md border-b shadow-sm rounded-t-lg -mx-2 px-2">
+            <div className="sticky top-[84px] z-40 hidden xl:grid xl:grid-cols-4 gap-6 mb-2 py-3 bg-white/95 backdrop-blur-md border-b shadow-sm rounded-t-lg -mx-2 px-2">
               {DISCIPLINE_ORDER.map(disciplineKey => (
                 <div key={disciplineKey} className="bg-gray-100 p-3 rounded-lg border text-center font-bold text-sm text-gray-700 shadow-sm">
                   {DISCIPLINE_TITLES[disciplineKey]}

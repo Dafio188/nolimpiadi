@@ -85,19 +85,8 @@ export default function BackupPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f5f5f7] py-12 px-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-12">
-          <Link href="/admin" className="inline-flex items-center gap-2 text-[#86868b] hover:text-[#1d1d1f] font-medium transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Torna alla Centrale
-          </Link>
-          <div className="flex items-center gap-3 bg-white/80 backdrop-blur-md py-2 px-4 rounded-2xl border border-white/50 shadow-sm">
-            <Database className="w-5 h-5 text-indigo-600" />
-            <span className="text-sm font-bold text-[#1d1d1f]">Manutenzione Dati</span>
-          </div>
-        </div>
+    <div className="relative">
+      <div className="max-w-4xl mx-auto py-8">
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -105,8 +94,11 @@ export default function BackupPage() {
           className="space-y-8"
         >
           <header>
-            <h1 className="text-4xl font-black text-[#1d1d1f] mb-4">Backup e Ripristino</h1>
-            <p className="text-xl text-[#86868b] font-medium">Esporta lo stato del torneo o ripristina dati da un salvataggio precedente.</p>
+            <h1 className="text-4xl font-black text-[#1d1d1f] mb-4 flex items-center gap-4">
+              <Database className="w-10 h-10 text-indigo-500" />
+              BACKUP DATI
+            </h1>
+            <p className="text-xl text-[#86868b] font-medium">Esportazione e ripristino database.</p>
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -240,6 +232,6 @@ export default function BackupPage() {
           </div>
         </motion.div>
       </div>
-    </main>
+    </div>
   );
 }

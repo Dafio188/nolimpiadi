@@ -1,7 +1,7 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ArrowLeft, Target, Trophy, ChevronRight, Activity } from "lucide-react";
+import { ArrowLeft, Target, Trophy, ChevronRight, Activity, ListOrdered } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
 
 export const dynamic = "force-dynamic";
@@ -35,23 +35,14 @@ export default async function ClassificaFase1() {
   const disciplineOrder = ["PING_PONG", "CALCIO_BALILLA", "AIR_HOCKEY", "FRECCETTE"];
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 flex items-center justify-between">
-        <Link 
-          href="/admin" 
-          className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-accent transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Torna alla Dashboard
-        </Link>
-      </div>
+    <div className="mx-auto w-full max-w-7xl">
 
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
-          <Activity className="w-10 h-10 text-cyan-500" />
-          Classifica <span className="text-cyan-500">Prima Fase</span>
+          <ListOrdered className="w-10 h-10 text-cyan-500" />
+          QUALIFICHE
         </h1>
-        <p className="mt-2 text-zinc-500 font-medium">Classifiche ufficiali dei gironi di Qualificazione per ogni disciplina.</p>
+        <p className="mt-2 text-zinc-500 font-medium">Classifica prima fase e gironi.</p>
       </header>
 
       <div className="space-y-16">

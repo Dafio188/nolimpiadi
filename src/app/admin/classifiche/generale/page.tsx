@@ -29,23 +29,14 @@ export default async function ClassificaGeneraleAdmin() {
   `;
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 flex items-center justify-between">
-        <Link 
-          href="/admin" 
-          className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-amber-500 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Torna alla Dashboard
-        </Link>
-      </div>
+    <div className="mx-auto w-full max-w-7xl">
 
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
           <Trophy className="w-10 h-10 text-amber-500" />
-          Classifica <span className="text-amber-500">Generale</span>
+          VINCITORE
         </h1>
-        <p className="mt-2 text-zinc-500 font-medium">Classifica complessiva per determinare il vincitore assoluto delle Nolimpiadi.</p>
+        <p className="mt-2 text-zinc-500 font-medium">Classifica generale assoluta e Campione 2026.</p>
       </header>
 
       <div className="space-y-16">

@@ -4,23 +4,14 @@ import PremiumCard from "@/components/ui/PremiumCard";
 
 export default function ClassificaFase2Placeholder() {
   return (
-    <div className="mx-auto min-h-screen w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 flex items-center justify-between">
-        <Link 
-          href="/admin" 
-          className="flex items-center gap-2 text-sm font-semibold text-zinc-500 hover:text-accent transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Torna alla Dashboard
-        </Link>
-      </div>
+    <div className="mx-auto w-full max-w-7xl">
 
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
           <Medal className="w-10 h-10 text-amber-500" />
-          Classifica <span className="text-amber-500">Seconda Fase</span>
+          FASE FINALE
         </h1>
-        <p className="mt-2 text-zinc-500 font-medium">Gestione dei tabelloni finali e piazzamenti definitivi (Fase 3 del progetto in arrivo).</p>
+        <p className="mt-2 text-zinc-500 font-medium">Playoff, finali e 2ª fase.</p>
       </header>
 
       <PremiumCard className="p-12 text-center border-none ring-1 ring-amber-500/30 bg-amber-50/50">

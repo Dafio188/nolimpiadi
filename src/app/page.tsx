@@ -12,9 +12,7 @@ export default async function Home() {
   const cookieStore = await cookies();
   const isLoggedIn = cookieStore.get("admin_session")?.value === "authenticated";
 
-  const publicLinks = [
-    { href: "/gare", title: "Gare", desc: "Programma e risultati live", icon: ClipboardList, color: "blue" },
-  ];
+  // Rimosso publicLinks per navigazione via Navbar
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-[#f5f5f7]">
@@ -23,26 +21,9 @@ export default async function Home() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-100 rounded-full blur-[120px] opacity-50" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-16">
-        {/* Top Navigation / Admin Link */}
-        <div className="absolute top-6 right-6 z-50">
-          <Link 
-            href={isLoggedIn ? "/admin" : "/login"}
-            className="group flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md border border-white shadow-sm rounded-full text-xs font-bold text-zinc-600 hover:text-blue-600 hover:shadow-md transition-all duration-300"
-          >
-            {isLoggedIn ? (
-              <LayoutDashboard className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-500 transition-colors" />
-            ) : (
-              <LogIn className="w-3.5 h-3.5 text-zinc-400 group-hover:text-blue-500 transition-colors" />
-            )}
-            <span>{isLoggedIn ? "Pannello Admin" : "Area Riservata"}</span>
-          </Link>
-        </div>
+        {/* Navigazione spostata nella Navbar globale */}
 
-        {/* Header Principale */}
         <header className="text-center mb-16 animate-in">
-          <div className="inline-flex items-center justify-center p-0 overflow-hidden bg-white/50 backdrop-blur-xl rounded-3xl shadow-sm border border-white/50 mb-6 w-24 h-24">
-            <img src="/immagini/stemma.jpeg" alt="Stemma Nolimpiadi" className="w-full h-full object-contain" />
-          </div>
           <h1 className="text-5xl md:text-7xl font-black tracking-tight text-[#1d1d1f] mb-6">
             NOLImpiadi <span className="text-blue-600 italic">2026</span>
           </h1>
@@ -111,28 +92,16 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Grid Pubblica */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 animate-in mb-20" style={{ animationDelay: '0.1s' }}>
-          {publicLinks.map((link) => (
-            <Link href={link.href} key={link.href}>
-              <PremiumCard 
-                title={link.title}
-                description={link.desc}
-                icon={link.icon}
-                color={link.color}
-              />
-            </Link>
-          ))}
-        </div>
+        {/* Griglia Pubblica rimossa in favore della Navbar */}
 
         {/* FantaNolimpiadi Invitation Section */}
-        <section className="mb-20 space-y-8">
+        <section id="fanta" className="mb-20 space-y-8 scroll-mt-24">
           <FantaNoliBanner />
           <FantaNoliInvitation formUrl="https://docs.google.com/forms/d/e/1FAIpQLSfL65wUBiXLybCVxkkYNBd2-H_jC5CoAyqugaJqHdzHpa8z0w/viewform" />
         </section>
 
         {/* Menù Nolimpico */}
-        <section className="mb-20">
+        <section id="menu" className="mb-20 scroll-mt-24">
           <MenuNolimpicoCard pdfUrl="/documenti/Menu%20Nolimpico.pdf" />
         </section>
 
