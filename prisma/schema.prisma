@@ -86,8 +86,8 @@ model QualificationSlot {
   disciplineId   String        @map("discipline_id")
   kind           DisciplineKind
   targetVictory  Int           @map("target_victory")
-  side1Letters   String[]      @map("side1_letters")
-  side2Letters   String[]      @map("side2_letters")
+  side1Letters   String[]      @map("side1_athlete_ids")
+  side2Letters   String[]      @map("side2_athlete_ids")
   createdAt      DateTime      @default(now()) @map("created_at")
   updatedAt      DateTime      @updatedAt @map("updated_at")
 
