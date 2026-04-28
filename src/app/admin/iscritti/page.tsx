@@ -20,8 +20,8 @@ export default async function IscrittiPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f5f5f7] py-12 px-6">
-      <div className="max-w-6xl mx-auto py-8">
+    <div className="mx-auto w-full max-w-7xl">
+      <div className="py-8">
 
         <header className="mb-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
