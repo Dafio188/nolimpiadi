@@ -50,13 +50,16 @@ export async function GET() {
         update: { malusDivisor: 1000 },
       });
 
-      // 2. Inizializza Atleti
+      // 2. Inizializza Atleti (Assegnando le lettere A-L)
+      const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
       const athletes = [];
-      for (const name of athleteNames) {
+      for (let i = 0; i < athleteNames.length; i++) {
+        const name = athleteNames[i];
+        const letter = letters[i];
         const a = await tx.athlete.upsert({
           where: { name },
-          create: { name },
-          update: { name },
+          create: { name, letter },
+          update: { letter }, // Forza l'allineamento della lettera se il nome esiste già
         });
         athletes.push(a);
       }
@@ -84,7 +87,6 @@ export async function GET() {
       }
 
       // 4. Inizializza Turni e Slot (Pianificazione Fissa a Lettere)
-      // Prima puliamo i vecchi slot per evitare duplicati o conflitti con il nuovo schema
       await tx.qualificationSlot.deleteMany({});
       await tx.qualificationTurn.deleteMany({});
 
