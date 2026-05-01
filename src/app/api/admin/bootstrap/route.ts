@@ -4,41 +4,7 @@ import { athleteNames, disciplineSeeds } from "@/lib/nolimpiadi";
 import { DisciplineKind } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
-const SCHEDULE_DATA = [
-  // ROUND 1
-  [
-    { cb: [["D", "L"], ["H", "K"]], fr: [["A"], ["E"]], pp: [["C"], ["G"]], bk: [["B"], ["F"]] }, // P1
-    { cb: [["H", "J"], ["A", "F"]], fr: [["G"], ["L"]], pp: [["D"], ["I"]], bk: [["C"], ["E"]] }, // P2
-    { cb: [["C", "I"], ["D", "E"]], fr: [["B"], ["H"]], pp: [["K"], ["L"]], bk: [["F"], ["J"]] }, // P3
-    { cb: [["F", "L"], ["G", "J"]], fr: [["C"], ["H"]], pp: [["B"], ["E"]], bk: [["A"], ["I"]] }, // P4
-    { cb: [["E", "K"], ["B", "L"]], fr: [["G"], ["I"]], pp: [["A"], ["H"]], bk: [["D"], ["J"]] }, // P5
-    { cb: [["B", "I"], ["A", "L"]], fr: [["D"], ["F"]], pp: [["E"], ["J"]], bk: [["G"], ["K"]] }, // P6
-    { cb: [["A", "K"], ["F", "I"]], fr: [["C"], ["J"]], pp: [["B"], ["G"]], bk: [["D"], ["H"]] }, // P7
-    { cb: [["D", "G"], ["C", "K"]], fr: [["H"], ["J"]], pp: [["F"], ["I"]], bk: [["A"], ["L"]] }, // P8
-  ],
-  // ROUND 2
-  [
-    { cb: [["E", "H"], ["C", "G"]], fr: [["F"], ["K"]], pp: [["A"], ["J"]], bk: [["B"], ["L"]] }, // P1
-    { cb: [["F", "J"], ["H", "I"]], fr: [["A"], ["B"]], pp: [["C"], ["D"]], bk: [["E"], ["K"]] }, // P2
-    { cb: [["D", "K"], ["B", "J"]], fr: [["E"], ["I"]], pp: [["F"], ["G"]], bk: [["C"], ["L"]] }, // P3
-    { cb: [["A", "J"], ["D", "E"]], fr: [["B"], ["F"]], pp: [["H"], ["L"]], bk: [["G"], ["I"]] }, // P4
-    { cb: [["F", "G"], ["H", "I"]], fr: [["D"], ["L"]], pp: [["C"], ["E"]], bk: [["A"], ["K"]] }, // P5
-    { cb: [["C", "I"], ["A", "E"]], fr: [["G"], ["K"]], pp: [["F"], ["L"]], bk: [["B"], ["H"]] }, // P6
-    { cb: [["B", "G"], ["E", "L"]], fr: [["A"], ["I"]], pp: [["H"], ["K"]], bk: [["C"], ["J"]] }, // P7
-    { cb: [["K", "L"], ["G", "J"]], fr: [["C"], ["D"]], pp: [["A"], ["B"]], bk: [["E"], ["H"]] }, // P8
-  ],
-  // ROUND 3
-  [
-    { cb: [["A", "I"], ["C", "F"]], fr: [["E"], ["J"]], pp: [["B"], ["K"]], bk: [["D"], ["G"]] }, // P1
-    { cb: [["B", "H"], ["C", "F"]], fr: [["K"], ["L"]], pp: [["D"], ["J"]], bk: [["E"], ["I"]] }, // P2
-    { cb: [["C", "E"], ["B", "K"]], fr: [["D"], ["H"]], pp: [["I"], ["J"]], bk: [["A"], ["F"]] }, // P3
-    { cb: [["A", "H"], ["D", "G"]], fr: [["C"], ["L"]], pp: [["F"], ["K"]], bk: [["B"], ["I"]] }, // P4
-    { cb: [["B", "E"], ["H", "L"]], fr: [["A"], ["G"]], pp: [["D"], ["I"]], bk: [["C"], ["J"]] }, // P5
-    { cb: [["C", "G"], ["A", "J"]], fr: [["B"], ["F"]], pp: [["E"], ["L"]], bk: [["D"], ["K"]] }, // P6
-    { cb: [["D", "F"], ["I", "L"]], fr: [["J"], ["K"]], pp: [["A"], ["C"]], bk: [["G"], ["H"]] }, // P7
-    { cb: [["J", "K"], ["B", "D"]], fr: [["E"], ["I"]], pp: [["G"], ["H"]], bk: [["F"], ["L"]] }, // P8
-  ],
-];
+import { TOURNAMENT_CALENDAR, DISCIPLINE_KEY_MAP } from "@/data/tournament-calendar";
 
 export async function GET() {
   try {
@@ -91,8 +57,8 @@ export async function GET() {
     await prisma.qualificationSlot.deleteMany({});
     await prisma.qualificationTurn.deleteMany({});
 
-    for (let roundIdx = 0; roundIdx < SCHEDULE_DATA.length; roundIdx++) {
-      const roundData = SCHEDULE_DATA[roundIdx];
+    for (let roundIdx = 0; roundIdx < TOURNAMENT_CALENDAR.length; roundIdx++) {
+      const roundData = TOURNAMENT_CALENDAR[roundIdx];
       for (let slotIdx = 0; slotIdx < roundData.length; slotIdx++) {
         const globalIdx = roundIdx * 8 + slotIdx + 1;
         const turn = await prisma.qualificationTurn.create({
@@ -100,28 +66,28 @@ export async function GET() {
         });
 
         const slotData = roundData[slotIdx];
-        const disciplineMapping = [
-          { kind: DisciplineKind.CALCIO_BALILLA, letters: slotData.cb },
-          { kind: DisciplineKind.FRECCETTE, letters: slotData.fr },
-          { kind: DisciplineKind.PING_PONG, letters: slotData.pp },
-          { kind: DisciplineKind.AIR_HOCKEY, letters: slotData.bk },
-        ];
-
-        for (const item of disciplineMapping) {
-          const disc = disciplinesMap[item.kind];
+        
+        for (const [key, kind] of Object.entries(DISCIPLINE_KEY_MAP)) {
+          const disc = disciplinesMap[kind];
           if (!disc) continue;
+          
+          const letters = (slotData as any)[key];
+          if (!letters) continue;
+
           await prisma.qualificationSlot.create({
             data: {
               turnId: turn.id,
               disciplineId: disc.id,
-              kind: item.kind,
+              kind: kind,
               targetVictory: disc.targetFixed || 10,
-              side1Letters: item.letters[0],
-              side2Letters: item.letters[1],
+              side1Letters: letters[0],
+              side2Letters: letters[1],
             } as any,
           });
         }
       }
+    }
+
     }
 
     // 5. Admin
