@@ -7,7 +7,6 @@ export type TemplateSeries = {
   [DisciplineKind.AIR_HOCKEY]: [string, string];
 };
 
-import { DisciplineKind } from "@prisma/client";
 import { TOURNAMENT_CALENDAR } from "@/data/tournament-calendar";
 
 export type TemplateSeries = {
