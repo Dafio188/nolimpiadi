@@ -54,6 +54,9 @@ export async function GET() {
     }
 
     // 4. Inizializza Turni e Slot (Pianificazione Fissa a Lettere)
+    await prisma.matchSideAthlete.deleteMany({});
+    await prisma.matchSide.deleteMany({});
+    await prisma.match.deleteMany({});
     await prisma.qualificationSlot.deleteMany({});
     await prisma.qualificationTurn.deleteMany({});
 
