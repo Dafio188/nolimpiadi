@@ -37,7 +37,7 @@ export const TOURNAMENT_CALENDAR: CalendarMatch[][] = [
     { cb: [["C", "E"], ["B", "K"]], fr: [["D"], ["H"]], pp: [["I"], ["J"]], ah: [["A"], ["F"]] },
     { cb: [["A", "H"], ["D", "G"]], fr: [["C"], ["L"]], pp: [["F"], ["K"]], ah: [["B"], ["I"]] },
     { cb: [["B", "E"], ["H", "L"]], fr: [["A"], ["G"]], pp: [["D"], ["I"]], ah: [["C"], ["J"]] },
-    { cb: [["C", "G"], ["A", "J"]], fr: [["B"], ["F"]], pp: [["E"], ["L"]], bk: [["D"], ["K"]] }, // Note: bk used in some parts of code
+    { cb: [["C", "G"], ["A", "J"]], fr: [["B"], ["F"]], pp: [["E"], ["L"]], ah: [["D"], ["K"]] }, // Note: bk used in some parts of code
     { cb: [["D", "F"], ["I", "L"]], fr: [["J"], ["K"]], pp: [["A"], ["C"]], ah: [["G"], ["H"]] },
     { cb: [["J", "K"], ["B", "D"]], fr: [["E"], ["I"]], pp: [["G"], ["H"]], ah: [["F"], ["L"]] },
   ],
