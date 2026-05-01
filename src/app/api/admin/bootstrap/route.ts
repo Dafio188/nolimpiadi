@@ -86,9 +86,6 @@ export async function GET() {
           });
         }
       }
-    }
-
-    }
 
     // 5. Admin
     const hashedPassword = await bcrypt.hash("nolimpiadi2026", 10);
