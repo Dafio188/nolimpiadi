@@ -1,9 +1,11 @@
 import { Trophy, Medal, Star, Calendar, Users, ArrowRight, Target, Zap, Activity, Dumbbell } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/ui/Navbar";
+import EditionCard from "@/components/ui/EditionCard";
 import { cookies } from "next/headers";
 
 const EDITIONS = [
+  // ... (EDITIONS data remains the same)
   {
     id: 6,
     title: "6° Edizione",
@@ -227,119 +229,18 @@ export default async function AlboDoroPage() {
 
       {/* Editions List */}
       <section className="pb-40 px-6">
-        <div className="max-w-6xl mx-auto space-y-16">
+        <div className="max-w-6xl mx-auto space-y-24">
           {EDITIONS.map((edition) => (
-            <div key={edition.id} className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl shadow-zinc-200/50 border border-white relative overflow-hidden group">
-              {/* Sfondo decorativo soft */}
-              <div className="absolute top-0 right-0 w-96 h-96 bg-blue-50 rounded-full blur-[100px] -mr-48 -mt-48 opacity-50 group-hover:opacity-100 transition-opacity duration-1000" />
-              
-              <div className="relative z-10">
-                {/* Header Edizione */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase tracking-widest">
-                        {edition.title}
-                      </span>
-                      <span className="text-sm font-bold text-zinc-400">
-                        {edition.date}
-                      </span>
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1d1d1f] tracking-tight">
-                      NOLImpiadi <span className="text-blue-600 italic">{edition.date.split(' ').pop()}</span>
-                    </h2>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right hidden sm:block">
-                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Campione in carica</p>
-                      <p className="text-xl font-black text-[#1d1d1f]">{edition.results[0].name}</p>
-                    </div>
-                    <div className="w-16 h-16 rounded-2xl bg-amber-400 flex items-center justify-center shadow-lg shadow-amber-200">
-                      <Trophy className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                  {/* Podio e Classifica Generale (7 colonne) */}
-                  <div className="lg:col-span-7 space-y-8">
-                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-600 flex items-center gap-2">
-                      <div className="w-8 h-[2px] bg-blue-600/20" />
-                      Classifica Generale
-                    </h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {/* Oro */}
-                      <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-3xl border border-amber-100 shadow-sm">
-                        <p className="text-[10px] font-black text-amber-600 uppercase mb-3">1° Posto</p>
-                        <p className="text-lg font-black text-zinc-900 leading-tight">{edition.results[0].name}</p>
-                      </div>
-                      {/* Argento */}
-                      <div className="bg-gradient-to-br from-zinc-50 to-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
-                        <p className="text-[10px] font-black text-zinc-400 uppercase mb-3">2° Posto</p>
-                        <p className="text-lg font-black text-zinc-900 leading-tight">{edition.results[1].name}</p>
-                      </div>
-                      {/* Bronzo */}
-                      <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-3xl border border-orange-100 shadow-sm">
-                        <p className="text-[10px] font-black text-orange-600 uppercase mb-3">3° Posto</p>
-                        <p className="text-lg font-black text-zinc-900 leading-tight">{edition.results[2].name}</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-zinc-50/50 rounded-[2rem] p-6 border border-zinc-100">
-                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
-                        {edition.results.slice(3).map((res) => (
-                          <div key={res.pos} className="flex items-center justify-between py-2 border-b border-zinc-200/50 last:border-0">
-                            <div className="flex items-center gap-3">
-                              <span className="text-[10px] font-black text-zinc-400 w-6">{res.pos}°</span>
-                              <span className="text-sm font-bold text-zinc-600">{res.name}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Classifiche Discipline (5 colonne) */}
-                  <div className="lg:col-span-5 space-y-8">
-                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-amber-600 flex items-center gap-2">
-                      <div className="w-8 h-[2px] bg-amber-600/20" />
-                      Vincitori Discipline
-                    </h3>
-                    
-                    <div className="grid grid-cols-1 gap-4">
-                      {edition.disciplines.map((disc, dIdx) => (
-                        <div key={dIdx} className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-zinc-100 hover:border-blue-200 hover:shadow-md transition-all duration-300">
-                          <div className="w-12 h-12 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400">
-                            <disc.icon className="w-6 h-6" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{disc.name}</p>
-                            <p className="text-base font-black text-zinc-900">{disc.winner}</p>
-                          </div>
-                          <div className="px-3 py-1 bg-amber-50 rounded-lg">
-                            <Medal className="w-4 h-4 text-amber-500" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="p-6 bg-blue-600 rounded-[2.5rem] text-white relative overflow-hidden group/cta">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
-                      <p className="text-sm font-bold mb-4 relative z-10 italic">
-                        &quot;Ogni disciplina è una battaglia, <br />ogni vittoria è leggenda.&quot;
-                      </p>
-                      <Link href="/gare" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-white text-blue-600 px-4 py-2 rounded-xl hover:scale-105 transition-transform">
-                        Vedi Gare 2026 <ArrowRight className="w-3 h-3" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <EditionCard key={edition.id} edition={edition} />
           ))}
         </div>
       </section>
+    </main>
+  );
+}
+
+
+
 
       {/* Footer CTA */}
       <section className="bg-zinc-900 py-32 px-6">
