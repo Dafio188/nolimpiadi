@@ -235,9 +235,6 @@ export default async function AlboDoroPage() {
           ))}
         </div>
       </section>
-    </main>
-  );
-}
 
 
 
