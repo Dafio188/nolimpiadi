@@ -14,9 +14,9 @@ export default function AdminNavbar() {
 
   const navLinks = [
     { name: "LIVE SCORE", href: "/admin/programma", icon: Gauge },
-    { name: "QUALIFICHE", href: "/admin/classifiche/fase1", icon: ListOrdered },
+    { name: "CLASSIFICA FASE 1", href: "/admin/classifiche/fase1", icon: ListOrdered },
     { name: "FASE FINALE", href: "/admin/classifiche/fase2", icon: Medal },
-    { name: "VINCITORE", href: "/admin/classifiche/generale", icon: Trophy },
+    { name: "CLASSIFICHE GENERALI", href: "/admin/classifiche/generale", icon: Trophy },
     { name: "CONFIGURAZIONE", href: "/admin/setup", icon: Settings },
     { name: "BACKUP DATI", href: "/admin/backup", icon: Database },
   ];

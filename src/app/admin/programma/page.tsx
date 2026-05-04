@@ -232,13 +232,19 @@ export default function ProgrammaPage() {
                               </div>
                               
                               {/* Players */}
-                              <div className="flex justify-between items-center text-2xl lg:text-3xl font-black mb-auto leading-none tracking-tighter">
+                              <div className="flex justify-between items-center text-xl lg:text-2xl font-medium mb-auto leading-none tracking-tight">
                                 <div className="flex flex-col flex-1 min-w-0">
-                                  {p1Names.map((n, i) => <span key={i} className="truncate">{n}</span>)}
+                                  {p1Names.map((n, i) => {
+                                    const cleanName = n.split(' ')[0];
+                                    return <span key={i} className="truncate">{cleanName}</span>;
+                                  })}
                                 </div>
                                 <span className="text-gray-300 mx-4 text-sm italic shrink-0">vs</span>
                                 <div className="flex flex-col text-right flex-1 min-w-0">
-                                  {p2Names.map((n, i) => <span key={i} className="truncate text-right w-full">{n}</span>)}
+                                  {p2Names.map((n, i) => {
+                                    const cleanName = n.split(' ')[0];
+                                    return <span key={i} className="truncate text-right w-full">{cleanName}</span>;
+                                  })}
                                 </div>
                               </div>
 

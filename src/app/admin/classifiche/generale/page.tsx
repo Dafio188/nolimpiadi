@@ -34,7 +34,7 @@ export default async function ClassificaGeneraleAdmin() {
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
           <Trophy className="w-10 h-10 text-amber-500" />
-          VINCITORE
+          CLASSIFICHE GENERALI
         </h1>
         <p className="mt-2 text-zinc-500 font-medium">Classifica generale assoluta e Campione 2026.</p>
       </header>
@@ -73,7 +73,7 @@ export default async function ClassificaGeneraleAdmin() {
                         key={r.athlete_id} 
                         className={`group transition-colors ${isPodium ? "hover:bg-amber-50/50 bg-amber-50/10" : "hover:bg-zinc-50/80"}`}
                       >
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <div className={`flex h-10 w-10 items-center justify-center rounded-xl font-black text-lg ${
                             idx === 0 ? "bg-gradient-to-br from-yellow-300 to-amber-500 text-white shadow-lg shadow-amber-500/40 ring-2 ring-amber-200" : 
                             idx === 1 ? "bg-gradient-to-br from-gray-300 to-zinc-400 text-white shadow-lg shadow-zinc-400/30 ring-2 ring-zinc-200" :
@@ -83,7 +83,7 @@ export default async function ClassificaGeneraleAdmin() {
                             {idx === 0 ? <Trophy className="w-5 h-5 text-yellow-50" /> : idx + 1}
                           </div>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-2">
                           <div className="flex items-center gap-3">
                             <span className={`font-bold ${idx === 0 ? 'text-xl text-amber-700' : 'text-lg text-foreground'}`}>
                               {r.name}
@@ -93,14 +93,14 @@ export default async function ClassificaGeneraleAdmin() {
                             </span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-center font-bold text-zinc-600">{r.matches_played}</td>
-                        <td className="px-6 py-4 text-center font-bold text-cyan-600">
+                        <td className="px-6 py-2 text-center font-bold text-zinc-600">{r.matches_played}</td>
+                        <td className="px-6 py-2 text-center font-bold text-cyan-600">
                           {Number(r.qualification_weighted).toLocaleString("it-IT", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                         </td>
-                        <td className="px-6 py-4 text-center font-bold text-indigo-600">
+                        <td className="px-6 py-2 text-center font-bold text-indigo-600">
                           {Number(r.finals_weighted).toLocaleString("it-IT", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                         </td>
-                        <td className="px-6 py-4 text-right">
+                        <td className="px-6 py-2 text-right">
                           <span className={`text-2xl font-black ${idx === 0 ? 'text-amber-600' : 'text-zinc-800'}`}>
                             {Number(r.total_weighted).toLocaleString("it-IT", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                           </span>

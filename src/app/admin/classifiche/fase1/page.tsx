@@ -40,7 +40,7 @@ export default async function ClassificaFase1() {
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
           <ListOrdered className="w-10 h-10 text-cyan-500" />
-          QUALIFICHE
+          CLASSIFICA FASE 1
         </h1>
         <p className="mt-2 text-zinc-500 font-medium">Classifica prima fase e gironi.</p>
       </header>
@@ -110,7 +110,7 @@ export default async function ClassificaFase1() {
                               key={r.athlete_id} 
                               className={`group transition-colors ${isQualificata ? "hover:bg-cyan-50/50" : "hover:bg-zinc-50/80 opacity-70"}`}
                             >
-                              <td className="px-6 py-4">
+                              <td className="px-6 py-2">
                                 <div className={`flex h-8 w-8 items-center justify-center rounded-xl font-black text-sm ${
                                   idx === 0 ? "bg-amber-400 text-white shadow-lg shadow-amber-400/30" : 
                                   idx === 1 ? "bg-zinc-300 text-white shadow-lg shadow-zinc-300/30" :
@@ -121,7 +121,7 @@ export default async function ClassificaFase1() {
                                   {idx + 1}
                                 </div>
                               </td>
-                              <td className="px-6 py-4">
+                              <td className="px-6 py-2">
                                 <div className="flex items-center gap-3">
                                   <span className="font-bold text-foreground">{r.athlete_name}</span>
                                   <span className="text-[10px] font-bold text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-full">
@@ -134,11 +134,11 @@ export default async function ClassificaFase1() {
                                   )}
                                 </div>
                               </td>
-                              <td className="px-6 py-4 text-center font-bold text-zinc-600">{r.matches_played}</td>
-                              <td className="px-6 py-4 text-center font-black text-foreground">{r.wins}</td>
-                              <td className="px-6 py-4 text-center font-bold text-emerald-600">{r.total_scored}</td>
-                              <td className="px-6 py-4 text-center font-bold text-red-600">{r.total_conceded}</td>
-                              <td className="px-6 py-4 text-right">
+                              <td className="px-6 py-2 text-center font-bold text-zinc-600">{r.matches_played}</td>
+                              <td className="px-6 py-2 text-center font-black text-foreground">{r.wins}</td>
+                              <td className="px-6 py-2 text-center font-bold text-emerald-600">{r.total_scored}</td>
+                              <td className="px-6 py-2 text-center font-bold text-red-600">{r.total_conceded}</td>
+                              <td className="px-6 py-2 text-right">
                                 <span className="text-lg font-black text-cyan-600">
                                   {Number(r.qualification_weighted).toLocaleString("it-IT", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
                                 </span>
