@@ -25,10 +25,10 @@ const EDITIONS = [
       { pos: 12, name: "Aurelio Piccione" },
     ],
     disciplines: [
-      { name: "Ping Pong", winner: "Stefano M.", icon: Activity },
-      { name: "Calcio Balilla", winner: "Alessandro R.", icon: Users },
-      { name: "Freccette", winner: "Massimo R.", icon: Target },
-      { name: "Air Hockey", winner: "Stefano M.", icon: Zap },
+      { name: "Ping Pong", winner: "Stefano M.", iconName: "Activity" },
+      { name: "Calcio Balilla", winner: "Alessandro R.", iconName: "Users" },
+      { name: "Freccette", winner: "Massimo R.", iconName: "Target" },
+      { name: "Air Hockey", winner: "Stefano M.", iconName: "Zap" },
     ]
   },
   {
@@ -50,10 +50,10 @@ const EDITIONS = [
       { pos: 12, name: "Emma Tira" },
     ],
     disciplines: [
-      { name: "Ping Pong", winner: "Pietro N.", icon: Activity },
-      { name: "Calcio Balilla", winner: "Gianni T.", icon: Users },
-      { name: "Freccette", winner: "Pietro N.", icon: Target },
-      { name: "Air Hockey", winner: "Pietro N.", icon: Zap },
+      { name: "Ping Pong", winner: "Pietro N.", iconName: "Activity" },
+      { name: "Calcio Balilla", winner: "Gianni T.", iconName: "Users" },
+      { name: "Freccette", winner: "Pietro N.", iconName: "Target" },
+      { name: "Air Hockey", winner: "Pietro N.", iconName: "Zap" },
     ]
   },
   {
@@ -75,10 +75,10 @@ const EDITIONS = [
       { pos: 12, name: "Matheus Interliggi" },
     ],
     disciplines: [
-      { name: "Ping Pong", winner: "Massimo R.", icon: Activity },
-      { name: "Calcio Balilla", winner: "Pietro N.", icon: Users },
-      { name: "Freccette", winner: "Gianni T.", icon: Target },
-      { name: "Air Hockey", winner: "Massimo R.", icon: Zap },
+      { name: "Ping Pong", winner: "Massimo R.", iconName: "Activity" },
+      { name: "Calcio Balilla", winner: "Pietro N.", iconName: "Users" },
+      { name: "Freccette", winner: "Gianni T.", iconName: "Target" },
+      { name: "Air Hockey", winner: "Massimo R.", iconName: "Zap" },
     ]
   },
   {
@@ -100,10 +100,10 @@ const EDITIONS = [
       { pos: 12, name: "Matheus Interliggi" },
     ],
     disciplines: [
-      { name: "Ping Pong", winner: "Massimo R.", icon: Activity },
-      { name: "Calcio Balilla", winner: "Salvatore B.", icon: Users },
-      { name: "Freccette", winner: "Massimo R.", icon: Target },
-      { name: "Air Hockey", winner: "Massimo R.", icon: Zap },
+      { name: "Ping Pong", winner: "Massimo R.", iconName: "Activity" },
+      { name: "Calcio Balilla", winner: "Salvatore B.", iconName: "Users" },
+      { name: "Freccette", winner: "Massimo R.", iconName: "Target" },
+      { name: "Air Hockey", winner: "Massimo R.", iconName: "Zap" },
     ]
   },
   {
@@ -125,10 +125,10 @@ const EDITIONS = [
       { pos: 12, name: "Aurelio Piccione" },
     ],
     disciplines: [
-      { name: "Ping Pong", winner: "Pietro N.", icon: Activity },
-      { name: "Calcio Balilla", winner: "Massimo R.", icon: Users },
-      { name: "Freccette", winner: "Salvatore B.", icon: Target },
-      { name: "Air Hockey", winner: "Pietro N.", icon: Zap },
+      { name: "Ping Pong", winner: "Pietro N.", iconName: "Activity" },
+      { name: "Calcio Balilla", winner: "Massimo R.", iconName: "Users" },
+      { name: "Freccette", winner: "Salvatore B.", iconName: "Target" },
+      { name: "Air Hockey", winner: "Pietro N.", iconName: "Zap" },
     ]
   },
   {
@@ -150,10 +150,10 @@ const EDITIONS = [
       { pos: 12, name: "Matheus Interliggi" },
     ],
     disciplines: [
-      { name: "Ping Pong", winner: "Pietro N.", icon: Activity },
-      { name: "Calcio Balilla", winner: "Gianni T.", icon: Users },
-      { name: "Freccette", winner: "Massimo R.", icon: Target },
-      { name: "Air Hockey", winner: "Pietro N.", icon: Zap },
+      { name: "Ping Pong", winner: "Pietro N.", iconName: "Activity" },
+      { name: "Calcio Balilla", winner: "Gianni T.", iconName: "Users" },
+      { name: "Freccette", winner: "Massimo R.", iconName: "Target" },
+      { name: "Air Hockey", winner: "Pietro N.", iconName: "Zap" },
     ]
   },
 ];

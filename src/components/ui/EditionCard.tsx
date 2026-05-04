@@ -1,11 +1,22 @@
 "use client";
 
 import React from "react";
-import { Trophy, Medal, ArrowRight } from "lucide-react";
+import { Trophy, Medal, ArrowRight, Activity, Users, Target, Zap, Dumbbell } from "lucide-react";
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  Activity,
+  Users,
+  Target,
+  Zap,
+  Dumbbell
+};
 
 export default function EditionCard({ edition }: { edition: any }) {
   // Lo stato del tab attivo per le discipline
   const [activeTab, setActiveTab] = React.useState(0);
+
+  // Helper per ottenere l'icona
+  const getIcon = (iconName: string) => ICON_MAP[iconName] || Activity;
 
   return (
     <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl shadow-zinc-200/50 border border-white relative overflow-hidden group">
@@ -98,7 +109,7 @@ export default function EditionCard({ edition }: { edition: any }) {
                     onClick={() => setActiveTab(idx)}
                     className={`flex-1 py-4 flex flex-col items-center gap-1 transition-all relative ${activeTab === idx ? 'bg-white' : 'hover:bg-zinc-100/50'}`}
                   >
-                    <disc.icon className={`w-5 h-5 ${activeTab === idx ? 'text-blue-600' : 'text-zinc-400'}`} />
+                    {React.createElement(getIcon(disc.iconName), { className: `w-5 h-5 ${activeTab === idx ? 'text-blue-600' : 'text-zinc-400'}` })}
                     <span className={`text-[9px] font-black uppercase tracking-widest ${activeTab === idx ? 'text-blue-600' : 'text-zinc-400'}`}>
                       {disc.name.split(' ')[0]}
                     </span>
@@ -114,7 +125,7 @@ export default function EditionCard({ edition }: { edition: any }) {
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600">
-                      {React.createElement(edition.disciplines[activeTab].icon, { className: "w-6 h-6" })}
+                      {React.createElement(getIcon(edition.disciplines[activeTab].iconName), { className: "w-6 h-6" })}
                     </div>
                     <div>
                       <h4 className="text-xl font-black text-zinc-900 leading-tight uppercase tracking-tighter">
