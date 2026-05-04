@@ -157,13 +157,29 @@ export default function GarePage() {
                                 </div>
                                 
                                 {/* Players */}
-                                <div className="flex justify-between items-center text-sm md:text-base lg:text-lg font-black mb-auto leading-tight">
+                                <div className="flex justify-between items-center text-xs md:text-sm lg:text-base font-medium mb-auto leading-tight">
                                   <div className="flex flex-col flex-1 min-w-0">
-                                    {p1Names.map((n, i) => <span key={i} className="truncate">{n}</span>)}
+                                    {p1Names.map((n, i) => (
+                                      <span key={i} className="truncate">
+                                        {n.split(' ').map((word, idx) => {
+                                          // Se è la prima parola o dopo un '/', la teniamo
+                                          if (idx === 0 || n.split(' ')[idx-1] === '/') return word;
+                                          // Altrimenti è un cognome/iniziale, lo saltiamo
+                                          return null;
+                                        }).filter(Boolean).join(' ')}
+                                      </span>
+                                    ))}
                                   </div>
                                   <span className="text-gray-300 mx-2 text-[10px] italic shrink-0">vs</span>
                                   <div className="flex flex-col text-right flex-1 min-w-0">
-                                    {p2Names.map((n, i) => <span key={i} className="truncate">{n}</span>)}
+                                    {p2Names.map((n, i) => (
+                                      <span key={i} className="truncate">
+                                        {n.split(' ').map((word, idx) => {
+                                          if (idx === 0 || n.split(' ')[idx-1] === '/') return word;
+                                          return null;
+                                        }).filter(Boolean).join(' ')}
+                                      </span>
+                                    ))}
                                   </div>
                                 </div>
 

@@ -134,7 +134,7 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 200, damping: 25, delay: 0.15 }}
-      className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 border border-amber-200/60 shadow-2xl shadow-amber-500/30"
+      className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 border border-amber-200/60 shadow-2xl shadow-zinc-900/20"
     >
       {/* Decorative blobs */}
       <div className="absolute top-0 right-0 w-72 h-72 bg-amber-300/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -272,11 +272,16 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
         </div>
       </div>
 
-      {/* Striscia Orizzontale Mascotte Gastronomiche */}
-      <div className="bg-white/40 backdrop-blur-sm border-t border-amber-100 py-6 px-6 overflow-hidden">
-        <div className="flex items-center justify-center gap-8 md:gap-16 opacity-80">
+      {/* Striscia Orizzontale Mascotte Gastronomiche — ANIMATA MARQUEE */}
+      <div className="bg-white/40 backdrop-blur-sm border-t border-amber-100 py-8 px-6 overflow-hidden">
+        <div className="flex animate-marquee whitespace-nowrap gap-16 min-w-full">
           {[
             "Nolimpius che mangia gli spaghetti.png",
+            "Chef Nolimpius che si lecca i baffi.png",
+            "Nolimpius cameriere.png",
+            "Chef Nolimpius.png",
+            "Nolimpius che cucina.png",
+            "Nolimpius che mangia gli spaghetti.png", // Duplicate for seamless loop
             "Chef Nolimpius che si lecca i baffi.png",
             "Nolimpius cameriere.png",
             "Chef Nolimpius.png",
@@ -285,7 +290,7 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
             <img 
               key={i} 
               src={`/immagini/mascot/${img}`} 
-              className="h-12 md:h-20 w-auto object-contain hover:scale-125 hover:rotate-6 transition-all duration-300" 
+              className="h-16 md:h-24 w-auto object-contain hover:scale-125 hover:rotate-6 transition-all duration-300 flex-shrink-0" 
               alt="Mascot Menu"
             />
           ))}
@@ -295,7 +300,7 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
       {/* Bottom stripe */}
       <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-400" />
 
-      <style>{`
+      <style jsx>{`
         @keyframes floatChefL {
           0%, 100% { transform: translateY(0px) rotate(-2deg); }
           50% { transform: translateY(-10px) rotate(0deg); }
@@ -303,6 +308,17 @@ export default function MenuNolimpicoCard({ pdfUrl }: MenuNolimpicoCardProps) {
         @keyframes floatChefR {
           0%, 100% { transform: translateY(-4px) rotate(2deg) scaleX(-1); }
           50% { transform: translateY(4px) rotate(0deg) scaleX(-1); }
+        }
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+          display: flex;
+          animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </motion.section>

@@ -1,0 +1,4391 @@
+{
+  "nodes": [
+    {
+      "id": "src_app_admin_backup_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "backup_page_handleexport",
+      "label": "handleExport()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L24"
+    },
+    {
+      "id": "backup_page_handleimport",
+      "label": "handleImport()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L54"
+    },
+    {
+      "id": "src_app_admin_calendario_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "calendario_page_fetchsettings",
+      "label": "fetchSettings()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L22"
+    },
+    {
+      "id": "calendario_page_handlegenerate",
+      "label": "handleGenerate()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L40"
+    },
+    {
+      "id": "src_app_admin_classifiche_fase1_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\classifiche\\fase1\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_admin_classifiche_fase2_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\classifiche\\fase2\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "fase2_page_classificafase2placeholder",
+      "label": "ClassificaFase2Placeholder()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\classifiche\\fase2\\page.tsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_app_admin_classifiche_generale_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\classifiche\\generale\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_admin_finali_finaliclient_tsx",
+      "label": "FinaliClient.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "finali_finaliclient_fetchdata",
+      "label": "fetchData()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L56"
+    },
+    {
+      "id": "finali_finaliclient_getbracketlines",
+      "label": "getBracketLines()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L79"
+    },
+    {
+      "id": "src_app_admin_finali_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\finali\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "finali_page_finalipage",
+      "label": "FinaliPage()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\finali\\page.tsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_app_admin_iscritti_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\iscritti\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "iscritti_page_gettiercolor",
+      "label": "getTierColor()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\iscritti\\page.tsx",
+      "source_location": "L13"
+    },
+    {
+      "id": "src_app_admin_layout_tsx",
+      "label": "layout.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\layout.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "admin_layout_adminlayout",
+      "label": "AdminLayout()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\layout.tsx",
+      "source_location": "L3"
+    },
+    {
+      "id": "src_app_admin_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_admin_programma_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "programma_page_fetchdata",
+      "label": "fetchData()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L58"
+    },
+    {
+      "id": "programma_page_handleinputchange",
+      "label": "handleInputChange()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L78"
+    },
+    {
+      "id": "programma_page_initeditmode",
+      "label": "initEditMode()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L88"
+    },
+    {
+      "id": "programma_page_handlesave",
+      "label": "handleSave()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L111"
+    },
+    {
+      "id": "src_app_admin_setup_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "setup_page_setuppage",
+      "label": "SetupPage()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\page.tsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_app_admin_setup_setup_client_tsx",
+      "label": "setup-client.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "setup_setup_client_getcategorylabel",
+      "label": "getCategoryLabel()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L10"
+    },
+    {
+      "id": "setup_setup_client_starteditathlete",
+      "label": "startEditAthlete()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L31"
+    },
+    {
+      "id": "setup_setup_client_starteditdiscipline",
+      "label": "startEditDiscipline()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L38"
+    },
+    {
+      "id": "setup_setup_client_cancelathlete",
+      "label": "cancelAthlete()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L44"
+    },
+    {
+      "id": "setup_setup_client_canceldiscipline",
+      "label": "cancelDiscipline()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L49"
+    },
+    {
+      "id": "setup_setup_client_saveathlete",
+      "label": "saveAthlete()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L54"
+    },
+    {
+      "id": "setup_setup_client_savediscipline",
+      "label": "saveDiscipline()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L85"
+    },
+    {
+      "id": "setup_setup_client_async",
+      "label": "async()",
+      "file_type": "code",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L157"
+    },
+    {
+      "id": "src_app_albo_doro_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\albo-doro\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_anteprima_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "anteprima_page_pill",
+      "label": "Pill()",
+      "file_type": "code",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "anteprima_page_scorerow",
+      "label": "ScoreRow()",
+      "file_type": "code",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L13"
+    },
+    {
+      "id": "anteprima_page_disciplinecard",
+      "label": "DisciplineCard()",
+      "file_type": "code",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L22"
+    },
+    {
+      "id": "anteprima_page_bracketbox",
+      "label": "BracketBox()",
+      "file_type": "code",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L76"
+    },
+    {
+      "id": "anteprima_page_anteprimapage",
+      "label": "AnteprimaPage()",
+      "file_type": "code",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L96"
+    },
+    {
+      "id": "src_app_api_admin_athletes_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "athletes_route_parsename",
+      "label": "parseName()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "athletes_route_patch",
+      "label": "PATCH()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L14"
+    },
+    {
+      "id": "src_app_api_admin_backup_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\backup\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "backup_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\backup\\route.ts",
+      "source_location": "L4"
+    },
+    {
+      "id": "backup_route_post",
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\backup\\route.ts",
+      "source_location": "L41"
+    },
+    {
+      "id": "src_app_api_admin_bootstrap_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "bootstrap_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L43"
+    },
+    {
+      "id": "src_app_api_admin_discipline_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "discipline_route_parsetarget",
+      "label": "parseTarget()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L4"
+    },
+    {
+      "id": "discipline_route_patch",
+      "label": "PATCH()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L10"
+    },
+    {
+      "id": "src_app_api_admin_drop_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\drop\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "drop_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\drop\\route.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_app_api_admin_schedule_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\schedule\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "schedule_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\schedule\\route.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_app_api_admin_schedule_save_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\schedule\\save\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "save_route_post",
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\schedule\\save\\route.ts",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_app_api_admin_setup_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\setup\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "setup_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\admin\\setup\\route.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_app_api_atleti_id_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\atleti\\[id]\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "id_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\atleti\\[id]\\route.ts",
+      "source_location": "L4"
+    },
+    {
+      "id": "src_app_api_auth_login_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "login_route_post",
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_app_api_auth_logout_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\auth\\logout\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "logout_route_post",
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\auth\\logout\\route.ts",
+      "source_location": "L4"
+    },
+    {
+      "id": "src_app_api_classifica_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\classifica\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "classifica_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\classifica\\route.ts",
+      "source_location": "L13"
+    },
+    {
+      "id": "src_app_api_documenti_regolamento_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\documenti\\regolamento\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "regolamento_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\documenti\\regolamento\\route.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_app_api_gare_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\gare\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "gare_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\gare\\route.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_app_api_matches_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "matches_route_isrecord",
+      "label": "isRecord()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "matches_route_parseenumvalue",
+      "label": "parseEnumValue()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L9"
+    },
+    {
+      "id": "matches_route_parseintfield",
+      "label": "parseIntField()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L18"
+    },
+    {
+      "id": "matches_route_post",
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L24"
+    },
+    {
+      "id": "src_app_api_qualificati_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "qualificati_route_parsekind",
+      "label": "parseKind()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "qualificati_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L20"
+    },
+    {
+      "id": "src_app_api_suggestions_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "suggestions_route_parsekind",
+      "label": "parseKind()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "suggestions_route_pairkey",
+      "label": "pairKey()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L11"
+    },
+    {
+      "id": "suggestions_route_teamkey",
+      "label": "teamKey()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L15"
+    },
+    {
+      "id": "suggestions_route_matchkey",
+      "label": "matchKey()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L19"
+    },
+    {
+      "id": "suggestions_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L25"
+    },
+    {
+      "id": "src_app_api_turni_plan_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "plan_route_isrecord",
+      "label": "isRecord()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "plan_route_parseintornull",
+      "label": "parseIntOrNull()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L10"
+    },
+    {
+      "id": "plan_route_parseboolean",
+      "label": "parseBoolean()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L19"
+    },
+    {
+      "id": "plan_route_parsedateornull",
+      "label": "parseDateOrNull()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L25"
+    },
+    {
+      "id": "plan_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L31"
+    },
+    {
+      "id": "plan_route_post",
+      "label": "POST()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L44"
+    },
+    {
+      "id": "src_app_api_turni_suggest_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "suggest_route_pairkey",
+      "label": "pairKey()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "suggest_route_matchkeysingles",
+      "label": "matchKeySingles()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L9"
+    },
+    {
+      "id": "suggest_route_teamkey",
+      "label": "teamKey()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L13"
+    },
+    {
+      "id": "suggest_route_matchupkey",
+      "label": "matchupKey()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L17"
+    },
+    {
+      "id": "suggest_route_defaulttargetvictory",
+      "label": "defaultTargetVictory()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L23"
+    },
+    {
+      "id": "suggest_route_qualificatiids",
+      "label": "qualificatiIds()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L30"
+    },
+    {
+      "id": "suggest_route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L42"
+    },
+    {
+      "id": "src_app_atleti_id_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "id_page_formatnumber",
+      "label": "formatNumber()",
+      "file_type": "code",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L42"
+    },
+    {
+      "id": "id_page_stagelabel",
+      "label": "stageLabel()",
+      "file_type": "code",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L47"
+    },
+    {
+      "id": "id_page_fetchathlete",
+      "label": "fetchAthlete()",
+      "file_type": "code",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L64"
+    },
+    {
+      "id": "src_app_classifica_classificalive_tsx",
+      "label": "ClassificaLive.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "classifica_classificalive_formatnumber",
+      "label": "formatNumber()",
+      "file_type": "code",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L22"
+    },
+    {
+      "id": "classifica_classificalive_tick",
+      "label": "tick()",
+      "file_type": "code",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L52"
+    },
+    {
+      "id": "src_app_classifica_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\classifica\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "classifica_page_classificapage",
+      "label": "ClassificaPage()",
+      "file_type": "code",
+      "source_file": "src\\app\\classifica\\page.tsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_app_gare_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\gare\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "gare_page_fetchdata",
+      "label": "fetchData()",
+      "file_type": "code",
+      "source_file": "src\\app\\gare\\page.tsx",
+      "source_location": "L51"
+    },
+    {
+      "id": "src_app_giudici_classificamini_tsx",
+      "label": "ClassificaMini.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\ClassificaMini.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "giudici_classificamini_formatnumber",
+      "label": "formatNumber()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\ClassificaMini.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "giudici_classificamini_classificamini",
+      "label": "ClassificaMini()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\ClassificaMini.tsx",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_app_giudici_giudicidashboard_tsx",
+      "label": "GiudiciDashboard.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "giudici_giudicidashboard_defaultformstate",
+      "label": "defaultFormState()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L72"
+    },
+    {
+      "id": "giudici_giudicidashboard_parseintornull",
+      "label": "parseIntOrNull()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L94"
+    },
+    {
+      "id": "giudici_giudicidashboard_update",
+      "label": "update()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L156"
+    },
+    {
+      "id": "giudici_giudicidashboard_loadsuggestions",
+      "label": "loadSuggestions()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L286"
+    },
+    {
+      "id": "giudici_giudicidashboard_submit",
+      "label": "submit()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L302"
+    },
+    {
+      "id": "src_app_giudici_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "giudici_page_giudicipage",
+      "label": "GiudiciPage()",
+      "file_type": "code",
+      "source_file": "src\\app\\giudici\\page.tsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_app_layout_tsx",
+      "label": "layout.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_layout_rootlayout",
+      "label": "RootLayout()",
+      "file_type": "code",
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "src_app_login_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "login_page_loginform",
+      "label": "LoginForm()",
+      "file_type": "code",
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_app_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_stampa_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "stampa_page_kindlabel",
+      "label": "kindLabel()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L32"
+    },
+    {
+      "id": "stampa_page_jointeam",
+      "label": "joinTeam()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L48"
+    },
+    {
+      "id": "stampa_page_asseedlabel",
+      "label": "asSeedLabel()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L52"
+    },
+    {
+      "id": "stampa_page_bracketbox",
+      "label": "BracketBox()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L58"
+    },
+    {
+      "id": "stampa_page_brackettemplate",
+      "label": "BracketTemplate()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L76"
+    },
+    {
+      "id": "stampa_page_qualificati",
+      "label": "qualificati()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L125"
+    },
+    {
+      "id": "stampa_page_chunkarray",
+      "label": "chunkArray()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L143"
+    },
+    {
+      "id": "src_app_stampa_printbutton_tsx",
+      "label": "PrintButton.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\PrintButton.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "stampa_printbutton_printbutton",
+      "label": "PrintButton()",
+      "file_type": "code",
+      "source_file": "src\\app\\stampa\\PrintButton.tsx",
+      "source_location": "L3"
+    },
+    {
+      "id": "src_components_ui_adminnavbar_tsx",
+      "label": "AdminNavbar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\AdminNavbar.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ui_adminnavbar_adminnavbar",
+      "label": "AdminNavbar()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\AdminNavbar.tsx",
+      "source_location": "L12"
+    },
+    {
+      "id": "src_components_ui_fantanolibanner_tsx",
+      "label": "FantaNoliBanner.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\FantaNoliBanner.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ui_fantanolibanner_fantanolibanner",
+      "label": "FantaNoliBanner()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\FantaNoliBanner.tsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_components_ui_fantanolifeatures_tsx",
+      "label": "FantaNoliFeatures.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\FantaNoliFeatures.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ui_fantanolifeatures_fantanolifeatures",
+      "label": "FantaNoliFeatures()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\FantaNoliFeatures.tsx",
+      "source_location": "L2"
+    },
+    {
+      "id": "src_components_ui_fantanoliinvitation_tsx",
+      "label": "FantaNoliInvitation.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\FantaNoliInvitation.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ui_fantanoliinvitation_fantanoliinvitation",
+      "label": "FantaNoliInvitation()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\FantaNoliInvitation.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "src_components_ui_menunolimpicocard_tsx",
+      "label": "MenuNolimpicoCard.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\MenuNolimpicoCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ui_menunolimpicocard_menunolimpicocard",
+      "label": "MenuNolimpicoCard()",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\MenuNolimpicoCard.tsx",
+      "source_location": "L129"
+    },
+    {
+      "id": "src_components_ui_navbar_tsx",
+      "label": "Navbar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\Navbar.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_ui_premiumcard_tsx",
+      "label": "PremiumCard.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ui\\PremiumCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_browser_ts",
+      "label": "browser.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\browser.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_client_ts",
+      "label": "client.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_commoninputtypes_ts",
+      "label": "commonInputTypes.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\commonInputTypes.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_enums_ts",
+      "label": "enums.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\enums.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_internal_class_ts",
+      "label": "class.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\internal\\class.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "internal_class_decodebase64aswasm",
+      "label": "decodeBase64AsWasm()",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\internal\\class.ts",
+      "source_location": "L41"
+    },
+    {
+      "id": "internal_class_getprismaclientclass",
+      "label": "getPrismaClientClass()",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\internal\\class.ts",
+      "source_location": "L282"
+    },
+    {
+      "id": "src_generated_prisma_internal_prismanamespace_ts",
+      "label": "prismaNamespace.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\internal\\prismaNamespace.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_internal_prismanamespacebrowser_ts",
+      "label": "prismaNamespaceBrowser.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\internal\\prismaNamespaceBrowser.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_admin_ts",
+      "label": "Admin.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\Admin.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_athlete_ts",
+      "label": "Athlete.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\Athlete.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_discipline_ts",
+      "label": "Discipline.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\Discipline.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_match_ts",
+      "label": "Match.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\Match.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_matchside_ts",
+      "label": "MatchSide.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\MatchSide.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_matchsideathlete_ts",
+      "label": "MatchSideAthlete.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\MatchSideAthlete.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_qualificationslot_ts",
+      "label": "QualificationSlot.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\QualificationSlot.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_qualificationturn_ts",
+      "label": "QualificationTurn.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\QualificationTurn.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_systemsetting_ts",
+      "label": "SystemSetting.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models\\SystemSetting.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_generated_prisma_models_ts",
+      "label": "models.ts",
+      "file_type": "code",
+      "source_file": "src\\generated\\prisma\\models.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_nolimpiadi_ts",
+      "label": "nolimpiadi.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\nolimpiadi.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_nolimpiadi_assertnever",
+      "label": "assertNever()",
+      "file_type": "code",
+      "source_file": "src\\lib\\nolimpiadi.ts",
+      "source_location": "L57"
+    },
+    {
+      "id": "src_lib_prisma_ts",
+      "label": "prisma.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\prisma.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_schedule_template_ts",
+      "label": "schedule-template.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\schedule-template.ts",
+      "source_location": "L1"
+    }
+  ],
+  "edges": [
+    {
+      "source": "src_app_admin_backup_page_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_backup_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_backup_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_backup_page_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_backup_page_tsx",
+      "target": "backup_page_handleexport",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_backup_page_tsx",
+      "target": "backup_page_handleimport",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\backup\\page.tsx",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_calendario_page_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_calendario_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_calendario_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_calendario_page_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_calendario_page_tsx",
+      "target": "calendario_page_fetchsettings",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_calendario_page_tsx",
+      "target": "calendario_page_handlegenerate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "calendario_page_handlegenerate",
+      "target": "calendario_page_fetchsettings",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\calendario\\page.tsx",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase1_page_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase1\\page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase1_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase1\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase1_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase1\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase1_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase1\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase1_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase1\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase2_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase2\\page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase2_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase2\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase2_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase2\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_fase2_page_tsx",
+      "target": "fase2_page_classificafase2placeholder",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\fase2\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_generale_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\generale\\page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_generale_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\generale\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_generale_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\generale\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_classifiche_generale_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\classifiche\\generale\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_finaliclient_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_finaliclient_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_finaliclient_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_finaliclient_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_finaliclient_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_finaliclient_tsx",
+      "target": "finali_finaliclient_fetchdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_finaliclient_tsx",
+      "target": "finali_finaliclient_getbracketlines",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\FinaliClient.tsx",
+      "source_location": "L79",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_page_tsx",
+      "target": "src_app_admin_finali_finaliclient",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_finali_page_tsx",
+      "target": "finali_page_finalipage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\finali\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_iscritti_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\iscritti\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_iscritti_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\iscritti\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_iscritti_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\iscritti\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_iscritti_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\iscritti\\page.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_iscritti_page_tsx",
+      "target": "iscritti_page_gettiercolor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\iscritti\\page.tsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_layout_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_adminnavbar",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\layout.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_layout_tsx",
+      "target": "admin_layout_adminlayout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\layout.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_page_tsx",
+      "target": "headers",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_page_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "sonner",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "programma_page_fetchdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "programma_page_handleinputchange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "programma_page_initeditmode",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_programma_page_tsx",
+      "target": "programma_page_handlesave",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "programma_page_handlesave",
+      "target": "programma_page_fetchdata",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\programma\\page.tsx",
+      "source_location": "L136",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_app_admin_setup_setup_client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_page_tsx",
+      "target": "setup_page_setuppage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_getcategorylabel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_starteditathlete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_starteditdiscipline",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_cancelathlete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_canceldiscipline",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_saveathlete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_savediscipline",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_setup_setup_client_tsx",
+      "target": "setup_setup_client_async",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\admin\\setup\\setup-client.tsx",
+      "source_location": "L157",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_albo_doro_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\albo-doro\\page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_albo_doro_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\albo-doro\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_albo_doro_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_navbar",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\albo-doro\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_albo_doro_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\albo-doro\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_albo_doro_page_tsx",
+      "target": "headers",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\albo-doro\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_anteprima_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_anteprima_page_tsx",
+      "target": "anteprima_page_pill",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_anteprima_page_tsx",
+      "target": "anteprima_page_scorerow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_anteprima_page_tsx",
+      "target": "anteprima_page_disciplinecard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_anteprima_page_tsx",
+      "target": "anteprima_page_bracketbox",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_anteprima_page_tsx",
+      "target": "anteprima_page_anteprimapage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\anteprima\\page.tsx",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_athletes_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_athletes_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_athletes_route_ts",
+      "target": "athletes_route_parsename",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_athletes_route_ts",
+      "target": "athletes_route_patch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "athletes_route_patch",
+      "target": "athletes_route_parsename",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_backup_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\backup\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_backup_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\backup\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_backup_route_ts",
+      "target": "backup_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\backup\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_backup_route_ts",
+      "target": "backup_route_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\backup\\route.ts",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_bootstrap_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_bootstrap_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_bootstrap_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_nolimpiadi",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_bootstrap_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_bootstrap_route_ts",
+      "target": "bcryptjs",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_bootstrap_route_ts",
+      "target": "bootstrap_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\bootstrap\\route.ts",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_discipline_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_discipline_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_discipline_route_ts",
+      "target": "discipline_route_parsetarget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_discipline_route_ts",
+      "target": "discipline_route_patch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "discipline_route_patch",
+      "target": "discipline_route_parsetarget",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_drop_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\drop\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_drop_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\drop\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_drop_route_ts",
+      "target": "drop_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\drop\\route.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_schedule_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\schedule\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_schedule_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\schedule\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_schedule_route_ts",
+      "target": "schedule_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\schedule\\route.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_schedule_save_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\schedule\\save\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_schedule_save_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\schedule\\save\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_schedule_save_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\schedule\\save\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_schedule_save_route_ts",
+      "target": "save_route_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\schedule\\save\\route.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_setup_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\setup\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_setup_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\setup\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_setup_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\setup\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_admin_setup_route_ts",
+      "target": "setup_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\admin\\setup\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_atleti_id_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\atleti\\[id]\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_atleti_id_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\atleti\\[id]\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_atleti_id_route_ts",
+      "target": "id_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\atleti\\[id]\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_login_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_login_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_login_route_ts",
+      "target": "headers",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_login_route_ts",
+      "target": "bcryptjs",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_login_route_ts",
+      "target": "login_route_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_logout_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\logout\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_logout_route_ts",
+      "target": "headers",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\logout\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_logout_route_ts",
+      "target": "logout_route_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\auth\\logout\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_classifica_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\classifica\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_classifica_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\classifica\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_classifica_route_ts",
+      "target": "classifica_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\classifica\\route.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_documenti_regolamento_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\documenti\\regolamento\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_documenti_regolamento_route_ts",
+      "target": "fs",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\documenti\\regolamento\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_documenti_regolamento_route_ts",
+      "target": "path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\documenti\\regolamento\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_documenti_regolamento_route_ts",
+      "target": "regolamento_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\documenti\\regolamento\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_gare_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\gare\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_gare_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\gare\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_gare_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\gare\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_gare_route_ts",
+      "target": "gare_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\gare\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_matches_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_matches_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_matches_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_matches_route_ts",
+      "target": "matches_route_isrecord",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_matches_route_ts",
+      "target": "matches_route_parseenumvalue",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_matches_route_ts",
+      "target": "matches_route_parseintfield",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_matches_route_ts",
+      "target": "matches_route_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "matches_route_post",
+      "target": "matches_route_isrecord",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "matches_route_post",
+      "target": "matches_route_parseenumvalue",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "matches_route_post",
+      "target": "matches_route_parseintfield",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_qualificati_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_qualificati_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_qualificati_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_qualificati_route_ts",
+      "target": "qualificati_route_parsekind",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_qualificati_route_ts",
+      "target": "qualificati_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "qualificati_route_get",
+      "target": "qualificati_route_parsekind",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\qualificati\\route.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "suggestions_route_parsekind",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "suggestions_route_pairkey",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "suggestions_route_teamkey",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "suggestions_route_matchkey",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_suggestions_route_ts",
+      "target": "suggestions_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "suggestions_route_matchkey",
+      "target": "suggestions_route_teamkey",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "suggestions_route_get",
+      "target": "suggestions_route_parsekind",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "suggestions_route_get",
+      "target": "suggestions_route_pairkey",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "suggestions_route_get",
+      "target": "suggestions_route_matchkey",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\suggestions\\route.ts",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_schedule_template",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "plan_route_isrecord",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "plan_route_parseintornull",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "plan_route_parseboolean",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "plan_route_parsedateornull",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "plan_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_plan_route_ts",
+      "target": "plan_route_post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "plan_route_post",
+      "target": "plan_route_isrecord",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "plan_route_post",
+      "target": "plan_route_parseintornull",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "plan_route_post",
+      "target": "plan_route_parseboolean",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "plan_route_post",
+      "target": "plan_route_parsedateornull",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\plan\\route.ts",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "suggest_route_pairkey",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "suggest_route_matchkeysingles",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "suggest_route_teamkey",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "suggest_route_matchupkey",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "suggest_route_defaulttargetvictory",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "suggest_route_qualificatiids",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_turni_suggest_route_ts",
+      "target": "suggest_route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "suggest_route_matchupkey",
+      "target": "suggest_route_teamkey",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "suggest_route_get",
+      "target": "suggest_route_matchkeysingles",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L132",
+      "weight": 1.0
+    },
+    {
+      "source": "suggest_route_get",
+      "target": "suggest_route_qualificatiids",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L176",
+      "weight": 1.0
+    },
+    {
+      "source": "suggest_route_get",
+      "target": "suggest_route_defaulttargetvictory",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L190",
+      "weight": 1.0
+    },
+    {
+      "source": "suggest_route_get",
+      "target": "suggest_route_matchupkey",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "suggest_route_get",
+      "target": "suggest_route_pairkey",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\api\\turni\\suggest\\route.ts",
+      "source_location": "L304",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "id_page_formatnumber",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "id_page_stagelabel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_atleti_id_page_tsx",
+      "target": "id_page_fetchathlete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\atleti\\[id]\\page.tsx",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_classificalive_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_classificalive_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_classificalive_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_classificalive_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_classificalive_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_classificalive_tsx",
+      "target": "classifica_classificalive_formatnumber",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_classificalive_tsx",
+      "target": "classifica_classificalive_tick",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\ClassificaLive.tsx",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_app_classifica_classificalive",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_classifica_page_tsx",
+      "target": "classifica_page_classificapage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\classifica\\page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_gare_page_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\gare\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_gare_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\gare\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_gare_page_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\gare\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_gare_page_tsx",
+      "target": "gare_page_fetchdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\gare\\page.tsx",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_classificamini_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\ClassificaMini.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_classificamini_tsx",
+      "target": "giudici_classificamini_formatnumber",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\ClassificaMini.tsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_classificamini_tsx",
+      "target": "giudici_classificamini_classificamini",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\ClassificaMini.tsx",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "giudici_giudicidashboard_defaultformstate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "giudici_giudicidashboard_parseintornull",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "giudici_giudicidashboard_update",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "giudici_giudicidashboard_loadsuggestions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L286",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_giudicidashboard_tsx",
+      "target": "giudici_giudicidashboard_submit",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L302",
+      "weight": 1.0
+    },
+    {
+      "source": "giudici_giudicidashboard_loadsuggestions",
+      "target": "giudici_giudicidashboard_update",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L287",
+      "weight": 1.0
+    },
+    {
+      "source": "giudici_giudicidashboard_submit",
+      "target": "giudici_giudicidashboard_parseintornull",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L307",
+      "weight": 1.0
+    },
+    {
+      "source": "giudici_giudicidashboard_submit",
+      "target": "giudici_giudicidashboard_update",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L312",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_app_giudici_giudicidashboard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_giudici_page_tsx",
+      "target": "giudici_page_giudicipage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\giudici\\page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_layout_tsx",
+      "target": "next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_layout_tsx",
+      "target": "headers",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_layout_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_navbar",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_layout_tsx",
+      "target": "src_app_globals_css",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_layout_tsx",
+      "target": "app_layout_rootlayout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_login_page_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_login_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_login_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_login_page_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_login_page_tsx",
+      "target": "login_page_loginform",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_page_tsx",
+      "target": "headers",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_page_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_premiumcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_fantanoliinvitation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_components_ui_menunolimpicocard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\page.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "src_app_stampa_printbutton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "c_users_info_documents_noli_nolimpiadi2026_src_lib_prisma",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "stampa_page_kindlabel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "stampa_page_jointeam",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "stampa_page_asseedlabel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "stampa_page_bracketbox",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "stampa_page_brackettemplate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "stampa_page_qualificati",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_page_tsx",
+      "target": "stampa_page_chunkarray",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L143",
+      "weight": 1.0
+    },
+    {
+      "source": "stampa_page_brackettemplate",
+      "target": "stampa_page_asseedlabel",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\page.tsx",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_stampa_printbutton_tsx",
+      "target": "stampa_printbutton_printbutton",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\stampa\\PrintButton.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_adminnavbar_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\AdminNavbar.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_adminnavbar_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\AdminNavbar.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_adminnavbar_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\AdminNavbar.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_adminnavbar_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\AdminNavbar.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_adminnavbar_tsx",
+      "target": "ui_adminnavbar_adminnavbar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\AdminNavbar.tsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_fantanolibanner_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\FantaNoliBanner.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_fantanolibanner_tsx",
+      "target": "ui_fantanolibanner_fantanolibanner",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\FantaNoliBanner.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_fantanolifeatures_tsx",
+      "target": "ui_fantanolifeatures_fantanolifeatures",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\FantaNoliFeatures.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_fantanoliinvitation_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\FantaNoliInvitation.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_fantanoliinvitation_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\FantaNoliInvitation.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_fantanoliinvitation_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\FantaNoliInvitation.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_fantanoliinvitation_tsx",
+      "target": "ui_fantanoliinvitation_fantanoliinvitation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\FantaNoliInvitation.tsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_menunolimpicocard_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\MenuNolimpicoCard.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_menunolimpicocard_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\MenuNolimpicoCard.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_menunolimpicocard_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\MenuNolimpicoCard.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_menunolimpicocard_tsx",
+      "target": "ui_menunolimpicocard_menunolimpicocard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\MenuNolimpicoCard.tsx",
+      "source_location": "L129",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_navbar_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\Navbar.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_navbar_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\Navbar.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_navbar_tsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\Navbar.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_navbar_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\Navbar.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_premiumcard_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\PremiumCard.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_ui_premiumcard_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ui\\PremiumCard.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_browser_ts",
+      "target": "src_generated_prisma_internal_prismanamespacebrowser",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\browser.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_client_ts",
+      "target": "node_process",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_client_ts",
+      "target": "node_path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_client_ts",
+      "target": "node_url",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_client_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_client_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_client_ts",
+      "target": "src_generated_prisma_internal_class",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_client_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\client.ts",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_commoninputtypes_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\commonInputTypes.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_commoninputtypes_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\commonInputTypes.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_commoninputtypes_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\commonInputTypes.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_class_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\class.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_class_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\class.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_class_ts",
+      "target": "internal_class_decodebase64aswasm",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\class.ts",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_class_ts",
+      "target": "internal_class_getprismaclientclass",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\class.ts",
+      "source_location": "L282",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_prismanamespace_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\prismaNamespace.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_prismanamespace_ts",
+      "target": "src_generated_prisma_models",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\prismaNamespace.ts",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_prismanamespace_ts",
+      "target": "src_generated_prisma_internal_class",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\prismaNamespace.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_internal_prismanamespacebrowser_ts",
+      "target": "index_browser",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\internal\\prismaNamespaceBrowser.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_admin_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Admin.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_admin_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Admin.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_admin_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Admin.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_athlete_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Athlete.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_athlete_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Athlete.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_athlete_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Athlete.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_discipline_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Discipline.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_discipline_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Discipline.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_discipline_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Discipline.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_match_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Match.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_match_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Match.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_match_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\Match.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_matchside_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\MatchSide.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_matchside_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\MatchSide.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_matchside_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\MatchSide.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_matchsideathlete_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\MatchSideAthlete.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_matchsideathlete_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\MatchSideAthlete.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_matchsideathlete_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\MatchSideAthlete.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_qualificationslot_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\QualificationSlot.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_qualificationslot_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\QualificationSlot.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_qualificationslot_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\QualificationSlot.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_qualificationturn_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\QualificationTurn.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_qualificationturn_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\QualificationTurn.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_qualificationturn_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\QualificationTurn.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_systemsetting_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\SystemSetting.ts",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_systemsetting_ts",
+      "target": "src_generated_prisma_enums",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\SystemSetting.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_generated_prisma_models_systemsetting_ts",
+      "target": "src_generated_prisma_internal_prismanamespace",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\generated\\prisma\\models\\SystemSetting.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_nolimpiadi_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\nolimpiadi.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_nolimpiadi_ts",
+      "target": "lib_nolimpiadi_assertnever",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\nolimpiadi.ts",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_prisma_ts",
+      "target": "pg",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\prisma.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_prisma_ts",
+      "target": "adapter_pg",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\prisma.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_prisma_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\prisma.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_schedule_template_ts",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\schedule-template.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "athletes_route_patch",
+      "target": "giudici_giudicidashboard_update",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\api\\admin\\athletes\\route.ts",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "discipline_route_patch",
+      "target": "giudici_giudicidashboard_update",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\api\\admin\\discipline\\route.ts",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "save_route_post",
+      "target": "giudici_giudicidashboard_update",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\api\\admin\\schedule\\save\\route.ts",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "login_route_post",
+      "target": "suggest_route_get",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\api\\auth\\login\\route.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "matches_route_post",
+      "target": "giudici_giudicidashboard_update",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\api\\matches\\route.ts",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "giudici_giudicidashboard_submit",
+      "target": "suggest_route_get",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\giudici\\GiudiciDashboard.tsx",
+      "source_location": "L303",
+      "weight": 1.0
+    },
+    {
+      "source": "app_layout_rootlayout",
+      "target": "suggest_route_get",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\layout.tsx",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "login_page_loginform",
+      "target": "suggest_route_get",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\app\\login\\page.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

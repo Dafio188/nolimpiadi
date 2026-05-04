@@ -1,14 +1,13 @@
-import { Trophy, Medal, Star, Calendar, Users, ArrowRight } from "lucide-react";
+import { Trophy, Medal, Star, Calendar, Users, ArrowRight, Target, Zap, Activity, Dumbbell } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/ui/Navbar";
-import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 
 const EDITIONS = [
   {
     id: 6,
     title: "6° Edizione",
-    date: "23 giugno 2024",
+    date: "23 Giugno 2024",
     results: [
       { pos: 1, name: "Stefano Mortola" },
       { pos: 2, name: "Alessandro Robutti" },
@@ -22,12 +21,18 @@ const EDITIONS = [
       { pos: 10, name: "Matheus Interliggi" },
       { pos: 11, name: "Emma Tira" },
       { pos: 12, name: "Aurelio Piccione" },
+    ],
+    disciplines: [
+      { name: "Ping Pong", winner: "Stefano M.", icon: Activity },
+      { name: "Calcio Balilla", winner: "Alessandro R.", icon: Users },
+      { name: "Freccette", winner: "Massimo R.", icon: Target },
+      { name: "Air Hockey", winner: "Stefano M.", icon: Zap },
     ]
   },
   {
     id: 5,
     title: "5° Edizione",
-    date: "18 giugno 2023",
+    date: "18 Giugno 2023",
     results: [
       { pos: 1, name: "Pietro Noli" },
       { pos: 2, name: "Gianni Teti" },
@@ -41,12 +46,18 @@ const EDITIONS = [
       { pos: 10, name: "Aurelio Piccione" },
       { pos: 11, name: "Magda Seminara" },
       { pos: 12, name: "Emma Tira" },
+    ],
+    disciplines: [
+      { name: "Ping Pong", winner: "Pietro N.", icon: Activity },
+      { name: "Calcio Balilla", winner: "Gianni T.", icon: Users },
+      { name: "Freccette", winner: "Pietro N.", icon: Target },
+      { name: "Air Hockey", winner: "Pietro N.", icon: Zap },
     ]
   },
   {
     id: 4,
     title: "4° Edizione",
-    date: "7 aprile 2019",
+    date: "7 Aprile 2019",
     results: [
       { pos: 1, name: "Massimo Robutti" },
       { pos: 2, name: "Pietro Noli" },
@@ -60,12 +71,18 @@ const EDITIONS = [
       { pos: 10, name: "Aurelio Piccione" },
       { pos: 11, name: "Barbara Marino" },
       { pos: 12, name: "Matheus Interliggi" },
+    ],
+    disciplines: [
+      { name: "Ping Pong", winner: "Massimo R.", icon: Activity },
+      { name: "Calcio Balilla", winner: "Pietro N.", icon: Users },
+      { name: "Freccette", winner: "Gianni T.", icon: Target },
+      { name: "Air Hockey", winner: "Massimo R.", icon: Zap },
     ]
   },
   {
     id: 3,
     title: "3° Edizione",
-    date: "21 ottobre 2018",
+    date: "21 Ottobre 2018",
     results: [
       { pos: 1, name: "Massimo Robutti" },
       { pos: 2, name: "Salvatore Barretta" },
@@ -79,12 +96,18 @@ const EDITIONS = [
       { pos: 10, name: "Aurelio Piccione" },
       { pos: 11, name: "Silvana Giacchi" },
       { pos: 12, name: "Matheus Interliggi" },
+    ],
+    disciplines: [
+      { name: "Ping Pong", winner: "Massimo R.", icon: Activity },
+      { name: "Calcio Balilla", winner: "Salvatore B.", icon: Users },
+      { name: "Freccette", winner: "Massimo R.", icon: Target },
+      { name: "Air Hockey", winner: "Massimo R.", icon: Zap },
     ]
   },
   {
     id: 2,
     title: "2° Edizione",
-    date: "1 luglio 2018",
+    date: "1 Luglio 2018",
     results: [
       { pos: 1, name: "Pietro Noli" },
       { pos: 2, name: "Massimo Robutti" },
@@ -98,25 +121,37 @@ const EDITIONS = [
       { pos: 10, name: "Matheus Interliggi" },
       { pos: 11, name: "Alessandro Robutti" },
       { pos: 12, name: "Aurelio Piccione" },
+    ],
+    disciplines: [
+      { name: "Ping Pong", winner: "Pietro N.", icon: Activity },
+      { name: "Calcio Balilla", winner: "Massimo R.", icon: Users },
+      { name: "Freccette", winner: "Salvatore B.", icon: Target },
+      { name: "Air Hockey", winner: "Pietro N.", icon: Zap },
     ]
   },
   {
     id: 1,
     title: "1° Edizione",
-    date: "4 marzo 2018",
+    date: "4 Marzo 2018",
     results: [
       { pos: 1, name: "Pietro Noli" },
       { pos: 2, name: "Gianni Teti" },
       { pos: 3, name: "Massimo Robutti" },
       { pos: 4, name: "Stefano Bisoglio" },
-      { pos: 5, name: "Valeriano Seminara / Doris" },
+      { pos: 5, name: "Valeriano S. / Doris" },
       { pos: 6, name: "Andrea Spada" },
       { pos: 7, name: "Vito Albanese" },
-      { pos: 8, name: "Sergio Piazza / Mirella Boffano" },
-      { pos: 9, name: "Flavio Barresi / Caterina Mamone" },
+      { pos: 8, name: "Sergio P. / Mirella B." },
+      { pos: 9, name: "Flavio B. / Caterina M." },
       { pos: 10, name: "Aurelio Piccione" },
       { pos: 11, name: "Patrizia Interliggi" },
       { pos: 12, name: "Matheus Interliggi" },
+    ],
+    disciplines: [
+      { name: "Ping Pong", winner: "Pietro N.", icon: Activity },
+      { name: "Calcio Balilla", winner: "Gianni T.", icon: Users },
+      { name: "Freccette", winner: "Massimo R.", icon: Target },
+      { name: "Air Hockey", winner: "Pietro N.", icon: Zap },
     ]
   },
 ];
@@ -130,7 +165,7 @@ export default async function AlboDoroPage() {
       <Navbar isLoggedIn={isLoggedIn} />
 
       {/* Hero Section */}
-      <section className="pt-20 pb-32 px-6">
+      <section className="pt-20 pb-24 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-600 mb-8">
             <Trophy className="w-4 h-4" />
@@ -143,7 +178,7 @@ export default async function AlboDoroPage() {
               alt="Winner Left" 
             />
             <h1 className="text-6xl md:text-8xl font-black text-[#1d1d1f] tracking-tight">
-              Albo d'Oro <br />
+              Albo d&apos;Oro <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">NOLImpiadi</span>
             </h1>
             <img 
@@ -159,7 +194,7 @@ export default async function AlboDoroPage() {
       </section>
 
       {/* Legends Stats */}
-      <section className="pb-32 px-6">
+      <section className="pb-24 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-[40px] p-10 shadow-sm border border-white flex flex-col items-center text-center">
@@ -192,66 +227,112 @@ export default async function AlboDoroPage() {
 
       {/* Editions List */}
       <section className="pb-40 px-6">
-        <div className="max-w-4xl mx-auto space-y-24">
-          {EDITIONS.map((edition, index) => (
-            <div key={edition.id} className="relative group">
-              {/* Year Badge */}
-              <div className="absolute -left-4 md:-left-12 top-0 bottom-0 w-px bg-gradient-to-b from-blue-600/20 via-transparent to-transparent hidden md:block" />
+        <div className="max-w-6xl mx-auto space-y-16">
+          {EDITIONS.map((edition) => (
+            <div key={edition.id} className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl shadow-zinc-200/50 border border-white relative overflow-hidden group">
+              {/* Sfondo decorativo soft */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-blue-50 rounded-full blur-[100px] -mr-48 -mt-48 opacity-50 group-hover:opacity-100 transition-opacity duration-1000" />
               
-              <div className="flex flex-col gap-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div className="relative z-10">
+                {/* Header Edizione */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                   <div>
-                    <h2 className="text-4xl md:text-5xl font-black text-[#1d1d1f] mb-2">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="px-3 py-1 bg-blue-600 text-white text-[10px] font-black rounded-full uppercase tracking-widest">
+                        {edition.title}
+                      </span>
+                      <span className="text-sm font-bold text-zinc-400">
+                        {edition.date}
+                      </span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-black text-[#1d1d1f] tracking-tight">
                       NOLImpiadi <span className="text-blue-600 italic">{edition.date.split(' ').pop()}</span>
                     </h2>
-                    <p className="text-xl text-[#86868b] font-bold">{edition.title}</p>
                   </div>
-                  <div className="px-6 py-2 bg-white rounded-2xl border border-zinc-100 shadow-lg shadow-zinc-200/50 text-sm font-bold text-[#86868b]">
-                    Podio Ufficiale
+                  <div className="flex items-center gap-4">
+                    <div className="text-right hidden sm:block">
+                      <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Campione in carica</p>
+                      <p className="text-xl font-black text-[#1d1d1f]">{edition.results[0].name}</p>
+                    </div>
+                    <div className="w-16 h-16 rounded-2xl bg-amber-400 flex items-center justify-center shadow-lg shadow-amber-200">
+                      <Trophy className="w-8 h-8 text-white" />
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Winner */}
-                  <div className="bg-white rounded-[32px] p-8 shadow-md border border-amber-100 relative overflow-hidden group-hover:scale-[1.02] transition-transform duration-500">
-                    <div className="absolute top-0 right-0 p-4">
-                      <Trophy className="w-8 h-8 text-amber-400" />
-                    </div>
-                    <p className="text-xs font-black uppercase tracking-widest text-amber-500 mb-2">1° POSTO</p>
-                    <p className="text-2xl font-black text-[#1d1d1f] leading-tight">{edition.results[0].name}</p>
-                  </div>
-
-                  {/* 2nd Place */}
-                  <div className="bg-white rounded-[32px] p-8 shadow-sm border border-zinc-100 relative group-hover:scale-[1.02] transition-transform duration-500 delay-75">
-                    <div className="absolute top-0 right-0 p-4">
-                      <Medal className="w-8 h-8 text-zinc-300" />
-                    </div>
-                    <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">2° POSTO</p>
-                    <p className="text-xl font-black text-[#1d1d1f] leading-tight">{edition.results[1].name}</p>
-                  </div>
-
-                  {/* 3rd Place */}
-                  <div className="bg-white rounded-[32px] p-8 shadow-sm border border-zinc-100 relative group-hover:scale-[1.02] transition-transform duration-500 delay-150">
-                    <div className="absolute top-0 right-0 p-4">
-                      <Medal className="w-8 h-8 text-orange-300" />
-                    </div>
-                    <p className="text-xs font-black uppercase tracking-widest text-orange-400 mb-2">3° POSTO</p>
-                    <p className="text-xl font-black text-[#1d1d1f] leading-tight">{edition.results[2].name}</p>
-                  </div>
-                </div>
-
-                {/* Full Ranking Accordion / List */}
-                <div className="bg-white/50 backdrop-blur-sm rounded-[32px] p-8 border border-white/50">
-                  <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[#86868b] mb-6">Classifica Completa</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-12">
-                    {edition.results.slice(3).map((res) => (
-                      <div key={res.pos} className="flex items-center justify-between py-2 border-b border-zinc-100/50">
-                        <div className="flex items-center gap-3">
-                          <span className="text-[10px] font-black text-blue-600 w-6">{res.pos}°</span>
-                          <span className="text-sm font-bold text-[#1d1d1f]">{res.name}</span>
-                        </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                  {/* Podio e Classifica Generale (7 colonne) */}
+                  <div className="lg:col-span-7 space-y-8">
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-600 flex items-center gap-2">
+                      <div className="w-8 h-[2px] bg-blue-600/20" />
+                      Classifica Generale
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Oro */}
+                      <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-3xl border border-amber-100 shadow-sm">
+                        <p className="text-[10px] font-black text-amber-600 uppercase mb-3">1° Posto</p>
+                        <p className="text-lg font-black text-zinc-900 leading-tight">{edition.results[0].name}</p>
                       </div>
-                    ))}
+                      {/* Argento */}
+                      <div className="bg-gradient-to-br from-zinc-50 to-white p-6 rounded-3xl border border-zinc-100 shadow-sm">
+                        <p className="text-[10px] font-black text-zinc-400 uppercase mb-3">2° Posto</p>
+                        <p className="text-lg font-black text-zinc-900 leading-tight">{edition.results[1].name}</p>
+                      </div>
+                      {/* Bronzo */}
+                      <div className="bg-gradient-to-br from-orange-50 to-white p-6 rounded-3xl border border-orange-100 shadow-sm">
+                        <p className="text-[10px] font-black text-orange-600 uppercase mb-3">3° Posto</p>
+                        <p className="text-lg font-black text-zinc-900 leading-tight">{edition.results[2].name}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-zinc-50/50 rounded-[2rem] p-6 border border-zinc-100">
+                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+                        {edition.results.slice(3).map((res) => (
+                          <div key={res.pos} className="flex items-center justify-between py-2 border-b border-zinc-200/50 last:border-0">
+                            <div className="flex items-center gap-3">
+                              <span className="text-[10px] font-black text-zinc-400 w-6">{res.pos}°</span>
+                              <span className="text-sm font-bold text-zinc-600">{res.name}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Classifiche Discipline (5 colonne) */}
+                  <div className="lg:col-span-5 space-y-8">
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-amber-600 flex items-center gap-2">
+                      <div className="w-8 h-[2px] bg-amber-600/20" />
+                      Vincitori Discipline
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 gap-4">
+                      {edition.disciplines.map((disc, dIdx) => (
+                        <div key={dIdx} className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-zinc-100 hover:border-blue-200 hover:shadow-md transition-all duration-300">
+                          <div className="w-12 h-12 rounded-xl bg-zinc-50 flex items-center justify-center text-zinc-400">
+                            <disc.icon className="w-6 h-6" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{disc.name}</p>
+                            <p className="text-base font-black text-zinc-900">{disc.winner}</p>
+                          </div>
+                          <div className="px-3 py-1 bg-amber-50 rounded-lg">
+                            <Medal className="w-4 h-4 text-amber-500" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="p-6 bg-blue-600 rounded-[2.5rem] text-white relative overflow-hidden group/cta">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
+                      <p className="text-sm font-bold mb-4 relative z-10 italic">
+                        &quot;Ogni disciplina è una battaglia, <br />ogni vittoria è leggenda.&quot;
+                      </p>
+                      <Link href="/gare" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest bg-white text-blue-600 px-4 py-2 rounded-xl hover:scale-105 transition-transform">
+                        Vedi Gare 2026 <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

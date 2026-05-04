@@ -19,6 +19,7 @@ export default function Navbar({ isLoggedIn }: NavbarProps) {
   if (isAdmin || isGiudici || isLogin) return null;
 
   const navLinks = [
+    { name: "HOME", href: "/" },
     { name: "GARE", href: "/gare" },
     { name: "ALBO D'ORO", href: "/albo-doro" },
     { name: "FANTA", href: isHome ? "#fanta" : "/#fanta" },

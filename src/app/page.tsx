@@ -45,7 +45,7 @@ export default async function Home() {
               La <span className="text-blue-600">7ª edizione</span> è ufficialmente indetta!
             </p>
             <p className="text-lg text-[#86868b] font-medium leading-relaxed">
-              Sì, avete letto bene: la sfavillante, roboante e fantasmagorica edizione del più prestigioso (e controverso) torneo multisportivo del multiverso sta per tornare. 
+              Sì, avete letto bene: la sfavillante, roboante e fantasmagorica edizione del più prestigioso (e controverso) torneo polisportivo del multiverso sta per tornare. 
             </p>
           </div>
         </header>
@@ -86,7 +86,7 @@ export default async function Home() {
                   <div>
                     <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mb-1">Quando</p>
                     <p className="text-lg lg:text-xl font-black text-[#1d1d1f]">Domenica 17 Maggio 2026</p>
-                    <p className="text-lg lg:text-xl font-black text-blue-600/60 uppercase">Ore 13:45</p>
+                    <p className="text-lg lg:text-xl font-black text-blue-600/60">Ore 13:45</p>
                   </div>
                 </div>
 

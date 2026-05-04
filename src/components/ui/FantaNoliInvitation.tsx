@@ -62,7 +62,7 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
             </div>
 
             {/* Vertically Stacked Buttons */}
-            <div className="flex flex-col w-full gap-3 max-w-[300px]">
+            <div className="flex flex-col w-full gap-3 max-w-[260px]">
               <a 
                 href={formUrl}
                 target="_blank"
@@ -78,7 +78,7 @@ const FantaNoliInvitation = ({ formUrl }: FantaNoliInvitationProps) => {
                 target="_blank"
                 className="flex items-center justify-center gap-3 px-8 py-4 bg-amber-400 text-zinc-900 rounded-2xl font-black border-2 border-amber-500 shadow-xl shadow-amber-200/50 hover:bg-amber-500 hover:scale-[1.03] active:scale-[0.97] transition-all duration-300"
               >
-                <span>Regolamento</span>
+                <span>Leggi il regolamento</span>
               </a>
             </div>
           </div>
