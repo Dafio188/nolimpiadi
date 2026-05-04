@@ -28,7 +28,7 @@ const EDITIONS = [
       { name: "Ping Pong", winner: "Stefano M.", iconName: "Activity" },
       { name: "Calcio Balilla", winner: "Alessandro R.", iconName: "Users" },
       { name: "Freccette", winner: "Massimo R.", iconName: "Target" },
-      { name: "Air Hockey", winner: "Stefano M.", iconName: "Zap" },
+      { name: "Basket", winner: "Stefano M.", iconName: "Dumbbell" },
     ]
   },
   {
@@ -53,7 +53,7 @@ const EDITIONS = [
       { name: "Ping Pong", winner: "Pietro N.", iconName: "Activity" },
       { name: "Calcio Balilla", winner: "Gianni T.", iconName: "Users" },
       { name: "Freccette", winner: "Pietro N.", iconName: "Target" },
-      { name: "Air Hockey", winner: "Pietro N.", iconName: "Zap" },
+      { name: "Basket", winner: "Pietro N.", iconName: "Dumbbell" },
     ]
   },
   {
@@ -78,7 +78,7 @@ const EDITIONS = [
       { name: "Ping Pong", winner: "Massimo R.", iconName: "Activity" },
       { name: "Calcio Balilla", winner: "Pietro N.", iconName: "Users" },
       { name: "Freccette", winner: "Gianni T.", iconName: "Target" },
-      { name: "Air Hockey", winner: "Massimo R.", iconName: "Zap" },
+      { name: "Basket", winner: "Massimo R.", iconName: "Dumbbell" },
     ]
   },
   {
@@ -103,7 +103,7 @@ const EDITIONS = [
       { name: "Ping Pong", winner: "Massimo R.", iconName: "Activity" },
       { name: "Calcio Balilla", winner: "Salvatore B.", iconName: "Users" },
       { name: "Freccette", winner: "Massimo R.", iconName: "Target" },
-      { name: "Air Hockey", winner: "Massimo R.", iconName: "Zap" },
+      { name: "Basket", winner: "Massimo R.", iconName: "Dumbbell" },
     ]
   },
   {
@@ -128,7 +128,7 @@ const EDITIONS = [
       { name: "Ping Pong", winner: "Pietro N.", iconName: "Activity" },
       { name: "Calcio Balilla", winner: "Massimo R.", iconName: "Users" },
       { name: "Freccette", winner: "Salvatore B.", iconName: "Target" },
-      { name: "Air Hockey", winner: "Pietro N.", iconName: "Zap" },
+      { name: "Basket", winner: "Pietro N.", iconName: "Dumbbell" },
     ]
   },
   {
@@ -153,7 +153,7 @@ const EDITIONS = [
       { name: "Ping Pong", winner: "Pietro N.", iconName: "Activity" },
       { name: "Calcio Balilla", winner: "Gianni T.", iconName: "Users" },
       { name: "Freccette", winner: "Massimo R.", iconName: "Target" },
-      { name: "Air Hockey", winner: "Pietro N.", iconName: "Zap" },
+      { name: "Basket", winner: "Pietro N.", iconName: "Dumbbell" },
     ]
   },
 ];
