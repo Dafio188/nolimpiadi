@@ -1,11 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ArrowLeft, Trophy, Medal, Star, Activity } from "lucide-react";
+import { ArrowLeft, Trophy, Medal, Star, Activity, Zap } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
+import DisciplineRankings from "@/components/ui/admin/DisciplineRankings";
 
 export const dynamic = "force-dynamic";
 
 export default async function ClassificaGeneraleAdmin() {
+  // 1. Classifica Generale Complessiva
   const rows = await prisma.$queryRaw<{
     athlete_id: string;
     name: string;
@@ -28,24 +30,110 @@ export default async function ClassificaGeneraleAdmin() {
     ORDER BY c.total_weighted::numeric DESC, a.name ASC
   `;
 
+  // 2. Classifiche per Disciplina (Fase 2)
+  const finalMatches = await prisma.match.findMany({
+    where: { phase: "FINALI" },
+    include: {
+      discipline: true,
+      sides: {
+        include: {
+          athletes: {
+            include: { athlete: true }
+          }
+        }
+      }
+    },
+    orderBy: { playedAt: 'desc' }
+  });
+
+  // Organizziamo i risultati per disciplina
+  const disciplineRankingsMap: Record<string, any> = {};
+
+  finalMatches.forEach(match => {
+    const kind = match.discipline.kind;
+    if (!disciplineRankingsMap[kind]) {
+      disciplineRankingsMap[kind] = { kind, standings: [] };
+    }
+
+    const side1 = match.sides.find(s => s.side === 1);
+    const side2 = match.sides.find(s => s.side === 2);
+    if (!side1 || !side2) return;
+
+    const winner = side1.points > side2.points ? side1 : side2;
+    const loser = side1.points > side2.points ? side2 : side1;
+
+    const stageNames: Record<string, string> = {
+      FINALE: "Finale",
+      SEMIFINALI: "Semifinale",
+      QUARTI: "Quarti di Finale"
+    };
+
+    const currentStage = match.finalStage ? stageNames[match.finalStage] : "Finale";
+
+    // Aggiungiamo il vincitore se è la finale (1° posto)
+    if (match.finalStage === "FINALE") {
+      winner.athletes.forEach(sa => {
+        disciplineRankingsMap[kind].standings.push({
+          pos: 1,
+          name: sa.athlete.name,
+          stage: "Campione",
+          isWinner: true
+        });
+      });
+      loser.athletes.forEach(sa => {
+        disciplineRankingsMap[kind].standings.push({
+          pos: 2,
+          name: sa.athlete.name,
+          stage: "Finalista",
+          isWinner: false
+        });
+      });
+    } else if (match.finalStage === "SEMIFINALI") {
+      loser.athletes.forEach(sa => {
+        disciplineRankingsMap[kind].standings.push({
+          pos: 3,
+          name: sa.athlete.name,
+          stage: "Semifinalista",
+          isWinner: false
+        });
+      });
+    } else if (match.finalStage === "QUARTI") {
+       loser.athletes.forEach(sa => {
+        disciplineRankingsMap[kind].standings.push({
+          pos: 5,
+          name: sa.athlete.name,
+          stage: "Quarti di Finale",
+          isWinner: false
+        });
+      });
+    }
+  });
+
+  // Ordiniamo le classifiche disciplinari per posizione
+  const rankings = Object.values(disciplineRankingsMap).map(r => ({
+    ...r,
+    standings: r.standings.sort((a: any, b: any) => a.pos - b.pos)
+  }));
+
   return (
-    <div className="mx-auto w-full max-w-7xl">
+    <div className="mx-auto w-full max-w-7xl pb-20">
 
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
           <Trophy className="w-10 h-10 text-amber-500" />
           CLASSIFICHE GENERALI
         </h1>
-        <p className="mt-2 text-zinc-500 font-medium">Classifica generale assoluta e Campione 2026.</p>
+        <p className="mt-2 text-zinc-500 font-medium">Risultati aggregati e classifiche finali per disciplina.</p>
       </header>
 
-      <div className="space-y-16">
+      <div className="space-y-20">
+        {/* Classifica Assoluta */}
         <section>
           <div className="mb-6 flex items-center gap-3">
             <div className="bg-amber-500/10 p-2 rounded-lg">
               <Star className="w-6 h-6 text-amber-600" />
             </div>
-            <h2 className="text-2xl font-black text-foreground">Tabellone Finale</h2>
+            <h2 className="text-2xl font-black text-foreground">Ranking Assoluto 2026</h2>
             <span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-[10px] font-black text-zinc-500 uppercase">
               {rows.length} Atleti
             </span>
@@ -58,10 +146,10 @@ export default async function ClassificaGeneraleAdmin() {
                   <tr className="border-b border-zinc-100 bg-amber-50/30">
                     <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 w-24">Pos</th>
                     <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">Atleta</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-center">Partite Giocate</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-cyan-600 text-center">Pt. Qualificazioni</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-center">Partite</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-cyan-600 text-center">Pt. Qual.</th>
                     <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-indigo-600 text-center">Pt. Finali</th>
-                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-amber-600 text-right">Punteggio Totale</th>
+                    <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-amber-600 text-right">Totale</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-50">
@@ -94,15 +182,15 @@ export default async function ClassificaGeneraleAdmin() {
                           </div>
                         </td>
                         <td className="px-6 py-2 text-center font-bold text-zinc-600">{r.matches_played}</td>
-                        <td className="px-6 py-2 text-center font-bold text-cyan-600">
-                          {Number(r.qualification_weighted).toLocaleString("it-IT", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                        <td className="px-6 py-2 text-center font-bold text-cyan-600 text-sm">
+                          {Number(r.qualification_weighted).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
-                        <td className="px-6 py-2 text-center font-bold text-indigo-600">
-                          {Number(r.finals_weighted).toLocaleString("it-IT", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                        <td className="px-6 py-2 text-center font-bold text-indigo-600 text-sm">
+                          {Number(r.finals_weighted).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
                         <td className="px-6 py-2 text-right">
                           <span className={`text-2xl font-black ${idx === 0 ? 'text-amber-600' : 'text-zinc-800'}`}>
-                            {Number(r.total_weighted).toLocaleString("it-IT", { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+                            {Number(r.total_weighted).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </span>
                         </td>
                       </tr>
@@ -113,7 +201,11 @@ export default async function ClassificaGeneraleAdmin() {
             </div>
           </PremiumCard>
         </section>
+
+        {/* Classifiche per Disciplina Fase 2 */}
+        <DisciplineRankings rankings={rankings} />
       </div>
     </div>
   );
 }
+
