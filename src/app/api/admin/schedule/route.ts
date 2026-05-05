@@ -43,7 +43,7 @@ export async function GET() {
 
     for (const turn of turns) {
       const blockIdx = Math.floor(turn.index / 100);
-      const partitaIdx = (turn.index % 100) + 1; // 1-based (Partita 1, Partita 2...)
+      const partitaIdx = turn.index % 100; // già 1-based: bootstrap genera slotIdx+1 (1,2...8 per ogni turno)
 
       if (!blocks[blockIdx]) {
         blocks[blockIdx] = {
