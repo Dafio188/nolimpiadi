@@ -30,10 +30,20 @@ export default async function ClassificaGeneraleAdmin() {
     ORDER BY c.total_weighted::numeric DESC, a.name ASC
   `;
 
-  // 2. Recuperiamo tutte le discipline per assicurarci che la sezione sia sempre visibile
-  const allDisciplines = await prisma.discipline.findMany({
-    orderBy: { name: "asc" }
-  });
+  // 2. Recuperiamo tutte le discipline
+  const allDisciplinesRaw = await prisma.discipline.findMany();
+  
+  // Ordine ufficiale del Live Score / Calendario
+  const orderMap: Record<string, number> = {
+    CALCIO_BALILLA: 1,
+    FRECCETTE: 2,
+    PING_PONG: 3,
+    AIR_HOCKEY: 4
+  };
+
+  const allDisciplines = allDisciplinesRaw.sort((a, b) => 
+    (orderMap[a.kind] || 99) - (orderMap[b.kind] || 99)
+  );
 
 
   // 2.1 Classifiche per Disciplina (Fase 2)
@@ -52,7 +62,7 @@ export default async function ClassificaGeneraleAdmin() {
     orderBy: { playedAt: 'desc' }
   });
 
-  // Organizziamo i risultati per disciplina, inizializzando con tutte le discipline attive
+  // Organizziamo i risultati per disciplina, seguendo l'ordine di allDisciplines
   const disciplineRankingsMap: Record<string, any> = {};
   
   allDisciplines.forEach(d => {
@@ -61,7 +71,6 @@ export default async function ClassificaGeneraleAdmin() {
 
   finalMatches.forEach(match => {
     const kind = match.discipline.kind;
-    // Se per qualche motivo la disciplina non era in allDisciplines, la aggiungiamo
     if (!disciplineRankingsMap[kind]) {
       disciplineRankingsMap[kind] = { kind, standings: [] };
     }
@@ -70,24 +79,16 @@ export default async function ClassificaGeneraleAdmin() {
     const side2 = match.sides.find(s => s.side === 2);
     if (!side1 || !side2) return;
 
-    // Consideriamo il match solo se è stato giocato (almeno un punto segnato o flag isPlayed)
     if (side1.points === 0 && side2.points === 0) return;
 
     const winner = side1.points > side2.points ? side1 : side2;
     const loser = side1.points > side2.points ? side2 : side1;
 
-    const stageNames: Record<string, string> = {
-      FINALE: "Finale",
-      SEMIFINALI: "Semifinale",
-      QUARTI: "Quarti di Finale"
-    };
-
-    // Aggiungiamo il vincitore se è la finale (1° posto)
     if (match.finalStage === "FINALE") {
       winner.athletes.forEach(sa => {
         disciplineRankingsMap[kind].standings.push({
           pos: 1,
-          name: sa.athlete.name.split(' ').slice(0, 2).join(' '), // Togliamo iniziali/cognomi extra
+          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
           stage: "Campione",
           isWinner: true
         });
@@ -121,10 +122,10 @@ export default async function ClassificaGeneraleAdmin() {
     }
   });
 
-  // Ordiniamo le classifiche disciplinari per posizione
-  const rankings = Object.values(disciplineRankingsMap).map(r => ({
-    ...r,
-    standings: r.standings.sort((a: any, b: any) => a.pos - b.pos)
+  // Manteniamo l'ordine basato su allDisciplines per l'output finale
+  const rankings = allDisciplines.map(d => ({
+    ...disciplineRankingsMap[d.kind],
+    standings: disciplineRankingsMap[d.kind].standings.sort((a: any, b: any) => a.pos - b.pos)
   }));
 
   return (
@@ -160,10 +161,10 @@ export default async function ClassificaGeneraleAdmin() {
       </header>
 
       {/* Grid Dashboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* COLONNA SINISTRA: RANKING ASSOLUTO (8/12) */}
-        <section className="lg:col-span-8 space-y-6">
+        {/* COLONNA SINISTRA: RANKING ASSOLUTO (7/12) */}
+        <section className="lg:col-span-7 space-y-6">
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-amber-500 rounded-full" />
@@ -179,15 +180,15 @@ export default async function ClassificaGeneraleAdmin() {
 
           <PremiumCard className="p-0 border-none ring-1 ring-zinc-200/50 dark:ring-zinc-800 shadow-2xl shadow-zinc-200/40 dark:shadow-none overflow-hidden bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse table-fixed">
                 <thead>
                   <tr className="border-b border-zinc-100/50 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-800/30">
-                    <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-400 w-20">#</th>
-                    <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-400">Atleta</th>
-                    <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-center">Match</th>
-                    <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-cyan-500/70 text-center hidden md:table-cell">Qual.</th>
-                    <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-indigo-500/70 text-center hidden md:table-cell">Finali</th>
-                    <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-amber-600 text-right">Totale</th>
+                    <th className="px-3 py-5 text-[9px] font-black uppercase tracking-widest text-zinc-400 w-[50px]">#</th>
+                    <th className="px-3 py-5 text-[9px] font-black uppercase tracking-widest text-zinc-400 w-[180px]">Atleta</th>
+                    <th className="px-3 py-5 text-[9px] font-black uppercase tracking-widest text-zinc-400 text-center w-[70px]">Match</th>
+                    <th className="px-3 py-5 text-[9px] font-black uppercase tracking-widest text-cyan-500/70 text-center hidden md:table-cell w-[80px]">Qual.</th>
+                    <th className="px-3 py-5 text-[9px] font-black uppercase tracking-widest text-indigo-500/70 text-center hidden md:table-cell w-[80px]">Finali</th>
+                    <th className="px-3 py-5 text-[9px] font-black uppercase tracking-widest text-amber-600 text-right w-[100px]">Totale</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-zinc-100/50 dark:divide-zinc-800/50">
@@ -200,8 +201,8 @@ export default async function ClassificaGeneraleAdmin() {
                         key={r.athlete_id} 
                         className={`group transition-all duration-300 ${isPodium ? "bg-amber-500/[0.02]" : "hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30"}`}
                       >
-                        <td className="px-6 py-3">
-                          <div className={`flex h-8 w-8 items-center justify-center rounded-lg font-black text-xs transition-transform group-hover:scale-110 ${
+                        <td className="px-3 py-3">
+                          <div className={`flex h-7 w-7 items-center justify-center rounded-lg font-black text-[10px] transition-transform group-hover:scale-110 ${
                             idx === 0 ? "bg-amber-400 text-white shadow-lg shadow-amber-400/30" : 
                             idx === 1 ? "bg-zinc-300 text-zinc-600" :
                             idx === 2 ? "bg-orange-300 text-orange-800" :
@@ -210,38 +211,33 @@ export default async function ClassificaGeneraleAdmin() {
                             {idx + 1}
                           </div>
                         </td>
-                        <td className="px-6 py-3">
-                          <div className="flex items-center gap-3">
-                            <div className="flex flex-col">
-                              <span className={`font-bold tracking-tight ${idx === 0 ? 'text-lg text-amber-600' : 'text-zinc-800 dark:text-zinc-200'}`}>
-                                {displayName}
-                              </span>
-                              <div className="flex items-center gap-2">
-                                <span className="text-[8px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/50 dark:border-zinc-700 px-1.5 py-0.5 rounded tracking-tighter uppercase">
-                                  Cod. {r.letter}
-                                </span>
-                              </div>
-                            </div>
+                        <td className="px-3 py-3">
+                          <div className="flex flex-col min-w-0">
+                            <span className={`font-bold tracking-tight truncate ${idx === 0 ? 'text-base text-amber-600' : 'text-sm text-zinc-800 dark:text-zinc-200'}`}>
+                              {displayName}
+                            </span>
+                            <span className="text-[7px] w-fit font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/50 dark:border-zinc-700 px-1 py-0 rounded tracking-tighter uppercase">
+                              COD. {r.letter}
+                            </span>
                           </div>
                         </td>
-                        <td className="px-6 py-3 text-center">
-                          <div className="inline-flex items-center gap-1 text-zinc-500 font-bold text-sm bg-zinc-50 dark:bg-zinc-800/50 px-2 py-1 rounded-md">
-                            <Activity className="w-3 h-3 opacity-30" />
+                        <td className="px-3 py-3 text-center">
+                          <div className="inline-flex items-center gap-1 text-zinc-500 font-bold text-xs bg-zinc-50 dark:bg-zinc-800/50 px-2 py-0.5 rounded">
                             {r.matches_played}
                           </div>
                         </td>
-                        <td className="px-6 py-3 text-center font-bold text-cyan-600/80 text-xs hidden md:table-cell font-mono">
-                          {Number(r.qualification_weighted).toFixed(2)}
+                        <td className="px-3 py-3 text-center font-bold text-cyan-600/80 text-[10px] hidden md:table-cell font-mono">
+                          {Number(r.qualification_weighted).toFixed(1)}
                         </td>
-                        <td className="px-6 py-3 text-center font-bold text-indigo-600/80 text-xs hidden md:table-cell font-mono">
-                          {Number(r.finals_weighted).toFixed(2)}
+                        <td className="px-3 py-3 text-center font-bold text-indigo-600/80 text-[10px] hidden md:table-cell font-mono">
+                          {Number(r.finals_weighted).toFixed(1)}
                         </td>
-                        <td className="px-6 py-3 text-right">
+                        <td className="px-3 py-3 text-right">
                           <div className="flex flex-col items-end">
-                            <span className={`text-xl font-black tabular-nums tracking-tighter ${idx === 0 ? 'text-amber-600 drop-shadow-sm' : 'text-zinc-800 dark:text-zinc-100'}`}>
-                              {Number(r.total_weighted).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            <span className={`text-base font-black tabular-nums tracking-tighter ${idx === 0 ? 'text-amber-600 drop-shadow-sm' : 'text-zinc-800 dark:text-zinc-100'}`}>
+                              {Number(r.total_weighted).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
                             </span>
-                            <div className="w-12 h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-1 overflow-hidden">
+                            <div className="w-10 h-0.5 bg-zinc-100 dark:bg-zinc-800 rounded-full mt-0.5 overflow-hidden">
                               <div 
                                 className={`h-full rounded-full ${idx === 0 ? 'bg-amber-500' : 'bg-zinc-300 dark:bg-zinc-600'}`} 
                                 style={{ width: `${Math.max(10, (Number(r.total_weighted) / Number(rows[0].total_weighted)) * 100)}%` }}
@@ -258,35 +254,38 @@ export default async function ClassificaGeneraleAdmin() {
           </PremiumCard>
         </section>
 
-        {/* COLONNA DESTRA: SIDEBAR DISCIPLINE (4/12) */}
-        <aside className="lg:col-span-4 space-y-6">
-          <div className="flex items-center gap-3 px-2">
-            <div className="bg-indigo-500/10 p-2 rounded-lg">
-              <Medal className="w-5 h-5 text-indigo-600" />
+        {/* COLONNA DESTRA: SIDEBAR DISCIPLINE (5/12) */}
+        <aside className="lg:col-span-5 space-y-6">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-3">
+              <div className="bg-indigo-500/10 p-2 rounded-lg">
+                <Medal className="w-5 h-5 text-indigo-600" />
+              </div>
+              <h2 className="text-xl font-black text-foreground">Classifiche per Disciplina</h2>
             </div>
-            <h2 className="text-xl font-black text-foreground">Classifiche Fase 2</h2>
+            <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest bg-zinc-100 px-2 py-1 rounded">Fase 2</span>
           </div>
 
-          <div className="bg-zinc-50/50 dark:bg-zinc-900/50 p-1 rounded-3xl border border-zinc-100 dark:border-zinc-800">
+          <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800 shadow-xl shadow-zinc-200/20 overflow-hidden">
              <DisciplineRankings rankings={rankings} />
           </div>
 
-          <div className="p-6 bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl text-white shadow-xl shadow-indigo-500/20 overflow-hidden relative group">
-            <Zap className="absolute -right-4 -bottom-4 w-32 h-32 text-white/10 rotate-12 transition-transform group-hover:scale-110" />
-            <h3 className="text-lg font-black mb-2 relative z-10">Statistiche Fase 2</h3>
-            <p className="text-white/80 text-xs font-medium leading-relaxed relative z-10">
-              I punteggi della Fase 2 sono pesati al 60% sul totale. 
-              Ogni vittoria in finale vale oro puro per il Ranking Assoluto.
+          <div className="p-6 bg-gradient-to-br from-zinc-800 to-black rounded-3xl text-white shadow-xl shadow-black/10 overflow-hidden relative group">
+            <Zap className="absolute -right-4 -bottom-4 w-32 h-32 text-white/5 rotate-12 transition-transform group-hover:scale-110" />
+            <h3 className="text-lg font-black mb-2 relative z-10">Pesi Punteggio</h3>
+            <p className="text-zinc-400 text-[10px] font-medium leading-relaxed relative z-10">
+              La classifica assoluta è determinata dalla somma pesata delle due fasi. La vittoria in una disciplina nella Fase 2 garantisce un balzo significativo nel Ranking Assoluto.
             </p>
             <div className="mt-4 flex gap-2 relative z-10">
-               <div className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase">Weight: 0.6</div>
-               <div className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase">Fase Finale</div>
+               <div className="px-3 py-1 bg-white/10 rounded-full text-[9px] font-black uppercase border border-white/5">Fase 1: 40%</div>
+               <div className="px-3 py-1 bg-white/10 rounded-full text-[9px] font-black uppercase border border-white/5">Fase 2: 60%</div>
             </div>
           </div>
         </aside>
 
       </div>
     </div>
+
   );
 }
 
