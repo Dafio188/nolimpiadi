@@ -30,10 +30,11 @@ export default async function ClassificaGeneraleAdmin() {
     ORDER BY c.total_weighted::numeric DESC, a.name ASC
   `;
 
-  // 2. Recuperiamo tutte le discipline attive per assicurarci che la sezione sia sempre visibile
+  // 2. Recuperiamo tutte le discipline per assicurarci che la sezione sia sempre visibile
   const allDisciplines = await prisma.discipline.findMany({
-    where: { isActive: true }
+    orderBy: { name: "asc" }
   });
+
 
   // 2.1 Classifiche per Disciplina (Fase 2)
   const finalMatches = await prisma.match.findMany({
