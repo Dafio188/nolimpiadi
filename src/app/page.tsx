@@ -135,8 +135,9 @@ export default async function Home() {
                       muted
                       playsInline
                       poster="/immagini/mascot/Nolimpius giudice con fischietto.png"
-                      className="h-28 md:h-36 object-contain drop-shadow-xl -mb-4"
-                    />
+                      className="h-28 md:h-36 drop-shadow-xl -mb-4"
+                      style={{ objectFit: "contain" }}
+                    ></video>
                   </div>
                   <p className="text-lg text-[#86868b] font-medium leading-relaxed">
                     Dalle freccette millimetriche alla velocità pura dell&apos;air hockey. Ogni disciplina mette alla prova un talento diverso. Sei pronto a dominarle tutte?
