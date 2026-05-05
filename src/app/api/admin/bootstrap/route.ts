@@ -15,23 +15,22 @@ export async function GET() {
       update: { malusDivisor: 1000 },
     });
 
-    // 2. Inizializza Atleti (Assegnando le lettere A-L)
-    await prisma.athlete.updateMany({ data: { letter: null } as any });
-
-    const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+    // 2. Inizializza Atleti — NON resettare le lettere: vengono mantenute quelle impostate dall'admin
+    const defaultLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
     const athletes = [];
     for (let i = 0; i < athleteNames.length; i++) {
       const name = athleteNames[i];
-      const letter = letters[i];
+      const defaultLetter = defaultLetters[i];
       const a = await prisma.athlete.upsert({
         where: { name },
-        create: { name, letter } as any,
-        update: { letter } as any,
+        create: { name, letter: defaultLetter } as any,
+        // update: NON sovrascrivere la lettera — l'admin la gestisce dalla UI Configurazione
+        update: {} as any,
       });
       athletes.push(a);
     }
 
-    // 3. Inizializza Discipline
+    // 3. Inizializza Discipline — NON sovrascrivere targetFixed: viene mantenuto quello impostato dall'admin
     const disciplinesMap: Record<string, any> = {};
     for (const seed of disciplineSeeds) {
       const d = await prisma.discipline.upsert({
@@ -47,7 +46,7 @@ export async function GET() {
           name: seed.name,
           coefficient: seed.coefficient,
           teamSize: seed.teamSize,
-          targetFixed: seed.targetFixed,
+          // targetFixed: NON sovrascrivere — l'admin lo gestisce dalla UI Configurazione
         },
       });
       disciplinesMap[seed.kind] = d;
@@ -63,7 +62,9 @@ export async function GET() {
     for (let roundIdx = 0; roundIdx < TOURNAMENT_CALENDAR.length; roundIdx++) {
       const roundData = TOURNAMENT_CALENDAR[roundIdx];
       for (let slotIdx = 0; slotIdx < roundData.length; slotIdx++) {
-        const globalIdx = roundIdx * 8 + slotIdx + 1;
+        // FIX: usa *100 per separare i blocchi turno (1-8 = 1°T, 101-108 = 2°T, 201-208 = 3°T)
+        // Il parser in schedule/route.ts usa Math.floor(index/100) per il blocco e (index%100) per la partita
+        const globalIdx = roundIdx * 100 + slotIdx + 1;
         const turn = await prisma.qualificationTurn.create({
           data: { index: globalIdx },
         });

@@ -29,6 +29,16 @@ export async function PATCH(req: Request) {
       data: { targetFixed },
       select: { id: true, kind: true, targetFixed: true },
     });
+
+    // Propaga il nuovo target a tutti gli slot non ancora giocati di questa disciplina
+    await (prisma.qualificationSlot as any).updateMany({
+      where: {
+        kind: disciplineKind as any,
+        match: null, // solo slot senza risultato registrato
+      },
+      data: { targetVictory: targetFixed },
+    });
+
     return NextResponse.json({ ok: true, discipline });
   } catch (e) {
     return NextResponse.json({ ok: false, error: "Errore salvataggio disciplina" }, { status: 500 });
