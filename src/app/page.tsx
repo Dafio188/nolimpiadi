@@ -128,10 +128,14 @@ export default async function Home() {
                       Le Quattro Discipline <br />
                       <span className="text-blue-600 italic">della Gloria.</span>
                     </h2>
-                    <img 
-                      src="/immagini/mascot/Nolimpius giudice con fischietto.png" 
-                      alt="Nolimpius Giudice" 
-                      className="h-24 md:h-32 object-contain drop-shadow-xl -mb-4 animate-bounce-slow"
+                    <video
+                      src="/immagini/mp.mp4"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      poster="/immagini/mascot/Nolimpius giudice con fischietto.png"
+                      className="h-28 md:h-36 object-contain drop-shadow-xl -mb-4"
                     />
                   </div>
                   <p className="text-lg text-[#86868b] font-medium leading-relaxed">
