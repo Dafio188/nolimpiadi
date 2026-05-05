@@ -97,22 +97,22 @@ function CurrentMatchCard({ partita, turnoName }: { partita: Partita; turnoName:
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
           </span>
-          <span className="text-xs font-black uppercase tracking-widest text-emerald-700">
+          <span className="text-sm font-black uppercase tracking-widest text-emerald-700">
             Serie in corso
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded-full">
+          <span className="text-sm font-bold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
             {turnoName}
           </span>
-          <span className="text-xs font-black text-emerald-800">
+          <span className="text-sm font-black text-emerald-800">
             Serie #{partita.partitaIndex}
           </span>
         </div>
       </div>
 
       {/* Corpo card: le 4 discipline in colonne */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-0 divide-x divide-emerald-100">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-0 divide-x divide-emerald-100 min-h-[160px]">
         {slots.map(({ key, slot }) => {
           if (!slot) return <div key={key} className="p-4" />;
 
@@ -120,9 +120,9 @@ function CurrentMatchCard({ partita, turnoName }: { partita: Partita; turnoName:
           const p2 = slot.side2Names.length > 0 ? slot.side2Names.map(firstName) : slot.side2Letters;
 
           return (
-            <div key={key} className="p-4 flex flex-col items-center gap-3">
+            <div key={key} className="p-5 flex flex-col items-center gap-4">
               {/* Nome disciplina */}
-              <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
                 {DISCIPLINE_LABELS[key]}
               </span>
 
@@ -131,19 +131,19 @@ function CurrentMatchCard({ partita, turnoName }: { partita: Partita; turnoName:
                 {/* Lato 1 */}
                 <div className="flex flex-col items-end flex-1 min-w-0">
                   {p1.map((n, i) => (
-                    <span key={i} className="text-sm font-bold text-zinc-800 truncate max-w-full text-right leading-tight">
+                    <span key={i} className="text-base font-bold text-zinc-800 truncate max-w-full text-right leading-tight">
                       {n}
                     </span>
                   ))}
                 </div>
 
                 {/* VS */}
-                <span className="text-[10px] font-black text-zinc-300 shrink-0 italic">vs</span>
+                <span className="text-xs font-black text-zinc-300 shrink-0 italic">vs</span>
 
                 {/* Lato 2 */}
                 <div className="flex flex-col items-start flex-1 min-w-0">
                   {p2.map((n, i) => (
-                    <span key={i} className="text-sm font-bold text-zinc-800 truncate max-w-full leading-tight">
+                    <span key={i} className="text-base font-bold text-zinc-800 truncate max-w-full leading-tight">
                       {n}
                     </span>
                   ))}
@@ -153,9 +153,9 @@ function CurrentMatchCard({ partita, turnoName }: { partita: Partita; turnoName:
               {/* Target + attesa punteggio */}
               <div className="flex flex-col items-center gap-1 mt-1">
                 {slot.targetVictory > 0 && (
-                  <span className="text-[9px] text-zinc-400 font-medium">Target: {slot.targetVictory}</span>
+                  <span className="text-xs text-zinc-400 font-semibold">Target: {slot.targetVictory}</span>
                 )}
-                <div className="text-xs font-black text-emerald-400 uppercase tracking-widest animate-pulse">
+                <div className="text-sm font-black text-emerald-500 uppercase tracking-widest animate-pulse">
                   In attesa…
                 </div>
               </div>
@@ -167,7 +167,7 @@ function CurrentMatchCard({ partita, turnoName }: { partita: Partita; turnoName:
       {/* Footer: atleti fermi */}
       {partita.restingNames.length > 0 && (
         <div className="px-5 py-2 bg-zinc-50/80 border-t border-emerald-100 text-center">
-          <span className="text-[10px] text-zinc-400 font-medium italic">
+          <span className="text-xs text-zinc-400 font-medium italic">
             Fermi: {partita.restingNames.map(firstName).join(", ")}
           </span>
         </div>
@@ -203,22 +203,22 @@ function ScoreboardRow({ partita, globalIndex, status, delay }: {
       exit={{ opacity: 0, x: -6 }}
       transition={{ type: "spring", stiffness: 400, damping: 38, delay }}
       className={`flex items-center border rounded-lg overflow-hidden transition-colors duration-300 ${rowStyles[status]}`}
-      style={{ minHeight: "42px" }}
+      style={{ minHeight: "50px" }}
     >
       {/* Numero */}
-      <div className={`shrink-0 w-9 flex items-center justify-center self-stretch text-xs font-black ${numStyles[status]}`}>
+      <div className={`shrink-0 w-10 flex items-center justify-center self-stretch text-sm font-black ${numStyles[status]}`}>
         {globalIndex}
       </div>
 
       {/* Stato pill */}
-      <div className="shrink-0 w-20 flex items-center justify-center">
+      <div className="shrink-0 w-24 flex items-center justify-center">
         {status === "DONE" ? (
-          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-red-100 text-red-500 text-[8px] font-black uppercase">
-            <CheckCircle2 className="w-2 h-2" /> Finita
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 text-red-500 text-[10px] font-black uppercase">
+            <CheckCircle2 className="w-2.5 h-2.5" /> Finita
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-600 text-[8px] font-black uppercase">
-            <Clock className="w-2 h-2" /> Attesa
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-600 text-[10px] font-black uppercase">
+            <Clock className="w-2.5 h-2.5" /> Attesa
           </span>
         )}
       </div>
@@ -235,14 +235,14 @@ function ScoreboardRow({ partita, globalIndex, status, delay }: {
         const scoreColor = status === "DONE" ? "text-red-500 font-black" : "text-zinc-300";
 
         return (
-          <div key={dk} className="flex-1 min-w-0 flex items-center justify-between gap-1 px-2 border-l border-zinc-100 py-1">
-            <span className={`text-[11px] font-medium truncate flex-1 text-right ${textColor}`}>
+          <div key={dk} className="flex-1 min-w-0 flex items-center justify-between gap-1 px-3 border-l border-zinc-100 py-2">
+            <span className={`text-xs font-semibold truncate flex-1 text-right ${textColor}`}>
               {p1.join(" & ")}
             </span>
-            <span className={`shrink-0 text-xs tabular-nums mx-1 ${scoreColor}`}>
-              {status === "DONE" ? `${slot.points1}-${slot.points2}` : "vs"}
+            <span className={`shrink-0 text-sm tabular-nums font-black mx-1.5 ${scoreColor}`}>
+              {status === "DONE" ? `${slot.points1}–${slot.points2}` : "vs"}
             </span>
-            <span className={`text-[11px] font-medium truncate flex-1 text-left ${textColor}`}>
+            <span className={`text-xs font-semibold truncate flex-1 text-left ${textColor}`}>
               {p2.join(" & ")}
             </span>
           </div>
