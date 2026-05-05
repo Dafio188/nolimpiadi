@@ -133,11 +133,13 @@ export async function GET() {
         SUM(v.points_scored) AS total_scored,
         SUM(v.points_conceded) AS total_conceded,
         COUNT(*) AS matches_played,
-        (SUM(v.points_scored) - (SUM(v.points_conceded) / 1000.0)) * (840.0 / (d.team_size * 4.0 * d.target_fixed)) AS qualification_weighted
+        SUM(
+          ((v.points_scored::float / GREATEST(v.points_scored, v.points_conceded)::float) * 210.0) - (v.points_conceded::float / 1000.0)
+        ) AS qualification_weighted
       FROM v_participations v
       JOIN disciplines d ON d.id = v.discipline_id
       WHERE v.phase = 'QUALIFICAZIONE'
-      GROUP BY v.athlete_id, v.discipline_id, d.kind, d.name, d.team_size, d.target_fixed;
+      GROUP BY v.athlete_id, v.discipline_id, d.kind, d.name;
 
       CREATE OR REPLACE VIEW classifica_complessiva AS
       WITH athlete_discipline_scores AS (
@@ -145,11 +147,13 @@ export async function GET() {
           v.athlete_id,
           v.discipline_id,
           v.phase,
-          (SUM(v.points_scored) - (SUM(v.points_conceded) / 1000.0)) * (840.0 / (d.team_size * 4.0 * d.target_fixed)) AS score,
+          SUM(
+            ((v.points_scored::float / GREATEST(v.points_scored, v.points_conceded)::float) * 210.0) - (v.points_conceded::float / 1000.0)
+          ) AS score,
           COUNT(v.match_id) AS matches_count
         FROM v_participations v
         JOIN disciplines d ON d.id = v.discipline_id
-        GROUP BY v.athlete_id, v.discipline_id, v.phase, d.team_size, d.target_fixed
+        GROUP BY v.athlete_id, v.discipline_id, v.phase
       )
       SELECT 
         a.id AS athlete_id,
