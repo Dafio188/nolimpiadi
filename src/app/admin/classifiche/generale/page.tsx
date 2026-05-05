@@ -30,7 +30,12 @@ export default async function ClassificaGeneraleAdmin() {
     ORDER BY c.total_weighted::numeric DESC, a.name ASC
   `;
 
-  // 2. Classifiche per Disciplina (Fase 2)
+  // 2. Recuperiamo tutte le discipline attive per assicurarci che la sezione sia sempre visibile
+  const allDisciplines = await prisma.discipline.findMany({
+    where: { isActive: true }
+  });
+
+  // 2.1 Classifiche per Disciplina (Fase 2)
   const finalMatches = await prisma.match.findMany({
     where: { phase: "FINALI" },
     include: {
@@ -46,11 +51,16 @@ export default async function ClassificaGeneraleAdmin() {
     orderBy: { playedAt: 'desc' }
   });
 
-  // Organizziamo i risultati per disciplina
+  // Organizziamo i risultati per disciplina, inizializzando con tutte le discipline attive
   const disciplineRankingsMap: Record<string, any> = {};
+  
+  allDisciplines.forEach(d => {
+    disciplineRankingsMap[d.kind] = { kind: d.kind, standings: [] };
+  });
 
   finalMatches.forEach(match => {
     const kind = match.discipline.kind;
+    // Se per qualche motivo la disciplina non era in allDisciplines, la aggiungiamo
     if (!disciplineRankingsMap[kind]) {
       disciplineRankingsMap[kind] = { kind, standings: [] };
     }
@@ -58,6 +68,9 @@ export default async function ClassificaGeneraleAdmin() {
     const side1 = match.sides.find(s => s.side === 1);
     const side2 = match.sides.find(s => s.side === 2);
     if (!side1 || !side2) return;
+
+    // Consideriamo il match solo se è stato giocato (almeno un punto segnato o flag isPlayed)
+    if (side1.points === 0 && side2.points === 0) return;
 
     const winner = side1.points > side2.points ? side1 : side2;
     const loser = side1.points > side2.points ? side2 : side1;
@@ -68,14 +81,12 @@ export default async function ClassificaGeneraleAdmin() {
       QUARTI: "Quarti di Finale"
     };
 
-    const currentStage = match.finalStage ? stageNames[match.finalStage] : "Finale";
-
     // Aggiungiamo il vincitore se è la finale (1° posto)
     if (match.finalStage === "FINALE") {
       winner.athletes.forEach(sa => {
         disciplineRankingsMap[kind].standings.push({
           pos: 1,
-          name: sa.athlete.name,
+          name: sa.athlete.name.split(' ').slice(0, 2).join(' '), // Togliamo iniziali/cognomi extra
           stage: "Campione",
           isWinner: true
         });
@@ -83,7 +94,7 @@ export default async function ClassificaGeneraleAdmin() {
       loser.athletes.forEach(sa => {
         disciplineRankingsMap[kind].standings.push({
           pos: 2,
-          name: sa.athlete.name,
+          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
           stage: "Finalista",
           isWinner: false
         });
@@ -92,7 +103,7 @@ export default async function ClassificaGeneraleAdmin() {
       loser.athletes.forEach(sa => {
         disciplineRankingsMap[kind].standings.push({
           pos: 3,
-          name: sa.athlete.name,
+          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
           stage: "Semifinalista",
           isWinner: false
         });
@@ -101,7 +112,7 @@ export default async function ClassificaGeneraleAdmin() {
        loser.athletes.forEach(sa => {
         disciplineRankingsMap[kind].standings.push({
           pos: 5,
-          name: sa.athlete.name,
+          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
           stage: "Quarti di Finale",
           isWinner: false
         });
@@ -116,14 +127,14 @@ export default async function ClassificaGeneraleAdmin() {
   }));
 
   return (
-    <div className="mx-auto w-full max-w-7xl pb-20">
+    <div className="mx-auto w-full max-w-7xl pb-20 px-4">
 
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
           <Trophy className="w-10 h-10 text-amber-500" />
           CLASSIFICHE GENERALI
         </h1>
-        <p className="mt-2 text-zinc-500 font-medium">Risultati aggregati e classifiche finali per disciplina.</p>
+        <p className="mt-2 text-zinc-500 font-medium italic">Risultati aggregati e classifiche finali per disciplina.</p>
       </header>
 
       <div className="space-y-20">
@@ -139,11 +150,11 @@ export default async function ClassificaGeneraleAdmin() {
             </span>
           </div>
 
-          <PremiumCard className="p-0 border-none ring-1 ring-amber-500/20 shadow-amber-500/10">
+          <PremiumCard className="p-0 border-none ring-1 ring-amber-500/10 shadow-xl shadow-zinc-200/50 dark:shadow-none overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-zinc-100 bg-amber-50/30">
+                  <tr className="border-b border-zinc-100 bg-zinc-50/50">
                     <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 w-24">Pos</th>
                     <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">Atleta</th>
                     <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-center">Partite</th>
@@ -155,41 +166,43 @@ export default async function ClassificaGeneraleAdmin() {
                 <tbody className="divide-y divide-zinc-50">
                   {rows.map((r, idx) => {
                     const isPodium = idx < 3;
+                    // Togliamo iniziali/cognomi extra (es: "Gustavo B. V." -> "Gustavo")
+                    const displayName = r.name.split(' ').slice(0, 2).join(' ');
 
                     return (
                       <tr 
                         key={r.athlete_id} 
-                        className={`group transition-colors ${isPodium ? "hover:bg-amber-50/50 bg-amber-50/10" : "hover:bg-zinc-50/80"}`}
+                        className={`group transition-colors ${isPodium ? "bg-amber-50/5" : "hover:bg-zinc-50/80"}`}
                       >
-                        <td className="px-6 py-2">
-                          <div className={`flex h-10 w-10 items-center justify-center rounded-xl font-black text-lg ${
-                            idx === 0 ? "bg-gradient-to-br from-yellow-300 to-amber-500 text-white shadow-lg shadow-amber-500/40 ring-2 ring-amber-200" : 
-                            idx === 1 ? "bg-gradient-to-br from-gray-300 to-zinc-400 text-white shadow-lg shadow-zinc-400/30 ring-2 ring-zinc-200" :
-                            idx === 2 ? "bg-gradient-to-br from-amber-700 to-orange-800 text-white shadow-lg shadow-orange-800/30 ring-2 ring-orange-900/50" :
-                            "bg-zinc-100 text-zinc-400"
+                        <td className="px-6 py-1.5">
+                          <div className={`flex h-9 w-9 items-center justify-center rounded-lg font-black text-sm ${
+                            idx === 0 ? "bg-amber-100 text-amber-600 ring-1 ring-amber-200" : 
+                            idx === 1 ? "bg-zinc-100 text-zinc-500 ring-1 ring-zinc-200" :
+                            idx === 2 ? "bg-orange-100 text-orange-700 ring-1 ring-orange-200" :
+                            "text-zinc-400"
                           }`}>
-                            {idx === 0 ? <Trophy className="w-5 h-5 text-yellow-50" /> : idx + 1}
+                            {idx + 1}
                           </div>
                         </td>
-                        <td className="px-6 py-2">
-                          <div className="flex items-center gap-3">
-                            <span className={`font-bold ${idx === 0 ? 'text-xl text-amber-700' : 'text-lg text-foreground'}`}>
-                              {r.name}
+                        <td className="px-6 py-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className={`font-medium ${idx === 0 ? 'text-lg text-amber-700' : 'text-base text-zinc-800'}`}>
+                              {displayName}
                             </span>
-                            <span className="text-[10px] font-bold text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded-full">
+                            <span className="text-[9px] font-black text-zinc-300 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded uppercase">
                               {r.letter}
                             </span>
                           </div>
                         </td>
-                        <td className="px-6 py-2 text-center font-bold text-zinc-600">{r.matches_played}</td>
-                        <td className="px-6 py-2 text-center font-bold text-cyan-600 text-sm">
+                        <td className="px-6 py-1.5 text-center font-bold text-zinc-500 text-sm">{r.matches_played}</td>
+                        <td className="px-6 py-1.5 text-center font-bold text-cyan-600 text-xs">
                           {Number(r.qualification_weighted).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
-                        <td className="px-6 py-2 text-center font-bold text-indigo-600 text-sm">
+                        <td className="px-6 py-1.5 text-center font-bold text-indigo-600 text-xs">
                           {Number(r.finals_weighted).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </td>
-                        <td className="px-6 py-2 text-right">
-                          <span className={`text-2xl font-black ${idx === 0 ? 'text-amber-600' : 'text-zinc-800'}`}>
+                        <td className="px-6 py-1.5 text-right">
+                          <span className={`text-xl font-black ${idx === 0 ? 'text-amber-600' : 'text-zinc-700'}`}>
                             {Number(r.total_weighted).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </span>
                         </td>
@@ -203,9 +216,12 @@ export default async function ClassificaGeneraleAdmin() {
         </section>
 
         {/* Classifiche per Disciplina Fase 2 */}
-        <DisciplineRankings rankings={rankings} />
+        <div className="pt-10 border-t border-zinc-100">
+          <DisciplineRankings rankings={rankings} />
+        </div>
       </div>
     </div>
   );
 }
+
 
