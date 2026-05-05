@@ -32,7 +32,7 @@ export default async function ClassificaFase1() {
     byDiscipline[r.kind].push(r);
   }
 
-  const disciplineOrder = ["PING_PONG", "CALCIO_BALILLA", "AIR_HOCKEY", "FRECCETTE"];
+  const disciplineOrder = ["CALCIO_BALILLA", "FRECCETTE", "PING_PONG", "AIR_HOCKEY"];
 
   return (
     <div className="mx-auto w-full max-w-7xl">
