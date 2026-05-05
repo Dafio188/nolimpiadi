@@ -290,7 +290,4 @@ export default async function ClassificaGeneraleAdmin() {
   );
 }
 
-  );
-}
-
 
