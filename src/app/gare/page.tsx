@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Radio, Clock, CheckCircle2, RefreshCw, Zap, ChevronRight } from "lucide-react";
+import { Radio, Clock, CheckCircle2, RefreshCw } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type SportState = "TODO" | "DONE";
-type SlotStatus = "DONE" | "CURRENT" | "UPCOMING";
 
 interface SportSlot {
   slotId: string;
@@ -29,6 +28,7 @@ interface Partita {
   sports: Record<string, SportSlot>;
   restingLetters: string[];
   restingNames: string[];
+  turnoName: string; // aggiunto in fase di flatten
 }
 
 interface TurnoBlock {
@@ -59,19 +59,88 @@ function isPartitaDone(partita: Partita): boolean {
   return slots.length > 0 && slots.every(s => s.state === "DONE");
 }
 
-// Trova la prima partita UPCOMING globale (attraverso tutti i turni)
-function findCurrentPartitaId(data: TurnoBlock[]): string | null {
-  for (const turno of data) {
-    for (const partita of turno.partite) {
-      if (!isPartitaDone(partita)) return partita.partitaId;
-    }
-  }
-  return null;
+function flattenPartite(data: TurnoBlock[]): Partita[] {
+  return data.flatMap(turno =>
+    turno.partite.map(p => ({ ...p, turnoName: turno.name }))
+  );
 }
 
-// ─── Current Match Card ───────────────────────────────────────────────────────
+// ─── Sticky Scoreboard Header ─────────────────────────────────────────────────
 
-function CurrentMatchCard({ partita, turnoName }: { partita: Partita; turnoName: string }) {
+function ScoreboardHeader({
+  completate, daGiocare, currentPartita, isRefreshing, onRefresh,
+}: {
+  completate: number;
+  daGiocare: number;
+  currentPartita: Partita | null;
+  isRefreshing: boolean;
+  onRefresh: () => void;
+}) {
+  const currentFermi = currentPartita?.restingNames.map(firstName).join(", ") ?? null;
+
+  return (
+    <div className="sticky top-[60px] z-50 bg-white/97 backdrop-blur-xl border-b border-zinc-200 shadow-sm">
+      <div className="mx-auto max-w-screen-2xl px-4 py-2.5">
+
+        {/* Riga titolo + counter */}
+        <div className="relative flex items-center justify-center mb-2.5">
+          {/* Titolo centrato */}
+          <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2 bg-zinc-900 text-white px-3 py-1.5 rounded-lg">
+              <Radio className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-xs font-black uppercase tracking-wider">Live Scoreboard</span>
+            </div>
+            <h1 className="text-lg font-black text-zinc-800 hidden sm:block">Nolimpiadi 2026</h1>
+          </div>
+
+          {/* Counter + refresh — destra */}
+          <div className="absolute right-0 flex items-center gap-1.5">
+            <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full bg-red-50 text-red-500">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />{completate} Finite
+            </span>
+            {currentPartita && (
+              <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full bg-emerald-50 text-emerald-600">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />1 In Corso
+              </span>
+            )}
+            <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full bg-amber-50 text-amber-600">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500" />{daGiocare} Da Giocare
+            </span>
+            <button onClick={onRefresh} className="p-1.5 rounded-lg hover:bg-zinc-100 transition-colors" title="Aggiorna ora">
+              <RefreshCw className={`w-3.5 h-3.5 text-zinc-400 ${isRefreshing ? "animate-spin" : ""}`} />
+            </button>
+          </div>
+        </div>
+
+        {/* Intestazioni colonne */}
+        <div
+          className="grid items-center text-center text-[9px] font-black uppercase tracking-widest text-zinc-400"
+          style={{ gridTemplateColumns: "40px 88px 1fr 1fr 1fr 1fr 140px" }}
+        >
+          <div className="text-center">#</div>
+          <div>Stato</div>
+          {DISCIPLINE_ORDER.map(dk => (
+            <div key={dk} className="border-l border-zinc-100 px-1">{DISCIPLINE_LABELS[dk]}</div>
+          ))}
+          {/* Colonna FERMI — dinamica con atleti della serie corrente */}
+          <div className="border-l border-zinc-100 px-2 text-left">
+            {currentFermi ? (
+              <span className="text-emerald-600 normal-case font-bold text-[9px]">
+                Fermi: <span className="font-black">{currentFermi}</span>
+              </span>
+            ) : (
+              "Fermi"
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Current Match Card (STICKY) ──────────────────────────────────────────────
+
+function CurrentMatchCard({ partita }: { partita: Partita }) {
   const slots = DISCIPLINE_ORDER.map(k => ({
     key: k,
     slot: partita.sports[k] as SportSlot | undefined,
@@ -81,137 +150,124 @@ function CurrentMatchCard({ partita, turnoName }: { partita: Partita; turnoName:
     <motion.div
       layout
       layoutId={`partita-${partita.partitaId}`}
-      initial={{ opacity: 0, scale: 0.97 }}
+      initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.97 }}
+      exit={{ opacity: 0, scale: 0.98 }}
       transition={{ type: "spring", stiffness: 350, damping: 30 }}
-      className="relative overflow-hidden rounded-2xl border-2 border-emerald-400 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 shadow-xl shadow-emerald-500/15 ring-4 ring-emerald-300/20 my-3"
+      // STICKY: rimane ancorata sotto l'header mentre si scrolla
+      className="sticky z-40 overflow-hidden rounded-xl border-2 border-emerald-400 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 shadow-lg shadow-emerald-500/20 ring-2 ring-emerald-300/20"
+      style={{ top: "148px" }}
     >
       {/* Glow decorativo */}
       <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/5 via-transparent to-emerald-400/5 pointer-events-none" />
 
-      {/* Header card */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-emerald-200/60 bg-emerald-500/5">
-        <div className="flex items-center gap-2.5">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
-          </span>
-          <span className="text-sm font-black uppercase tracking-widest text-emerald-700">
-            Serie in corso
-          </span>
+      {/* Header card compatto */}
+      <div
+        className="grid items-center px-3 py-2 border-b border-emerald-200/60 bg-emerald-500/5"
+        style={{ gridTemplateColumns: "40px 88px 1fr 1fr 1fr 1fr 140px" }}
+      >
+        {/* Numero */}
+        <div className="flex items-center justify-center">
+          <span className="text-sm font-black text-emerald-700">{partita.partitaIndex}</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-bold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
-            {turnoName}
-          </span>
-          <span className="text-sm font-black text-emerald-800">
-            Serie #{partita.partitaIndex}
-          </span>
-        </div>
-      </div>
 
-      {/* Corpo card: le 4 discipline in colonne */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-0 divide-x divide-emerald-100 min-h-[160px]">
+        {/* Badge "In Corso" */}
+        <div className="flex items-center justify-center">
+          <span className="relative flex items-center gap-1.5 text-[10px] font-black text-emerald-700 uppercase tracking-wider">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+            </span>
+            In Corso
+          </span>
+        </div>
+
+        {/* Sfidanti per disciplina — allineati alle colonne */}
         {slots.map(({ key, slot }) => {
-          if (!slot) return <div key={key} className="p-4" />;
-
+          if (!slot) return <div key={key} className="border-l border-emerald-100" />;
           const p1 = slot.side1Names.length > 0 ? slot.side1Names.map(firstName) : slot.side1Letters;
           const p2 = slot.side2Names.length > 0 ? slot.side2Names.map(firstName) : slot.side2Letters;
 
           return (
-            <div key={key} className="p-5 flex flex-col items-center gap-4">
-              {/* Nome disciplina */}
-              <span className="text-[11px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
+            <div key={key} className="flex flex-col items-center border-l border-emerald-100 px-2 py-1">
+              {/* Badge disciplina */}
+              <span className="text-[8px] font-black uppercase tracking-widest text-emerald-500 mb-1">
                 {DISCIPLINE_LABELS[key]}
               </span>
-
-              {/* Sfidanti */}
-              <div className="flex items-center justify-center gap-3 w-full">
-                {/* Lato 1 */}
+              {/* Nomi sfidanti */}
+              <div className="flex items-center justify-center gap-1.5 w-full">
                 <div className="flex flex-col items-end flex-1 min-w-0">
                   {p1.map((n, i) => (
-                    <span key={i} className="text-base font-bold text-zinc-800 truncate max-w-full text-right leading-tight">
-                      {n}
-                    </span>
+                    <span key={i} className="text-sm font-bold text-zinc-800 truncate max-w-full text-right leading-tight">{n}</span>
                   ))}
                 </div>
-
-                {/* VS */}
-                <span className="text-xs font-black text-zinc-300 shrink-0 italic">vs</span>
-
-                {/* Lato 2 */}
+                <span className="text-[9px] text-zinc-300 font-black italic shrink-0">vs</span>
                 <div className="flex flex-col items-start flex-1 min-w-0">
                   {p2.map((n, i) => (
-                    <span key={i} className="text-base font-bold text-zinc-800 truncate max-w-full leading-tight">
-                      {n}
-                    </span>
+                    <span key={i} className="text-sm font-bold text-zinc-800 truncate max-w-full leading-tight">{n}</span>
                   ))}
                 </div>
               </div>
-
-              {/* Target + attesa punteggio */}
-              <div className="flex flex-col items-center gap-1 mt-1">
-                {slot.targetVictory > 0 && (
-                  <span className="text-xs text-zinc-400 font-semibold">Target: {slot.targetVictory}</span>
-                )}
-                <div className="text-sm font-black text-emerald-500 uppercase tracking-widest animate-pulse">
-                  In attesa…
-                </div>
+              {/* Target */}
+              {slot.targetVictory > 0 && (
+                <span className="text-[8px] text-zinc-400 mt-0.5">Target: {slot.targetVictory}</span>
+              )}
+              {/* Status */}
+              <div className="text-[10px] font-black text-emerald-500 uppercase tracking-widest animate-pulse mt-0.5">
+                In attesa…
               </div>
             </div>
           );
         })}
-      </div>
 
-      {/* Footer: atleti fermi */}
-      {partita.restingNames.length > 0 && (
-        <div className="px-5 py-2 bg-zinc-50/80 border-t border-emerald-100 text-center">
-          <span className="text-xs text-zinc-400 font-medium italic">
-            Fermi: {partita.restingNames.map(firstName).join(", ")}
+        {/* Turno info (colonna fermi - header card mostra il turno) */}
+        <div className="border-l border-emerald-100 px-2 text-left">
+          <span className="text-[9px] text-emerald-600 font-bold bg-emerald-100 px-2 py-0.5 rounded-full">
+            {partita.turnoName}
           </span>
         </div>
-      )}
+      </div>
     </motion.div>
   );
 }
 
 // ─── Scoreboard Row ───────────────────────────────────────────────────────────
 
-function ScoreboardRow({ partita, globalIndex, status, delay }: {
+function ScoreboardRow({
+  partita, globalIndex, status, delay,
+}: {
   partita: Partita;
   globalIndex: number;
   status: "DONE" | "UPCOMING";
   delay: number;
 }) {
   const rowStyles = {
-    DONE: "bg-red-50/70 hover:bg-red-50 border-red-100",
+    DONE: "bg-red-50/60 hover:bg-red-50 border-red-100",
     UPCOMING: "bg-amber-50/30 hover:bg-amber-50/60 border-amber-100/60",
   };
-
   const numStyles = {
-    DONE: "bg-red-100 text-red-500",
-    UPCOMING: "text-amber-500",
+    DONE: "text-red-400 font-black",
+    UPCOMING: "text-amber-500 font-black",
   };
 
   return (
     <motion.div
       layout
       layoutId={`partita-${partita.partitaId}`}
-      initial={{ opacity: 0, x: -6 }}
+      initial={{ opacity: 0, x: -4 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -6 }}
+      exit={{ opacity: 0, x: 4 }}
       transition={{ type: "spring", stiffness: 400, damping: 38, delay }}
-      className={`flex items-center border rounded-lg overflow-hidden transition-colors duration-300 ${rowStyles[status]}`}
-      style={{ minHeight: "50px" }}
+      className={`grid items-center border rounded-lg overflow-hidden transition-colors duration-300 ${rowStyles[status]}`}
+      style={{ gridTemplateColumns: "40px 88px 1fr 1fr 1fr 1fr 140px", minHeight: "46px" }}
     >
-      {/* Numero */}
-      <div className={`shrink-0 w-10 flex items-center justify-center self-stretch text-sm font-black ${numStyles[status]}`}>
+      {/* # */}
+      <div className={`flex items-center justify-center self-stretch text-sm ${numStyles[status]}`}>
         {globalIndex}
       </div>
 
-      {/* Stato pill */}
-      <div className="shrink-0 w-24 flex items-center justify-center">
+      {/* Status pill */}
+      <div className="flex items-center justify-center">
         {status === "DONE" ? (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 text-red-500 text-[10px] font-black uppercase">
             <CheckCircle2 className="w-2.5 h-2.5" /> Finita
@@ -226,20 +282,19 @@ function ScoreboardRow({ partita, globalIndex, status, delay }: {
       {/* Celle disciplina */}
       {DISCIPLINE_ORDER.map((dk) => {
         const slot = partita.sports[dk];
-        if (!slot) return <div key={dk} className="flex-1 border-l border-zinc-100" />;
+        if (!slot) return <div key={dk} className="border-l border-zinc-100" />;
 
         const p1 = slot.side1Names.length > 0 ? slot.side1Names.map(firstName) : slot.side1Letters;
         const p2 = slot.side2Names.length > 0 ? slot.side2Names.map(firstName) : slot.side2Letters;
-
         const textColor = status === "DONE" ? "text-red-600" : "text-amber-700";
-        const scoreColor = status === "DONE" ? "text-red-500 font-black" : "text-zinc-300";
+        const scoreColor = status === "DONE" ? "text-red-500 font-black text-sm" : "text-zinc-300 text-xs";
 
         return (
-          <div key={dk} className="flex-1 min-w-0 flex items-center justify-between gap-1 px-3 border-l border-zinc-100 py-2">
+          <div key={dk} className="flex items-center justify-between gap-1 px-2.5 border-l border-zinc-100 py-1.5">
             <span className={`text-xs font-semibold truncate flex-1 text-right ${textColor}`}>
               {p1.join(" & ")}
             </span>
-            <span className={`shrink-0 text-sm tabular-nums font-black mx-1.5 ${scoreColor}`}>
+            <span className={`shrink-0 tabular-nums font-black mx-1.5 ${scoreColor}`}>
               {status === "DONE" ? `${slot.points1}–${slot.points2}` : "vs"}
             </span>
             <span className={`text-xs font-semibold truncate flex-1 text-left ${textColor}`}>
@@ -250,9 +305,9 @@ function ScoreboardRow({ partita, globalIndex, status, delay }: {
       })}
 
       {/* Fermi */}
-      <div className="shrink-0 w-24 px-2 text-right">
+      <div className="border-l border-zinc-100 px-2.5 text-left">
         {partita.restingNames.length > 0 && (
-          <span className="text-[8px] text-zinc-400 font-medium italic block leading-tight">
+          <span className="text-[9px] text-zinc-400 font-medium italic leading-tight block">
             {partita.restingNames.map(firstName).join(", ")}
           </span>
         )}
@@ -278,9 +333,8 @@ export default function GarePage() {
         setData(json.data.phases);
         setLastUpdate(new Date());
       }
-    } catch {
-      // silenzioso
-    } finally {
+    } catch { /* silenzioso */ }
+    finally {
       setLoading(false);
       setIsRefreshing(false);
     }
@@ -292,20 +346,26 @@ export default function GarePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // ID della serie "in corso" (prima UPCOMING globale)
-  const currentId = findCurrentPartitaId(data);
+  // Flatten tutte le partite in ordine mantenendo il nome turno
+  const allPartite: Partita[] = data.flatMap(turno =>
+    turno.partite.map(p => ({ ...p, turnoName: turno.name }))
+  );
 
-  // Contatori
-  const allPartite = data.flatMap(t => t.partite);
-  const completate = allPartite.filter(p => isPartitaDone(p)).length;
-  const daGiocare = allPartite.filter(p => !isPartitaDone(p) && p.partitaId !== currentId).length;
+  // Partizioniamo: done, current, upcoming
+  const donePartite = allPartite.filter(p => isPartitaDone(p));
+  const notDone = allPartite.filter(p => !isPartitaDone(p));
+  const currentPartita = notDone[0] ?? null;
+  const upcomingPartite = notDone.slice(1);
+
+  const completate = donePartite.length;
+  const daGiocare = upcomingPartite.length;
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-zinc-50">
         <div className="flex flex-col items-center gap-4">
-          <div className="relative h-16 w-16">
-            <div className="h-16 w-16 rounded-full border-4 border-zinc-200" />
+          <div className="relative h-14 w-14">
+            <div className="h-14 w-14 rounded-full border-4 border-zinc-200" />
             <div className="absolute inset-0 rounded-full border-4 border-t-emerald-500 animate-spin" />
           </div>
           <p className="text-zinc-500 font-medium text-sm">Caricamento Scoreboard…</p>
@@ -314,128 +374,79 @@ export default function GarePage() {
     );
   }
 
-  let globalCounter = 0;
-
   return (
     <div className="min-h-screen bg-zinc-50">
 
-      {/* ─── Sticky Header ─── */}
-      <div className="sticky top-[60px] z-50 bg-white/95 backdrop-blur-xl border-b border-zinc-200 shadow-sm">
-        <div className="mx-auto max-w-screen-2xl px-4 py-3">
+      {/* ─── Sticky Scoreboard Header ─── */}
+      <ScoreboardHeader
+        completate={completate}
+        daGiocare={daGiocare}
+        currentPartita={currentPartita}
+        isRefreshing={isRefreshing}
+        onRefresh={() => fetchData(true)}
+      />
 
-          {/* Riga titolo */}
-          <div className="relative flex items-center justify-center mb-3">
-            <div className="flex items-center gap-2.5">
-              <div className="flex items-center gap-2 bg-zinc-900 text-white px-3 py-1.5 rounded-lg">
-                <Radio className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-xs font-black uppercase tracking-wider">Live Scoreboard</span>
-              </div>
-              <h1 className="text-lg font-black text-zinc-800 hidden sm:block">Nolimpiadi 2026</h1>
-            </div>
+      {/* ─── Corpo pagina ─── */}
+      <div className="mx-auto max-w-screen-2xl px-4 pt-3 pb-32 space-y-1">
 
-            <div className="absolute right-0 flex items-center gap-2">
-              <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full bg-red-50 text-red-500">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500" />{completate} Finite
-              </span>
-              {currentId && (
-                <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full bg-emerald-50 text-emerald-600">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />1 In Corso
-                </span>
-              )}
-              <span className="flex items-center gap-1 text-[10px] font-black uppercase px-2 py-1 rounded-full bg-amber-50 text-amber-600">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500" />{daGiocare} Da Giocare
-              </span>
-              <button
-                onClick={() => fetchData(true)}
-                className="p-1.5 rounded-lg hover:bg-zinc-100 transition-colors"
-                title="Aggiorna ora"
-              >
-                <RefreshCw className={`w-4 h-4 text-zinc-400 ${isRefreshing ? "animate-spin" : ""}`} />
-              </button>
-            </div>
-          </div>
-
-          {/* Intestazioni colonne */}
-          <div
-            className="grid text-center text-[9px] font-black uppercase tracking-widest text-zinc-400"
-            style={{ gridTemplateColumns: "36px 80px 1fr 1fr 1fr 1fr 96px" }}
-          >
-            <div>#</div>
-            <div>Stato</div>
-            {DISCIPLINE_ORDER.map(dk => (
-              <div key={dk} className="border-l border-zinc-100">{DISCIPLINE_LABELS[dk]}</div>
-            ))}
-            <div>Fermi</div>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── Corpo ─── */}
-      <div className="mx-auto max-w-screen-2xl px-4 py-4 space-y-8 pb-24">
+        {/* ZONA A: Partite FINITE — scorrono verso l'alto */}
         <AnimatePresence mode="popLayout">
-          {data.map((turno) => {
-            const turnoHasContent = turno.partite.length > 0;
-            if (!turnoHasContent) return null;
+          {donePartite.map((partita, idx) => (
+            <ScoreboardRow
+              key={partita.partitaId}
+              partita={partita}
+              globalIndex={idx + 1}
+              status="DONE"
+              delay={0}
+            />
+          ))}
+        </AnimatePresence>
 
-            return (
-              <section key={turno.id}>
-                {/* Label turno */}
-                <div className="flex items-center gap-3 mb-2 pt-1">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400 bg-zinc-100 px-3 py-1 rounded-full">
-                    {turno.name}
-                  </span>
-                  <div className="flex-1 h-px bg-zinc-100" />
-                  <span className="text-[10px] text-zinc-300 font-medium">{turno.partite.length} serie</span>
-                </div>
+        {/* ZONA B: Serie corrente — STICKY, sempre visibile */}
+        <AnimatePresence mode="popLayout">
+          {currentPartita && (
+            <CurrentMatchCard
+              key={currentPartita.partitaId}
+              partita={currentPartita}
+            />
+          )}
+        </AnimatePresence>
 
-                {/* Partite */}
-                <div className="space-y-1.5">
-                  {turno.partite.map((partita) => {
-                    globalCounter++;
-                    const gIdx = globalCounter;
-                    const isDone = isPartitaDone(partita);
-                    const isCurrent = partita.partitaId === currentId;
+        {/* Separatore visivo */}
+        {upcomingPartite.length > 0 && (
+          <div className="flex items-center gap-3 pt-1 pb-0.5">
+            <div className="flex-1 h-px bg-amber-100" />
+            <span className="text-[9px] font-black uppercase tracking-widest text-amber-400">
+              {upcomingPartite.length} serie in attesa
+            </span>
+            <div className="flex-1 h-px bg-amber-100" />
+          </div>
+        )}
 
-                    if (isCurrent) {
-                      return (
-                        <CurrentMatchCard
-                          key={partita.partitaId}
-                          partita={partita}
-                          turnoName={turno.name}
-                        />
-                      );
-                    }
-
-                    return (
-                      <ScoreboardRow
-                        key={partita.partitaId}
-                        partita={partita}
-                        globalIndex={gIdx}
-                        status={isDone ? "DONE" : "UPCOMING"}
-                        delay={isDone ? 0 : 0.02}
-                      />
-                    );
-                  })}
-                </div>
-              </section>
-            );
-          })}
+        {/* ZONA C: Partite in ATTESA — si avvicinano verso la corrente */}
+        <AnimatePresence mode="popLayout">
+          {upcomingPartite.map((partita, idx) => (
+            <ScoreboardRow
+              key={partita.partitaId}
+              partita={partita}
+              globalIndex={donePartite.length + 1 + 1 + idx} // +1 current
+              status="UPCOMING"
+              delay={idx * 0.012}
+            />
+          ))}
         </AnimatePresence>
 
         {/* Legenda + timestamp */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-4 pb-2 border-t border-zinc-100">
+        <div className="flex flex-wrap items-center justify-center gap-5 pt-8 pb-2 border-t border-zinc-100 mt-6">
           <span className="text-[9px] text-zinc-400 font-black uppercase tracking-widest">Legenda</span>
           <span className="flex items-center gap-1.5 text-[10px] font-bold text-red-500">
-            <span className="w-3 h-3 rounded bg-red-100 border border-red-200 inline-block" />
-            Partita conclusa
+            <span className="w-3 h-3 rounded bg-red-100 border border-red-200 inline-block" /> Partita conclusa
           </span>
           <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600">
-            <span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 inline-block" />
-            Serie corrente
+            <span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 inline-block" /> Serie corrente
           </span>
           <span className="flex items-center gap-1.5 text-[10px] font-bold text-amber-600">
-            <span className="w-3 h-3 rounded bg-amber-50 border border-amber-200 inline-block" />
-            Da giocare
+            <span className="w-3 h-3 rounded bg-amber-50 border border-amber-200 inline-block" /> Da giocare
           </span>
           {lastUpdate && (
             <span className="text-[9px] text-zinc-300 ml-4">
