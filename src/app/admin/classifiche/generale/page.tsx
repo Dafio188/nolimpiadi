@@ -348,20 +348,20 @@ export default async function ClassificaGeneraleAdmin() {
                             <span className={`font-bold tracking-tight truncate ${idx === 0 ? 'text-base text-amber-600' : 'text-sm text-zinc-800 dark:text-zinc-200'}`}>
                               {displayName}
                             </span>
-                            <span className="text-[7px] w-fit font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/50 dark:border-zinc-700 px-1 py-0 rounded tracking-tighter uppercase">
-                              COD. {r.letter}
+                            <span className="text-[9px] w-fit font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/50 dark:border-zinc-700 px-1.5 py-0 rounded tracking-tighter uppercase">
+                              {r.letter}
                             </span>
                           </div>
                         </td>
                         <td className="px-3 py-3 text-center">
-                          <div className="inline-flex items-center gap-1 text-zinc-500 font-bold text-xs bg-zinc-50 dark:bg-zinc-800/50 px-2 py-0.5 rounded">
+                          <div className="inline-flex items-center gap-1 text-zinc-600 font-bold text-sm bg-zinc-50 dark:bg-zinc-800/50 px-2 py-0.5 rounded">
                             {r.matches_played}
                           </div>
                         </td>
-                        <td className="px-3 py-3 text-center font-bold text-cyan-600/80 text-[10px] hidden md:table-cell font-mono">
+                        <td className="px-3 py-3 text-center font-bold text-cyan-600/90 text-sm hidden md:table-cell font-mono">
                           {Number(r.qualification_weighted).toFixed(1)}
                         </td>
-                        <td className="px-3 py-3 text-center font-bold text-indigo-600/80 text-[10px] hidden md:table-cell font-mono">
+                        <td className="px-3 py-3 text-center font-bold text-indigo-600/90 text-sm hidden md:table-cell font-mono">
                           {Number(r.finals_weighted).toFixed(1)}
                         </td>
                         <td className="px-3 py-3 text-right">
