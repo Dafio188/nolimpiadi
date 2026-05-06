@@ -26,7 +26,7 @@ export async function GET() {
       SELECT c.discipline_id, c.athlete_id, c.kind, a.name as athlete_name
       FROM classifica_qualificazione_disciplina c
       JOIN athletes a ON a.id = c.athlete_id
-      ORDER BY c.kind ASC, c.qualification_weighted DESC
+      ORDER BY c.kind ASC, c.qualification_weighted DESC, a.name ASC
     `;
 
     const rankingsByKind: Record<string, Athlete[]> = {};

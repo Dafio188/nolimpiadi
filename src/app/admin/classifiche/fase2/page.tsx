@@ -10,7 +10,7 @@ export default async function ClassificaFase2Page() {
       a.name as athlete_name
     FROM classifica_qualificazione_disciplina c
     JOIN athletes a ON a.id = c.athlete_id
-    ORDER BY c.kind ASC, c.qualification_weighted DESC
+    ORDER BY c.kind ASC, c.qualification_weighted DESC, a.name ASC
   `;
 
   // 2. Recupera tutti i match della Fase Finale

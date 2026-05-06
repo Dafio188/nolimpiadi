@@ -182,7 +182,7 @@ export default async function ClassificaGeneraleAdmin() {
       c.qualification_weighted as score
     FROM classifica_qualificazione_disciplina c
     JOIN athletes a ON a.id = c.athlete_id
-    ORDER BY c.discipline_id, c.qualification_weighted DESC
+    ORDER BY c.discipline_id, c.qualification_weighted DESC, a.name ASC
   `;
 
   // 2.3 Punteggi totali pesati per disciplina (Fase 1 + Fase 2)
