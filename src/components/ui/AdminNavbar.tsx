@@ -16,7 +16,10 @@ export default function AdminNavbar() {
     { name: "LIVE SCORE", href: "/admin/programma", icon: Gauge },
     { name: "CLASSIFICA FASE 1", href: "/admin/classifiche/fase1", icon: ListOrdered },
     { name: "FASE FINALE", href: "/admin/classifiche/fase2", icon: Medal },
-    { name: "CLASSIFICHE GENERALI", href: "/admin/classifiche/generale", icon: Trophy },
+    { name: "CLASSIFICHE FINALI", href: "/admin/classifiche/generale", icon: Trophy },
+  ];
+
+  const utilityLinks = [
     { name: "CONFIGURAZIONE", href: "/admin/setup", icon: Settings },
     { name: "BACKUP DATI", href: "/admin/backup", icon: Database },
   ];
@@ -69,7 +72,29 @@ export default function AdminNavbar() {
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
-              
+              {/* Utility links: Configurazione e Backup */}
+              <div className="hidden xl:flex items-center gap-1">
+                {utilityLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-black tracking-wider transition-all duration-300 ${
+                        isActive 
+                          ? "bg-white/10 text-white shadow-inner" 
+                          : "text-zinc-400 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <link.icon className={`w-3.5 h-3.5 ${isActive ? "text-blue-400" : ""}`} />
+                      <span>{link.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className="hidden xl:block h-6 w-px bg-white/10" />
+
               <form action="/api/auth/logout" method="POST">
                 <button 
                   type="submit"

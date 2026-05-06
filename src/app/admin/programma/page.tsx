@@ -162,9 +162,6 @@ export default function ProgrammaPage() {
           </h1>
           <p className="text-gray-500 mt-2">Inserimento punteggi e gestione VAR.</p>
         </div>
-        <a href="/admin/classifiche/fase2" className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-sm font-bold text-white shadow hover:bg-indigo-700 transition-colors">
-          Vai alla Seconda Fase &rarr;
-        </a>
       </div>
 
       <div className="space-y-16">
@@ -231,25 +228,37 @@ export default function ProgrammaPage() {
                                 </span>
                               </div>
                               
-                              {/* Players */}
-                              <div className="flex justify-between items-center text-xl lg:text-2xl font-medium mb-auto leading-none tracking-tight">
+                              {/* Players: lettera ʼ Nome su una riga */}
+                              <div className="flex items-center justify-between gap-2 text-sm font-bold leading-tight">
                                 <div className="flex flex-col flex-1 min-w-0">
-                                  {p1Names.map((n, i) => {
-                                    const cleanName = n.split(' ')[0];
-                                    return <span key={i} className="truncate">{cleanName}</span>;
+                                  {slot.side1Letters.map((letter, i) => {
+                                    const firstName = (p1Names[i] || letter).split(' ')[0];
+                                    return (
+                                      <span key={i} className="truncate">
+                                        <span className="text-blue-500 font-black mr-0.5">{letter}</span>
+                                        <span className="text-zinc-300 mx-0.5">ʼ</span>
+                                        {firstName}
+                                      </span>
+                                    );
                                   })}
                                 </div>
-                                <span className="text-gray-300 mx-4 text-sm italic shrink-0">vs</span>
+                                <span className="text-gray-400 text-xs italic shrink-0">vs</span>
                                 <div className="flex flex-col text-right flex-1 min-w-0">
-                                  {p2Names.map((n, i) => {
-                                    const cleanName = n.split(' ')[0];
-                                    return <span key={i} className="truncate text-right w-full">{cleanName}</span>;
+                                  {slot.side2Letters.map((letter, i) => {
+                                    const firstName = (p2Names[i] || letter).split(' ')[0];
+                                    return (
+                                      <span key={i} className="truncate text-right">
+                                        {firstName}
+                                        <span className="text-zinc-300 mx-0.5">ʼ</span>
+                                        <span className="text-blue-500 font-black ml-0.5">{letter}</span>
+                                      </span>
+                                    );
                                   })}
                                 </div>
                               </div>
 
-                              {/* Interactive Score Area */}
-                              <div className="mt-4 pt-4 border-t border-gray-100">
+                              {/* Score area: riga singola */}
+                              <div className="mt-3 pt-3 border-t border-gray-100">
                                 <AnimatePresence mode="wait">
                                   {isDone ? (
                                     <motion.div
@@ -257,17 +266,17 @@ export default function ProgrammaPage() {
                                       initial={{ opacity: 0, scale: 0.95 }}
                                       animate={{ opacity: 1, scale: 1 }}
                                       exit={{ opacity: 0 }}
-                                      className="flex items-center justify-center relative w-full py-4 bg-green-50 rounded-2xl border border-green-100"
+                                      className="flex items-center justify-center relative w-full py-3 bg-green-50 rounded-2xl border border-green-100"
                                     >
-                                      <div className="text-5xl font-black text-green-600 dark:text-green-400 tracking-tighter">
-                                        {slot.points1} - {slot.points2}
+                                      <div className="text-3xl font-black text-green-600 tracking-tighter">
+                                        {slot.points1} – {slot.points2}
                                       </div>
                                       <button 
-                                        className="absolute right-3 inline-flex items-center justify-center h-10 w-10 rounded-full text-zinc-400 hover:text-green-600 hover:bg-green-500/10 transition-colors" 
+                                        className="absolute right-2 inline-flex items-center justify-center h-8 w-8 rounded-full text-zinc-400 hover:text-green-600 hover:bg-green-500/10 transition-colors" 
                                         onClick={() => initEditMode(slot)} 
                                         title="VAR (Modifica)"
                                       >
-                                        <Edit3 className="w-5 h-5" />
+                                        <Edit3 className="w-4 h-4" />
                                       </button>
                                     </motion.div>
                                   ) : (
@@ -276,26 +285,27 @@ export default function ProgrammaPage() {
                                       initial={{ opacity: 0, scale: 0.95 }}
                                       animate={{ opacity: 1, scale: 1 }}
                                       exit={{ opacity: 0 }}
-                                      className="flex items-center justify-between gap-3"
+                                      className="flex items-center gap-2"
                                     >
-                                        <input 
-                                          type="number" 
-                                          className="flex h-14 w-24 rounded-2xl border-2 border-zinc-200 bg-white px-2 py-1 text-2xl text-center font-black shadow-sm transition-all focus:ring-4 focus:ring-blue-500/20 focus:border-blue-600 outline-none disabled:opacity-50" 
+                                      <input 
+                                        type="number" 
+                                        className="flex h-10 w-14 rounded-xl border-2 border-zinc-200 bg-white px-1 py-1 text-xl text-center font-black shadow-sm transition-all focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none disabled:opacity-50" 
                                         placeholder="0"
                                         value={inputs[slot.slotId]?.p1 ?? ""}
                                         onChange={(e) => handleInputChange(slot.slotId, 1, e.target.value)}
                                         disabled={isSaving}
                                       />
                                       <button 
-                                        className="inline-flex h-14 flex-1 items-center justify-center rounded-2xl bg-blue-600 px-4 py-2 text-base font-black text-white shadow-lg shadow-blue-200 hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none"
+                                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:pointer-events-none"
                                         disabled={isSaving || !inputs[slot.slotId]?.p1 || !inputs[slot.slotId]?.p2}
                                         onClick={() => handleSave(slot.slotId)}
+                                        title="Salva"
                                       >
-                                        {isSaving ? <Loader2 className="w-6 h-6 animate-spin" /> : <Save className="w-7 h-7" />}
+                                        {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                                       </button>
                                       <input 
                                         type="number" 
-                                        className="flex h-14 w-24 rounded-2xl border-2 border-zinc-200 bg-white px-2 py-1 text-2xl text-center font-black shadow-sm transition-all focus:ring-4 focus:ring-blue-500/20 focus:border-blue-600 outline-none disabled:opacity-50" 
+                                        className="flex h-10 w-14 rounded-xl border-2 border-zinc-200 bg-white px-1 py-1 text-xl text-center font-black shadow-sm transition-all focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none disabled:opacity-50" 
                                         placeholder="0"
                                         value={inputs[slot.slotId]?.p2 ?? ""}
                                         onChange={(e) => handleInputChange(slot.slotId, 2, e.target.value)}

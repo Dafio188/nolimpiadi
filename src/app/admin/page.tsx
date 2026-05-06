@@ -14,9 +14,9 @@ export default async function AdminDashboard() {
 
   const adminActions = [
     { href: "/admin/programma", title: "LIVE SCORE", desc: "Inserimento punteggi e gestione VAR", icon: Gauge, color: "green" },
-    { href: "/admin/classifiche/fase1", title: "QUALIFICHE", desc: "Classifica prima fase e gironi", icon: ListOrdered, color: "cyan" },
+    { href: "/admin/classifiche/fase1", title: "CLASSIFICA FASE 1", desc: "Classifica prima fase e gironi", icon: ListOrdered, color: "cyan" },
     { href: "/admin/classifiche/fase2", title: "FASE FINALE", desc: "Playoff, finali e 2ª fase", icon: Medal, color: "amber" },
-    { href: "/admin/classifiche/generale", title: "VINCITORE", desc: "Classifica generale assoluta e Campione 2026", icon: Trophy, color: "yellow" },
+    { href: "/admin/classifiche/generale", title: "CLASSIFICHE FINALI", desc: "Classifica generale assoluta e Campione 2026", icon: Trophy, color: "yellow" },
     { href: "/admin/setup", title: "CONFIGURAZIONE", desc: "Gestione atleti e ripristino per nuovo anno", icon: Settings, color: "purple" },
     { href: "/admin/backup", title: "BACKUP DATI", desc: "Esportazione e ripristino database", icon: Database, color: "indigo" },
   ];
