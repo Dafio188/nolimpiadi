@@ -16,11 +16,14 @@ export default function Navbar({ isLoggedIn }: NavbarProps) {
   const isGiudici = pathname?.startsWith("/giudici");
   const isLogin = pathname === "/login";
 
-  if (isAdmin || isGiudici || isLogin) return null;
+  const isFinali = pathname?.startsWith("/finali");
+
+  if (isAdmin || isGiudici || isLogin || isFinali) return null;
 
   const navLinks = [
     { name: "HOME", href: "/" },
     { name: "GARE", href: "/gare" },
+    { name: "FINALI", href: "/finali" },
     { name: "ALBO D'ORO", href: "/albo-doro" },
     { name: "FANTA", href: isHome ? "#fanta" : "/#fanta" },
     { name: "MENÙ", href: isHome ? "#menu" : "/#menu" },
