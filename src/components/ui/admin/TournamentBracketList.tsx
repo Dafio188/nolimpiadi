@@ -1,0 +1,949 @@
+"use client";
+
+import { useState } from "react";
+import PremiumCard from "@/components/ui/PremiumCard";
+import { Trophy, Save, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
+interface TournamentBracketListProps {
+  disciplines: Record<string, any>;
+  matches: any[];
+}
+
+export default function TournamentBracketList({ disciplines, matches }: TournamentBracketListProps) {
+  // Calcolo atleti attualmente in campo (status IN_PROGRESS / points: -1)
+  const busyAthleteIds = new Set<string>();
+  matches.forEach(m => {
+    if (m.sides && m.sides.length > 0 && m.sides[0].points === -1) {
+      m.sides.forEach((side: any) => {
+        side.athletes?.forEach((a: any) => {
+          busyAthleteIds.add(a.athleteId);
+        });
+      });
+    }
+  });
+
+  const handleDeleteMatch = async (matchId: string) => {
+    if (!confirm("Sei sicuro di voler eliminare o resettare questo match?")) return;
+    try {
+      const res = await fetch("/api/admin/finali/delete-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ matchId }),
+      });
+      if (res.ok) {
+        toast.success("Match eliminato!");
+        window.location.reload();
+      } else {
+        toast.error("Errore eliminazione");
+      }
+    } catch (e) {
+      toast.error("Errore di rete");
+    }
+  };
+
+  const handleClearGhosts = async () => {
+    if (!confirm("Vuoi sbloccare tutti i giocatori bloccati eliminando i match 'in sospeso' nascosti?")) return;
+    try {
+      const res = await fetch("/api/admin/finali/clear-ghosts", { method: "POST" });
+      if (res.ok) {
+        toast.success("Giocatori sbloccati con successo!");
+        window.location.reload();
+      } else {
+        toast.error("Errore nello sblocco");
+      }
+    } catch (e) {
+      toast.error("Errore di rete");
+    }
+  };
+
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const getPlayableMatches = () => {
+    const playable: { discId: string, disc: string, title: string, athletes: string, athleteIds: string[] }[] = [];
+
+    Object.values(disciplines).forEach((disc: any) => {
+      const discMatches = matches.filter(m => m.disciplineId === disc.id);
+      const rankings = disc.rankings || [];
+
+      if (disc.kind === "CALCIO_BALILLA") {
+        const top5 = rankings.slice(0, 5);
+        if (top5.length < 5) return;
+        const c1=top5[0], c2=top5[1], c3=top5[2], c4=top5[3], c5=top5[4];
+        const schedule = [
+          { id: 1, title: "Partita 1", s1: [c1, c2], s2: [c3, c4] },
+          { id: 2, title: "Partita 2", s1: [c1, c3], s2: [c2, c5] },
+          { id: 3, title: "Partita 3", s1: [c1, c5], s2: [c2, c4] },
+          { id: 4, title: "Partita 4", s1: [c1, c4], s2: [c3, c5] },
+          { id: 5, title: "Partita 5", s1: [c2, c3], s2: [c4, c5] },
+        ];
+        schedule.forEach(m => {
+          const hasExact = (s:any, ids:string[]) => s?.athletes?.map((a:any)=>a.athleteId).sort().join(",") === ids.sort().join(",");
+          const saved = discMatches.find(dm => {
+            return (hasExact(dm.sides[0], m.s1.map(x=>x.id)) && hasExact(dm.sides[1], m.s2.map(x=>x.id))) || 
+                   (hasExact(dm.sides[0], m.s2.map(x=>x.id)) && hasExact(dm.sides[1], m.s1.map(x=>x.id)));
+          });
+          if (!saved) {
+            const isBusy = m.s1.some(a => busyAthleteIds.has(a.id)) || m.s2.some(a => busyAthleteIds.has(a.id));
+            if (!isBusy) {
+              playable.push({ 
+                discId: disc.id,
+                disc: disc.name, 
+                title: m.title, 
+                athletes: `${m.s1.map(a=>a.name).join(" + ")} VS ${m.s2.map(a=>a.name).join(" + ")}`,
+                athleteIds: [...m.s1.map(a=>a.id), ...m.s2.map(a=>a.id)]
+              });
+            }
+          }
+        });
+      } else {
+        const quarti = discMatches.filter(m => m.finalStage === "QUARTI");
+        const semi = discMatches.filter(m => m.finalStage === "SEMIFINALI");
+        const finali = discMatches.filter(m => m.finalStage === "FINALE");
+
+        const getAthleteId = (side: any) => side?.athletes?.[0]?.athleteId;
+        const hasAthlete = (match: any, athleteId: string) => match && (getAthleteId(match.sides[0]) === athleteId || getAthleteId(match.sides[1]) === athleteId);
+        
+        const getWinner = (match: any) => {
+          if (!match) return null;
+          const s1 = match.sides.find((s:any)=>s.side===1);
+          const s2 = match.sides.find((s:any)=>s.side===2);
+          if(!s1||!s2) return null;
+          if(s1.points > s2.points) return getAthleteId(s1);
+          if(s2.points > s1.points) return getAthleteId(s2);
+          return null;
+        };
+
+        const getLoser = (match: any) => {
+          if (!match) return null;
+          const s1 = match.sides.find((s:any)=>s.side===1);
+          const s2 = match.sides.find((s:any)=>s.side===2);
+          if(!s1||!s2) return null;
+          if(s1.points < s2.points) return getAthleteId(s1);
+          if(s2.points < s1.points) return getAthleteId(s2);
+          return null;
+        };
+
+        let q1 = quarti.find(m => hasAthlete(m, rankings[2]?.id) || hasAthlete(m, rankings[5]?.id));
+        let q2 = quarti.find(m => m.id !== q1?.id && (hasAthlete(m, rankings[3]?.id) || hasAthlete(m, rankings[4]?.id)));
+        if (!q1) q1 = quarti.find((m:any) => m.id !== q2?.id);
+        if (!q2) q2 = quarti.find((m:any) => m.id !== q1?.id);
+
+        let s1 = semi.find(m => hasAthlete(m, rankings[0]?.id));
+        let s2 = semi.find(m => m.id !== s1?.id && hasAthlete(m, rankings[1]?.id));
+        if (!s1) s1 = semi.find((m:any) => m.id !== s2?.id);
+        if (!s2) s2 = semi.find((m:any) => m.id !== s1?.id);
+
+        let f1 = finali.find(m => hasAthlete(m, getWinner(s1)));
+        let f3 = finali.find(m => m.id !== f1?.id);
+        if (!f1) f1 = finali.find((m:any) => m.id !== f3?.id);
+        if (!f3) f3 = finali.find((m:any) => m.id !== f1?.id);
+
+        const checkPlayable = (match: any, a1: any, a2: any, title: string) => {
+          if (!a1 || !a2) return;
+          if (match) return; // Già in corso o salvato
+          if (!busyAthleteIds.has(a1.id) && !busyAthleteIds.has(a2.id)) {
+            playable.push({ 
+              discId: disc.id,
+              disc: disc.name, 
+              title, 
+              athletes: `${a1.name} VS ${a2.name}`,
+              athleteIds: [a1.id, a2.id]
+            });
+          }
+        };
+
+        if (rankings.length >= 6) {
+          checkPlayable(q1, rankings[2], rankings[5], "Quarto di Finale (3° vs 6°)");
+        }
+        if (rankings.length >= 5) {
+          checkPlayable(q2, rankings[3], rankings[4], "Quarto di Finale (4° vs 5°)");
+        }
+        
+        const wQ1 = getWinner(q1);
+        const wQ2 = getWinner(q2);
+        
+        const aS1_2 = rankings.length >= 5 ? rankings.find((a:any)=>a.id===wQ2) : rankings[3];
+        const aS2_2 = rankings.length >= 6 ? rankings.find((a:any)=>a.id===wQ1) : rankings[2];
+
+        checkPlayable(s1, rankings[0], aS1_2, "Semifinale 1");
+        checkPlayable(s2, rankings[1], aS2_2, "Semifinale 2");
+
+        const wS1 = getWinner(s1);
+        const wS2 = getWinner(s2);
+        const lS1 = getLoser(s1);
+        const lS2 = getLoser(s2);
+        
+        checkPlayable(f1, rankings.find((a:any)=>a.id===wS1), rankings.find((a:any)=>a.id===wS2), "Finale 1°/2°");
+        checkPlayable(f3, rankings.find((a:any)=>a.id===lS1), rankings.find((a:any)=>a.id===lS2), "Finale 3°/4°");
+      }
+    });
+    return playable;
+  };
+
+  const getOptimalSchedule = (playable: ReturnType<typeof getPlayableMatches>) => {
+    let bestSchedule: typeof playable = [];
+
+    const backtrack = (index: number, currentSchedule: typeof playable, usedDisciplines: Set<string>, usedAthletes: Set<string>) => {
+      if (currentSchedule.length > bestSchedule.length) {
+        bestSchedule = [...currentSchedule];
+      }
+      
+      for (let i = index; i < playable.length; i++) {
+        const match = playable[i];
+        if (usedDisciplines.has(match.discId)) continue; // Si presume 1 campo per disciplina
+        
+        const hasConflict = match.athleteIds.some(id => usedAthletes.has(id));
+        if (!hasConflict) {
+          match.athleteIds.forEach(id => usedAthletes.add(id));
+          usedDisciplines.add(match.discId);
+          currentSchedule.push(match);
+          
+          backtrack(i + 1, currentSchedule, usedDisciplines, usedAthletes);
+          
+          currentSchedule.pop();
+          usedDisciplines.delete(match.discId);
+          match.athleteIds.forEach(id => usedAthletes.delete(id));
+        }
+      }
+    };
+
+    backtrack(0, [], new Set(), new Set());
+    return bestSchedule;
+  };
+
+  const playableMatches = getPlayableMatches();
+  const suggestedMatches = getOptimalSchedule(playableMatches);
+
+  return (
+    <div className="space-y-12">
+      <div className="flex justify-end bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm">
+        <div className="flex-1">
+          <h3 className="font-bold text-amber-800">Risoluzione Problemi (Giocatori Bloccati)</h3>
+          <p className="text-sm text-amber-700">Se vedi atleti occupati ma nessuna partita è "IN CAMPO", usa questo tasto per forzare lo sblocco.</p>
+        </div>
+        <div className="flex gap-4">
+          <button 
+            onClick={() => setShowSuggestions(!showSuggestions)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2"
+          >
+            <Trophy className="w-4 h-4" />
+            {showSuggestions ? "NASCONDI SUGGERIMENTI" : "SUGGERIMENTI INCONTRI"}
+          </button>
+
+          <button 
+            onClick={handleClearGhosts}
+            className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-all flex items-center gap-2"
+          >
+            <Trash2 className="w-4 h-4" />
+            SBLOCCA TUTTI
+          </button>
+        </div>
+      </div>
+
+      {showSuggestions && (
+        <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-200 shadow-sm mb-8 animate-in fade-in slide-in-from-top-4">
+          <div className="mb-4">
+            <h3 className="text-xl font-black text-indigo-900 flex items-center gap-2">
+              <span className="text-2xl">💡</span> Turno Ottimale Consigliato
+            </h3>
+            <p className="text-indigo-700 text-sm font-medium mt-1">
+              Questi {suggestedMatches.length} incontri possono essere giocati <strong>tutti in contemporanea</strong>. Non ci sono conflitti di atleti o di campi.
+            </p>
+          </div>
+          
+          {suggestedMatches.length === 0 ? (
+            <div className="bg-white/50 rounded-lg p-4 border border-indigo-100 text-center">
+              <p className="text-indigo-700 font-bold">Nessun set di incontri contemporanei disponibile al momento.</p>
+              <p className="text-indigo-500 text-sm mt-1">Attendi la fine dei match in corso o verifica che non manchino giocatori qualificati.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {suggestedMatches.map((sm, idx) => (
+                <div key={idx} className="bg-white p-4 rounded-xl shadow-sm border-2 border-indigo-100 flex flex-col gap-2 relative overflow-hidden group hover:border-indigo-300 transition-colors">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-xs font-black text-indigo-600 uppercase tracking-wider">{sm.disc}</span>
+                    <span className="text-[10px] bg-green-100 text-green-700 font-black px-2 py-0.5 rounded-full ring-1 ring-green-200 shadow-sm">PRONTO</span>
+                  </div>
+                  <span className="font-bold text-sm text-zinc-900 leading-tight">{sm.title}</span>
+                  <div className="bg-zinc-50 p-2 rounded-lg border border-zinc-100 mt-1">
+                    <span className="text-sm font-bold text-zinc-700 block text-center">{sm.athletes}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {Object.values(disciplines).map((disc: any) => {
+        const discMatches = matches.filter(m => m.disciplineId === disc.id);
+        
+        if (disc.kind === "CALCIO_BALILLA") {
+          return <CalcioBalillaFinals key={disc.kind} discipline={disc} matches={discMatches} onDeleteMatch={handleDeleteMatch} busyAthletes={busyAthleteIds} />;
+        }
+        
+        return <DisciplineBracket key={disc.kind} discipline={disc} matches={discMatches} onDeleteMatch={handleDeleteMatch} busyAthletes={busyAthleteIds} />;
+      })}
+    </div>
+  );
+}
+
+// --------------------------------------------------------------------------------------
+// 1. CALCIO-BALILLA: GIRONE ALL'ITALIANA (5 PLAYERS, IN DOPPIO)
+// --------------------------------------------------------------------------------------
+function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes }: { discipline: any, matches: any[], onDeleteMatch: (id: string) => void, busyAthletes: Set<string> }) {
+  const rankings = discipline.rankings || [];
+  
+  // Top 5 athletes
+  const c1 = rankings[0];
+  const c2 = rankings[1];
+  const c3 = rankings[2];
+  const c4 = rankings[3];
+  const c5 = rankings[4];
+
+  // Definition of the 5 matches
+  const schedule = [
+    { id: 1, title: "Partita 1", s1: [c1, c2], s2: [c3, c4] },
+    { id: 2, title: "Partita 2", s1: [c1, c3], s2: [c2, c5] },
+    { id: 3, title: "Partita 3", s1: [c1, c5], s2: [c2, c4] },
+    { id: 4, title: "Partita 4", s1: [c1, c4], s2: [c3, c5] },
+    { id: 5, title: "Partita 5", s1: [c2, c3], s2: [c4, c5] },
+  ];
+
+  const hasExactAthletes = (side: any, ids: string[]) => {
+    const sideIds = side?.athletes?.map((a:any)=>a.athleteId).sort().join(",") || "";
+    const targetIds = [...ids].sort().join(",");
+    return sideIds === targetIds;
+  };
+
+  const getSavedMatch = (mS1Ids: string[], mS2Ids: string[]) => {
+    return matches.find(m => {
+      const s1 = m.sides[0];
+      const s2 = m.sides[1];
+      return (hasExactAthletes(s1, mS1Ids) && hasExactAthletes(s2, mS2Ids)) || 
+             (hasExactAthletes(s1, mS2Ids) && hasExactAthletes(s2, mS1Ids));
+    });
+  };
+
+  const [scores, setScores] = useState<Record<number, {p1: number, p2: number}>>({});
+
+  // Initialize scores from DB
+  if (Object.keys(scores).length === 0 && schedule.every(m => m.s1.every(Boolean))) {
+    const initialScores: Record<number, any> = {};
+    schedule.forEach(m => {
+      const saved = getSavedMatch(m.s1.map(x=>x.id), m.s2.map(x=>x.id));
+      if (saved) {
+        const side1 = saved.sides.find((s:any) => hasExactAthletes(s, m.s1.map(x=>x.id)));
+        const side2 = saved.sides.find((s:any) => hasExactAthletes(s, m.s2.map(x=>x.id)));
+        initialScores[m.id] = { p1: side1?.points || 0, p2: side2?.points || 0 };
+      } else {
+        initialScores[m.id] = { p1: 0, p2: 0 };
+      }
+    });
+    setScores(initialScores);
+  }
+
+  const handleSave = async (matchDef: typeof schedule[0]) => {
+    try {
+      const matchScores = scores[matchDef.id];
+      const res = await fetch("/api/admin/finali/save-single-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          disciplineId: discipline.id,
+          stage: "FINALE", // We just use FINALE as stage for all these
+          side1AthleteIds: matchDef.s1.map(a => a.id),
+          side2AthleteIds: matchDef.s2.map(a => a.id),
+          points1: matchScores.p1,
+          points2: matchScores.p2
+        }),
+      });
+
+      if (res.ok) {
+        toast.success("Match di Calcio-balilla salvato!");
+        window.location.reload();
+      } else {
+        toast.error("Errore salvataggio");
+      }
+    } catch (e) {
+      toast.error("Errore di rete");
+    }
+  };
+
+  const handleSetActive = async (matchDef: typeof schedule[0]) => {
+    try {
+      const res = await fetch("/api/admin/finali/set-active-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          disciplineId: discipline.id,
+          stage: "FINALE",
+          side1AthleteIds: matchDef.s1.map(a => a.id),
+          side2AthleteIds: matchDef.s2.map(a => a.id),
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Giocatori mandati in campo!");
+        window.location.reload(); 
+      } else {
+        toast.error(data.error || "Errore");
+      }
+    } catch (e) {
+      toast.error("Errore di rete");
+    }
+  };
+
+  const isReady = c1 && c2 && c3 && c4 && c5;
+
+  return (
+    <PremiumCard className="p-8 relative overflow-hidden ring-2 ring-blue-500/20">
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+          <Trophy className="w-6 h-6 text-blue-600" />
+        </div>
+        <div>
+          <h2 className="text-3xl font-black">{discipline.name}</h2>
+          <p className="text-blue-600 font-bold text-sm">Girone Finale all'Italiana (5 Giocatori)</p>
+        </div>
+      </div>
+
+      {!isReady ? (
+        <div className="p-6 bg-red-50 text-red-600 rounded-xl font-bold">
+          Attenzione: Servono i primi 5 classificati per generare il girone. (Attualmente ne hai {rankings.length}).
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {schedule.map(m => {
+            const savedMatch = getSavedMatch(m.s1.map(x=>x.id), m.s2.map(x=>x.id));
+            const isSaved = !!savedMatch && savedMatch.sides[0].points >= 0;
+            const isInProgress = !!savedMatch && savedMatch.sides[0].points === -1;
+            const isStarted = isSaved || isInProgress;
+
+            const isS1Busy = m.s1.some(a => busyAthletes.has(a?.id));
+            const isS2Busy = m.s2.some(a => busyAthletes.has(a?.id));
+            const isBlocked = !isStarted && (isS1Busy || isS2Busy);
+
+            return (
+              <div key={m.id} className={`p-5 rounded-2xl border flex flex-col gap-4 transition-all ${
+                isInProgress ? "bg-green-100 border-green-500 shadow-md shadow-green-500/20 ring-2 ring-green-500" :
+                "bg-white border-zinc-200 shadow-sm"
+              }`}>
+                <div className="flex justify-between items-center">
+                  <h4 className={`text-[10px] font-black uppercase tracking-widest ${isInProgress ? "text-green-700" : "text-zinc-500"}`}>{m.title}</h4>
+                  {isSaved && <div className="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">COMPLETATO</div>}
+                  {isInProgress && <div className="text-[10px] font-bold text-white bg-green-500 px-2 py-0.5 rounded-full animate-pulse">IN CAMPO</div>}
+                </div>
+
+                <div className="flex items-center justify-between gap-4">
+                  {/* SQUADRA 1 */}
+                  <div className="flex-1 flex flex-col items-center">
+                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"}`}>
+                      <span className={busyAthletes.has(m.s1[0]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s1[0].name}</span>
+                      {" + "}
+                      <span className={busyAthletes.has(m.s1[1]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s1[1].name}</span>
+                    </span>
+                    {!isStarted && isS1Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
+                    {isStarted && (
+                      <input 
+                        type="number" 
+                        value={scores[m.id]?.p1 === -1 ? 0 : scores[m.id]?.p1} 
+                        onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p1: parseInt(e.target.value) || 0 }}))}
+                        className={`mt-2 w-16 h-12 text-center rounded-lg border-none text-xl font-black focus:ring-blue-500 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+                      />
+                    )}
+                  </div>
+                  
+                  <span className={`font-black ${isInProgress ? "text-green-500" : "text-zinc-300"}`}>VS</span>
+
+                  {/* SQUADRA 2 */}
+                  <div className="flex-1 flex flex-col items-center">
+                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"}`}>
+                      <span className={busyAthletes.has(m.s2[0]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s2[0].name}</span>
+                      {" + "}
+                      <span className={busyAthletes.has(m.s2[1]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s2[1].name}</span>
+                    </span>
+                    {!isStarted && isS2Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
+                    {isStarted && (
+                      <input 
+                        type="number" 
+                        value={scores[m.id]?.p2 === -1 ? 0 : scores[m.id]?.p2} 
+                        onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p2: parseInt(e.target.value) || 0 }}))}
+                        className={`mt-2 w-16 h-12 text-center rounded-lg border-none text-xl font-black focus:ring-blue-500 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {!isStarted ? (
+                  <button 
+                    onClick={() => handleSetActive(m)}
+                    disabled={isBlocked}
+                    className={`mt-2 w-full py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
+                      isBlocked
+                        ? "bg-zinc-200 text-zinc-500 cursor-not-allowed"
+                        : "bg-indigo-500 hover:bg-indigo-600 text-white shadow-indigo-500/20"
+                    }`}
+                  >
+                    {isBlocked ? "GIOCATORI OCCUPATI" : "MANDA IN CAMPO"}
+                  </button>
+                ) : (
+                  <div className="flex gap-2 mt-2">
+                    <button 
+                      onClick={() => onDeleteMatch(savedMatch!.id)}
+                      className="w-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all"
+                      title="Annulla Match"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                    <button 
+                      onClick={() => handleSave(m)}
+                      className={`flex-1 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+                        isSaved 
+                          ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20" 
+                          : "bg-green-600 hover:bg-green-700 text-white shadow-md shadow-green-600/20"
+                      }`}
+                    >
+                      <Save className="w-4 h-4" />
+                      {isSaved ? "AGGIORNA" : "SALVA MATCH"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </PremiumCard>
+  );
+}
+
+
+// --------------------------------------------------------------------------------------
+// 2. ALTRE DISCIPLINE: TABELLONE A ELIMINAZIONE DIRETTA (TENNIS)
+// --------------------------------------------------------------------------------------
+function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes }: { discipline: any, matches: any[], onDeleteMatch: (id: string) => void, busyAthletes: Set<string> }) {
+  const rankings = discipline.rankings || [];
+  
+  const [overrides, setOverrides] = useState<Record<string, string>>({});
+
+  const getAthleteId = (side: any) => side?.athletes?.[0]?.athleteId;
+  const hasAthlete = (match: any, athleteId: string) => {
+    if (!athleteId) return false;
+    return getAthleteId(match.sides[0]) === athleteId || getAthleteId(match.sides[1]) === athleteId;
+  };
+  const getWinner = (match: any) => {
+    if (!match) return null;
+    const s1 = match.sides.find((s: any) => s.side === 1);
+    const s2 = match.sides.find((s: any) => s.side === 2);
+    if (!s1 || !s2) return null;
+    if (s1.points > s2.points) return getAthleteId(s1);
+    if (s2.points > s1.points) return getAthleteId(s2);
+    return null;
+  };
+  const getLoser = (match: any) => {
+    if (!match) return null;
+    const s1 = match.sides.find((s: any) => s.side === 1);
+    const s2 = match.sides.find((s: any) => s.side === 2);
+    if (!s1 || !s2) return null;
+    if (s1.points < s2.points) return getAthleteId(s1);
+    if (s2.points < s1.points) return getAthleteId(s2);
+    return null;
+  };
+
+  // Ottieni atleti dal DB se il match esiste
+  const getDbA = (match: any, sideIdx: number) => {
+    if (!match) return null;
+    const side = match.sides.find((s: any) => s.side === sideIdx);
+    if (!side || !side.athletes || side.athletes.length === 0) return null;
+    return rankings.find((a: any) => a.id === side.athletes[0].athleteId);
+  };
+
+  const getA = (defaultA: any, key: string, dbMatch: any, sideIdx: number) => {
+    const dbA = getDbA(dbMatch, sideIdx);
+    if (dbA) return dbA; // Se c'è un match nel db, GLI ATLETI COMANDANO SUL DEFAULT
+    if (overrides[key]) return rankings.find((a:any) => a.id === overrides[key]);
+    return defaultA;
+  };
+
+  // Prima di tutto, classifichiamo i match del DB
+  const quarti = matches.filter(m => m.finalStage === "QUARTI");
+  const semi = matches.filter(m => m.finalStage === "SEMIFINALI");
+  const finali = matches.filter(m => m.finalStage === "FINALE");
+
+  let q1 = quarti.find(m => hasAthlete(m, rankings[2]?.id) || hasAthlete(m, rankings[5]?.id));
+  let q2 = quarti.find(m => m.id !== q1?.id && (hasAthlete(m, rankings[3]?.id) || hasAthlete(m, rankings[4]?.id)));
+  if (!q1) q1 = quarti.find((m:any) => m.id !== q2?.id);
+  if (!q2) q2 = quarti.find((m:any) => m.id !== q1?.id);
+
+  let s1 = semi.find(m => hasAthlete(m, rankings[0]?.id));
+  let s2 = semi.find(m => m.id !== s1?.id && hasAthlete(m, rankings[1]?.id));
+  if (!s1) s1 = semi.find((m:any) => m.id !== s2?.id);
+  if (!s2) s2 = semi.find((m:any) => m.id !== s1?.id);
+
+  let f1 = finali.find(m => hasAthlete(m, getWinner(s1)));
+  let f3 = finali.find(m => m.id !== f1?.id);
+  if (!f1) f1 = finali.find((m:any) => m.id !== f3?.id);
+  if (!f3) f3 = finali.find((m:any) => m.id !== f1?.id);
+
+  const aQ1_1 = getA(rankings[2], "q1_1", q1, 1);
+  const aQ1_2 = getA(rankings[5], "q1_2", q1, 2);
+  const aQ2_1 = getA(rankings[3], "q2_1", q2, 1);
+  const aQ2_2 = getA(rankings[4], "q2_2", q2, 2);
+
+  const wQ1 = getWinner(q1);
+  const wQ2 = getWinner(q2);
+
+  const defaultS1_2 = rankings[4] ? wQ2 : rankings[3]?.id; 
+  const defaultS2_2 = rankings[5] ? wQ1 : rankings[2]?.id; 
+
+  const aS1_1 = getA(rankings[0], "s1_1", s1, 1);
+  const aS1_2 = getA(rankings.find((a:any)=>a.id===defaultS1_2), "s1_2", s1, 2);
+  const aS2_1 = getA(rankings[1], "s2_1", s2, 1);
+  const aS2_2 = getA(rankings.find((a:any)=>a.id===defaultS2_2), "s2_2", s2, 2);
+
+  const wS1 = getWinner(s1);
+  const wS2 = getWinner(s2);
+  const lS1 = getLoser(s1);
+  const lS2 = getLoser(s2);
+
+  const aF1_1 = getA(rankings.find((a:any)=>a.id===wS1), "f1_1", f1, 1);
+  const aF1_2 = getA(rankings.find((a:any)=>a.id===wS2), "f1_2", f1, 2);
+  const aF3_1 = getA(rankings.find((a:any)=>a.id===lS1), "f3_1", f3, 1);
+  const aF3_2 = getA(rankings.find((a:any)=>a.id===lS2), "f3_2", f3, 2);
+
+  const [scores, setScores] = useState({
+    q1: { p1: q1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: q1?.sides.find((s:any)=>s.side===2)?.points || 0 },
+    q2: { p1: q2?.sides.find((s:any)=>s.side===1)?.points || 0, p2: q2?.sides.find((s:any)=>s.side===2)?.points || 0 },
+    s1: { p1: s1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: s1?.sides.find((s:any)=>s.side===2)?.points || 0 },
+    s2: { p1: s2?.sides.find((s:any)=>s.side===1)?.points || 0, p2: s2?.sides.find((s:any)=>s.side===2)?.points || 0 },
+    f1: { p1: f1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f1?.sides.find((s:any)=>s.side===2)?.points || 0 },
+    f3: { p1: f3?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f3?.sides.find((s:any)=>s.side===2)?.points || 0 },
+  });
+
+  const handleSave = async (stageKey: keyof typeof scores, stageLabel: string, athlete1Id: string, athlete2Id: string) => {
+    try {
+      const matchScores = scores[stageKey];
+      const res = await fetch("/api/admin/finali/save-single-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          disciplineId: discipline.id,
+          stage: stageLabel,
+          side1AthleteIds: [athlete1Id],
+          side2AthleteIds: [athlete2Id],
+          points1: matchScores.p1,
+          points2: matchScores.p2
+        }),
+      });
+
+      if (res.ok) {
+        toast.success("Match salvato!");
+        window.location.reload(); 
+      } else {
+        toast.error("Errore salvataggio");
+      }
+    } catch (e) {
+      toast.error("Errore di rete");
+    }
+  };
+
+  const handleSetActive = async (stageKey: keyof typeof scores, stageLabel: string, athlete1Id: string, athlete2Id: string) => {
+    try {
+      const res = await fetch("/api/admin/finali/set-active-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          disciplineId: discipline.id,
+          stage: stageLabel,
+          side1AthleteIds: [athlete1Id],
+          side2AthleteIds: [athlete2Id],
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("Giocatori mandati in campo!");
+        window.location.reload(); 
+      } else {
+        toast.error(data.error || "Errore");
+      }
+    } catch (e) {
+      toast.error("Errore di rete");
+    }
+  };
+
+  const updateScore = (match: keyof typeof scores, p1: number, p2: number) => {
+    setScores(prev => ({ ...prev, [match]: { p1, p2 } }));
+  };
+
+  const aWQ2 = rankings.find((a:any) => a.id === wQ2);
+  const aWQ1 = rankings.find((a:any) => a.id === wQ1);
+  const aWS1 = rankings.find((a:any) => a.id === wS1);
+  const aWS2 = rankings.find((a:any) => a.id === wS2);
+  const aLS1 = rankings.find((a:any) => a.id === lS1);
+  const aLS2 = rankings.find((a:any) => a.id === lS2);
+
+  return (
+    <PremiumCard className="p-8 relative overflow-hidden">
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+          <Trophy className="w-6 h-6 text-amber-600" />
+        </div>
+        <h2 className="text-3xl font-black">{discipline.name}</h2>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* COLONNA 1: QUARTI */}
+        {rankings[5] && rankings[4] && (
+          <div className="space-y-6">
+            <h3 className="text-sm font-black text-zinc-400 uppercase tracking-widest mb-4">Quarti</h3>
+            <MatchBox 
+              title="3° vs 6°"
+              a1={aQ1_1} a2={aQ1_2}
+              p1={scores.q1.p1} p2={scores.q1.p2}
+              onChange={(p1: number, p2: number) => updateScore("q1", p1, p2)}
+              onSave={() => handleSave("q1", "QUARTI", aQ1_1.id, aQ1_2.id)}
+              isSaved={!!q1 && q1.sides[0]?.points >= 0}
+              isInProgress={!!q1 && q1.sides[0]?.points === -1}
+              onSendToCourt={() => handleSetActive("q1", "QUARTI", aQ1_1.id, aQ1_2.id)}
+              allAthletes={rankings}
+              onOverrideA1={(id: string) => setOverrides(prev => ({...prev, q1_1: id}))}
+              onOverrideA2={(id: string) => setOverrides(prev => ({...prev, q1_2: id}))}
+              onDelete={q1 ? () => onDeleteMatch(q1.id) : undefined}
+              busyAthletes={busyAthletes}
+            />
+            <div className="h-4 border-l-2 border-b-2 border-zinc-200 ml-8 my-2 rounded-bl-xl opacity-30"></div>
+            <MatchBox 
+              title="4° vs 5°"
+              a1={aQ2_1} a2={aQ2_2}
+              p1={scores.q2.p1} p2={scores.q2.p2}
+              onChange={(p1: number, p2: number) => updateScore("q2", p1, p2)}
+              onSave={() => handleSave("q2", "QUARTI", aQ2_1.id, aQ2_2.id)}
+              isSaved={!!q2 && q2.sides[0]?.points >= 0}
+              isInProgress={!!q2 && q2.sides[0]?.points === -1}
+              onSendToCourt={() => handleSetActive("q2", "QUARTI", aQ2_1.id, aQ2_2.id)}
+              allAthletes={rankings}
+              onOverrideA1={(id: string) => setOverrides(prev => ({...prev, q2_1: id}))}
+              onOverrideA2={(id: string) => setOverrides(prev => ({...prev, q2_2: id}))}
+              onDelete={q2 ? () => onDeleteMatch(q2.id) : undefined}
+              busyAthletes={busyAthletes}
+            />
+          </div>
+        )}
+
+        {/* COLONNA 2: SEMIFINALI */}
+        <div className="space-y-6">
+          <h3 className="text-sm font-black text-zinc-400 uppercase tracking-widest mb-4">Semifinali</h3>
+          <MatchBox 
+            title={rankings[4] ? "1° vs Vincitore Q2" : "1° vs 4°"}
+            a1={aS1_1} a2={aS1_2}
+            p1={scores.s1.p1} p2={scores.s1.p2}
+            onChange={(p1: number, p2: number) => updateScore("s1", p1, p2)}
+            onSave={() => handleSave("s1", "SEMIFINALI", aS1_1.id, aS1_2.id)}
+            disabled={!aS1_1 || !aS1_2}
+            isSaved={!!s1 && s1.sides[0]?.points >= 0}
+            isInProgress={!!s1 && s1.sides[0]?.points === -1}
+            onSendToCourt={() => handleSetActive("s1", "SEMIFINALI", aS1_1.id, aS1_2.id)}
+            waitingLabel="In attesa (Q2)"
+            allAthletes={rankings}
+            onOverrideA1={(id: string) => setOverrides(prev => ({...prev, s1_1: id}))}
+            onOverrideA2={(id: string) => setOverrides(prev => ({...prev, s1_2: id}))}
+            onDelete={s1 ? () => onDeleteMatch(s1.id) : undefined}
+            busyAthletes={busyAthletes}
+          />
+          <div className="h-4 border-l-2 border-b-2 border-zinc-200 ml-8 my-2 rounded-bl-xl opacity-30"></div>
+          <MatchBox 
+            title={rankings[5] ? "2° vs Vincitore Q1" : "2° vs 3°"}
+            a1={aS2_1} a2={aS2_2}
+            p1={scores.s2.p1} p2={scores.s2.p2}
+            onChange={(p1: number, p2: number) => updateScore("s2", p1, p2)}
+            onSave={() => handleSave("s2", "SEMIFINALI", aS2_1.id, aS2_2.id)}
+            disabled={!aS2_1 || !aS2_2}
+            isSaved={!!s2 && s2.sides[0]?.points >= 0}
+            isInProgress={!!s2 && s2.sides[0]?.points === -1}
+            onSendToCourt={() => handleSetActive("s2", "SEMIFINALI", aS2_1.id, aS2_2.id)}
+            waitingLabel="In attesa (Q1)"
+            allAthletes={rankings}
+            onOverrideA1={(id: string) => setOverrides(prev => ({...prev, s2_1: id}))}
+            onOverrideA2={(id: string) => setOverrides(prev => ({...prev, s2_2: id}))}
+            onDelete={s2 ? () => onDeleteMatch(s2.id) : undefined}
+            busyAthletes={busyAthletes}
+          />
+        </div>
+
+        {/* COLONNA 3: FINALI */}
+        <div className="space-y-6">
+          <h3 className="text-sm font-black text-amber-500 uppercase tracking-widest mb-4">Finali</h3>
+          <MatchBox 
+            title="Finale 1°/2° Posto"
+            a1={aF1_1} a2={aF1_2}
+            p1={scores.f1.p1} p2={scores.f1.p2}
+            onChange={(p1: number, p2: number) => updateScore("f1", p1, p2)}
+            onSave={() => handleSave("f1", "FINALE", aF1_1.id, aF1_2.id)}
+            disabled={!aF1_1 || !aF1_2}
+            isSaved={!!f1 && f1.sides[0]?.points >= 0}
+            isInProgress={!!f1 && f1.sides[0]?.points === -1}
+            onSendToCourt={() => handleSetActive("f1", "FINALE", aF1_1.id, aF1_2.id)}
+            waitingLabel="In attesa Semifinali"
+            accent
+            allAthletes={rankings}
+            onOverrideA1={(id: string) => setOverrides(prev => ({...prev, f1_1: id}))}
+            onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f1_2: id}))}
+            onDelete={f1 ? () => onDeleteMatch(f1.id) : undefined}
+            busyAthletes={busyAthletes}
+          />
+          <MatchBox 
+            title="Finale 3°/4° Posto"
+            a1={aF3_1} a2={aF3_2}
+            p1={scores.f3.p1} p2={scores.f3.p2}
+            onChange={(p1: number, p2: number) => updateScore("f3", p1, p2)}
+            onSave={() => handleSave("f3", "FINALE", aF3_1.id, aF3_2.id)}
+            disabled={!aF3_1 || !aF3_2}
+            isSaved={!!f3 && f3.sides[0]?.points >= 0}
+            isInProgress={!!f3 && f3.sides[0]?.points === -1}
+            onSendToCourt={() => handleSetActive("f3", "FINALE", aF3_1.id, aF3_2.id)}
+            waitingLabel="In attesa Semifinali"
+            allAthletes={rankings}
+            onOverrideA1={(id: string) => setOverrides(prev => ({...prev, f3_1: id}))}
+            onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f3_2: id}))}
+            onDelete={f3 ? () => onDeleteMatch(f3.id) : undefined}
+            busyAthletes={busyAthletes}
+          />
+        </div>
+      </div>
+    </PremiumCard>
+  );
+}
+
+function MatchBox({ 
+  title, a1, a2, p1, p2, onChange, onSave, disabled, isSaved, waitingLabel = "In attesa...", accent, isInProgress, onSendToCourt,
+  allAthletes, onOverrideA1, onOverrideA2, onDelete, busyAthletes
+}: any) {
+  const isStarted = isSaved || isInProgress;
+  const isA1Busy = a1 && busyAthletes?.has(a1.id);
+  const isA2Busy = a2 && busyAthletes?.has(a2.id);
+  const isBlocked = !isStarted && (isA1Busy || isA2Busy);
+
+  return (
+    <div className={`p-4 rounded-2xl border transition-all ${
+      isInProgress ? "bg-green-100 border-green-500 shadow-md shadow-green-500/20 ring-2 ring-green-500" :
+      accent ? "bg-amber-50 border-amber-200" : 
+      "bg-white border-zinc-200 shadow-sm"
+    }`}>
+      <div className="flex justify-between items-center mb-3">
+        <h4 className={`text-[10px] font-black uppercase tracking-widest ${isInProgress ? "text-green-700" : "text-zinc-500"}`}>{title}</h4>
+        {isSaved && <div className="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">COMPLETATO</div>}
+        {isInProgress && <div className="text-[10px] font-bold text-white bg-green-500 px-2 py-0.5 rounded-full animate-pulse">IN CAMPO</div>}
+      </div>
+
+      <div className="space-y-3">
+        {/* A1 */}
+        <div className="flex items-center gap-3">
+          {allAthletes && !isStarted ? (
+            <div className="flex-1 flex flex-col">
+              <select 
+                value={a1?.id || ""} 
+                onChange={(e) => onOverrideA1 && onOverrideA1(e.target.value)}
+                className={`w-full text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a1 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+              >
+                <option value="" disabled>{waitingLabel}</option>
+                {allAthletes.map((a:any) => <option key={a.id} value={a.id}>{a.name}</option>)}
+              </select>
+              {isA1Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
+            </div>
+          ) : (
+            <div className={`flex-1 text-sm font-bold truncate ${!a1 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}>
+              {a1 ? a1.name : waitingLabel}
+            </div>
+          )}
+          {isStarted && (
+            <input 
+              type="number" 
+              value={p1 === -1 ? 0 : p1} 
+              onChange={(e) => onChange(parseInt(e.target.value) || 0, p2)}
+              disabled={disabled}
+              className={`w-16 h-8 text-center rounded-lg border-none text-sm font-black focus:ring-amber-500 disabled:opacity-50 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+            />
+          )}
+        </div>
+
+        {/* A2 */}
+        <div className="flex items-center gap-3">
+          {allAthletes && !isStarted ? (
+            <div className="flex-1 flex flex-col">
+              <select 
+                value={a2?.id || ""} 
+                onChange={(e) => onOverrideA2 && onOverrideA2(e.target.value)}
+                className={`w-full text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a2 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+              >
+                <option value="" disabled>{waitingLabel}</option>
+                {allAthletes.map((a:any) => <option key={a.id} value={a.id}>{a.name}</option>)}
+              </select>
+              {isA2Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
+            </div>
+          ) : (
+            <div className={`flex-1 text-sm font-bold truncate ${!a2 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}>
+              {a2 ? a2.name : waitingLabel}
+            </div>
+          )}
+          {isStarted && (
+            <input 
+              type="number" 
+              value={p2 === -1 ? 0 : p2} 
+              onChange={(e) => onChange(p1, parseInt(e.target.value) || 0)}
+              disabled={disabled}
+              className={`w-16 h-8 text-center rounded-lg border-none text-sm font-black focus:ring-amber-500 disabled:opacity-50 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+            />
+          )}
+        </div>
+      </div>
+
+      {!isStarted && a1 && a2 ? (
+        <button 
+          onClick={onSendToCourt}
+          disabled={disabled || isBlocked}
+          className={`mt-4 w-full py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
+            isBlocked
+              ? "bg-zinc-200 text-zinc-500 cursor-not-allowed"
+              : "bg-indigo-500 hover:bg-indigo-600 text-white shadow-indigo-500/20"
+          }`}
+        >
+          {isBlocked ? "ATLETI OCCUPATI" : "MANDA IN CAMPO"}
+        </button>
+      ) : isStarted ? (
+        <div className="flex gap-2 mt-4">
+          {onDelete && (
+            <button 
+              onClick={onDelete}
+              className="w-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all"
+              title="Annulla Match"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+          <button 
+            onClick={onSave}
+            disabled={disabled || !a1 || !a2}
+            className={`flex-1 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+              disabled || !a1 || !a2 
+                ? "bg-zinc-100 text-zinc-400 cursor-not-allowed" 
+                : isSaved 
+                  ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20" 
+                  : "bg-green-600 hover:bg-green-700 text-white shadow-md shadow-green-600/20"
+            }`}
+          >
+            <Save className="w-4 h-4" />
+            {isSaved ? "AGGIORNA" : "SALVA MATCH"}
+          </button>
+        </div>
+      ) : (
+        <button disabled className="mt-4 w-full py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all bg-zinc-100 text-zinc-400 cursor-not-allowed">
+          ATTESA SFIDANTI
+        </button>
+      )}
+    </div>
+  );
+}

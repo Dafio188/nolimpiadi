@@ -84,49 +84,181 @@ export default async function ClassificaGeneraleAdmin() {
     const winner = side1.points > side2.points ? side1 : side2;
     const loser = side1.points > side2.points ? side2 : side1;
 
-    if (match.finalStage === "FINALE") {
-      winner.athletes.forEach(sa => {
-        disciplineRankingsMap[kind].standings.push({
-          pos: 1,
-          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
-          stage: "Campione",
-          isWinner: true
-        });
+    if (kind === "CALCIO_BALILLA") {
+      // Accumuleremo i punti per il girone all'italiana
+      // Inizializziamo atleti se non esistono
+      side1.athletes.forEach(sa => {
+        let existing = disciplineRankingsMap[kind].standings.find((s: any) => s.id === sa.athleteId);
+        if (!existing) {
+          existing = {
+            id: sa.athleteId,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "Girone",
+            score: 0,
+            isWinner: false
+          };
+          disciplineRankingsMap[kind].standings.push(existing);
+        }
+        existing.score += side1.points;
       });
-      loser.athletes.forEach(sa => {
-        disciplineRankingsMap[kind].standings.push({
-          pos: 2,
-          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
-          stage: "Finalista",
-          isWinner: false
-        });
+      side2.athletes.forEach(sa => {
+        let existing = disciplineRankingsMap[kind].standings.find((s: any) => s.id === sa.athleteId);
+        if (!existing) {
+          existing = {
+            id: sa.athleteId,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "Girone",
+            score: 0,
+            isWinner: false
+          };
+          disciplineRankingsMap[kind].standings.push(existing);
+        }
+        existing.score += side2.points;
       });
-    } else if (match.finalStage === "SEMIFINALI") {
-      loser.athletes.forEach(sa => {
-        disciplineRankingsMap[kind].standings.push({
-          pos: 3,
-          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
-          stage: "Semifinalista",
-          isWinner: false
+    } else {
+      if (match.finalStage === "FINALE") {
+        winner.athletes.forEach(sa => {
+          disciplineRankingsMap[kind].standings.push({
+            pos: 1,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "Campione",
+            isWinner: true
+          });
         });
-      });
-    } else if (match.finalStage === "QUARTI") {
-       loser.athletes.forEach(sa => {
-        disciplineRankingsMap[kind].standings.push({
-          pos: 5,
-          name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
-          stage: "Quarti di Finale",
-          isWinner: false
+        loser.athletes.forEach(sa => {
+          disciplineRankingsMap[kind].standings.push({
+            pos: 2,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "Finalista",
+            isWinner: false
+          });
         });
-      });
+      } else if (match.finalStage === "SEMIFINALI") {
+        loser.athletes.forEach(sa => {
+          disciplineRankingsMap[kind].standings.push({
+            pos: 3,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "Semifinalista",
+            isWinner: false
+          });
+        });
+      } else if (match.finalStage === "QUARTI") {
+         loser.athletes.forEach(sa => {
+          disciplineRankingsMap[kind].standings.push({
+            pos: 5,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "Quarti di Finale",
+            isWinner: false
+          });
+        });
+      }
     }
   });
 
+  // Calcola posizioni finali per CALCIO_BALILLA
+  if (disciplineRankingsMap["CALCIO_BALILLA"]) {
+    disciplineRankingsMap["CALCIO_BALILLA"].standings.sort((a: any, b: any) => b.score - a.score);
+    disciplineRankingsMap["CALCIO_BALILLA"].standings.forEach((s: any, i: number) => {
+      s.pos = i + 1;
+      if (i === 0) {
+        s.stage = "Campione";
+        s.isWinner = true;
+      } else if (i === 1) {
+        s.stage = "Secondo Posto";
+      } else if (i === 2) {
+        s.stage = "Terzo Posto";
+      } else {
+        s.stage = "Piazzato";
+      }
+    });
+  }
+
+  // 2.2 Qualificati dalla Fase 1 (per popolare la lista da 1 a 6)
+  const phase1Rankings = await prisma.$queryRaw<any[]>`
+    SELECT 
+      c.discipline_id, 
+      c.athlete_id, 
+      a.name as athlete_name, 
+      c.qualification_weighted as score
+    FROM classifica_qualificazione_disciplina c
+    JOIN athletes a ON a.id = c.athlete_id
+    ORDER BY c.discipline_id, c.qualification_weighted DESC
+  `;
+
+  // 2.3 Punteggi totali pesati per disciplina (Fase 1 + Fase 2)
+  const disciplineTotalScores = await prisma.$queryRaw<any[]>`
+    WITH athlete_match_scores AS (
+      SELECT 
+        v.athlete_id,
+        v.discipline_id,
+        v.phase,
+        v.match_id,
+        (
+          (LEAST(v.points_scored::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float))
+          - ((LEAST(v.points_conceded::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
+        ) AS match_score
+      FROM v_participations v
+      WHERE v.phase = 'FINALI'
+    )
+    SELECT 
+      athlete_id, 
+      discipline_id, 
+      SUM(match_score) as total_weighted
+    FROM athlete_match_scores
+    GROUP BY athlete_id, discipline_id
+  `;
+
   // Manteniamo l'ordine basato su allDisciplines per l'output finale
-  const rankings = allDisciplines.map(d => ({
-    ...disciplineRankingsMap[d.kind],
-    standings: disciplineRankingsMap[d.kind].standings.sort((a: any, b: any) => a.pos - b.pos)
-  }));
+  const rankings = allDisciplines.map(d => {
+    const discPhase1 = phase1Rankings.filter(r => r.discipline_id === d.id);
+    const limit = d.kind === "CALCIO_BALILLA" ? 5 : 6;
+    const topQualifiers = discPhase1.slice(0, limit);
+
+    const finalStandings = disciplineRankingsMap[d.kind]?.standings || [];
+
+    // Creiamo la lista mergiando i dati
+    const mergedStandings = topQualifiers.map((q, idx) => {
+      const qName = q.athlete_name.split(' ').slice(0, 2).join(' ');
+      const finalS = finalStandings.find((s: any) => s.name === qName);
+      
+      const totalScore = disciplineTotalScores.find(
+        (ts: any) => ts.athlete_id === q.athlete_id && ts.discipline_id === d.id
+      )?.total_weighted;
+
+      return {
+        originalPos: idx + 1,
+        finalPos: finalS ? finalS.pos : 99, // 99 means not finalized yet
+        name: qName,
+        stage: finalS ? finalS.stage : (idx < limit ? "Qualificato (In Gara)" : ""),
+        isWinner: finalS ? finalS.isWinner : false,
+        score: totalScore !== undefined ? totalScore : 0
+      };
+    });
+
+    // Ordiniamo prima per posizione finale (se presente), altrimenti per posizione di qualifica
+    mergedStandings.sort((a, b) => {
+      if (a.finalPos !== 99 || b.finalPos !== 99) {
+        return a.finalPos - b.finalPos;
+      }
+      return a.originalPos - b.originalPos;
+    });
+
+    // Assegniamo la pos visuale (1 a 6)
+    mergedStandings.forEach((s, i) => {
+      (s as any).displayPos = i + 1;
+    });
+
+    return {
+      ...d,
+      standings: mergedStandings
+    };
+  });
+
+  // 3. Recuperiamo tutti gli atleti per la selezione manuale (Fase 2)
+  const allAthletes = await prisma.athlete.findMany({
+    orderBy: { name: 'asc' },
+    select: { id: true, name: true }
+  });
 
   return (
     <div className="mx-auto w-full max-w-[1600px] pb-20 px-4 sm:px-6 lg:px-8">
@@ -267,7 +399,7 @@ export default async function ClassificaGeneraleAdmin() {
           </div>
 
           <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800 shadow-xl shadow-zinc-200/20 overflow-hidden">
-             <DisciplineRankings rankings={rankings} />
+             <DisciplineRankings rankings={rankings} athletes={allAthletes} />
           </div>
 
           <div className="p-6 bg-gradient-to-br from-zinc-800 to-black rounded-3xl text-white shadow-xl shadow-black/10 overflow-hidden relative group">

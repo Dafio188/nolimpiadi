@@ -1,129 +1,121 @@
 "use client";
 
-import React from "react";
-import { Trophy, Medal, Activity, Users, Target, Zap, ChevronRight } from "lucide-react";
-import PremiumCard from "@/components/ui/PremiumCard";
+import { useState } from "react";
+import { Trophy, Zap } from "lucide-react";
 
-const ICON_MAP: Record<string, React.ElementType> = {
-  PING_PONG: Activity,
-  CALCIO_BALILLA: Users,
-  FRECCETTE: Target,
-  AIR_HOCKEY: Zap,
-};
-
-const DISCIPLINE_NAMES: Record<string, string> = {
-  PING_PONG: "Ping Pong",
-  CALCIO_BALILLA: "Calcio Balilla",
-  FRECCETTE: "Freccette",
-  AIR_HOCKEY: "Air Hockey",
-};
-
-interface DisciplineRanking {
-  kind: string;
-  standings: {
-    pos: number;
-    name: string;
-    stage: string;
-    isWinner: boolean;
-  }[];
+interface DisciplineRankingsProps {
+  rankings: any[];
+  athletes?: any[];
 }
 
-export default function DisciplineRankings({ rankings }: { rankings: DisciplineRanking[] }) {
-  const [activeTab, setActiveTab] = React.useState(0);
-  
-  if (!rankings || rankings.length === 0) return null;
+export default function DisciplineRankings({ rankings }: DisciplineRankingsProps) {
+  const [activeTab, setActiveTab] = useState(rankings[0]?.id || null);
 
-  const current = rankings[activeTab];
+  const activeDiscipline = rankings.find(r => r.id === activeTab);
 
   return (
-    <section className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="bg-blue-500/10 p-2 rounded-lg">
-          <Activity className="w-6 h-6 text-blue-600" />
-        </div>
-        <h2 className="text-2xl font-black text-foreground">Classifiche Fase 2 per Disciplina</h2>
-      </div>
-
-      {/* Tab Selector */}
-      <div className="flex flex-wrap gap-2 p-1 bg-zinc-100 dark:bg-zinc-800/50 rounded-2xl w-fit">
-        {rankings.map((r, idx) => {
-          const Icon = ICON_MAP[r.kind] || Activity;
-          return (
+    <div className="flex flex-col h-full bg-white dark:bg-zinc-900 border-none">
+      {/* Tabs Header */}
+      <div className="p-6 pb-0">
+        <div className="flex flex-wrap gap-2">
+          {rankings.map(disc => (
             <button
-              key={r.kind}
-              onClick={() => setActiveTab(idx)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                activeTab === idx 
-                ? "bg-white dark:bg-zinc-700 shadow-sm text-blue-600" 
-                : "text-zinc-500 hover:text-zinc-700 hover:bg-white/50"
+              key={disc.id}
+              onClick={() => setActiveTab(disc.id)}
+              className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 flex items-center gap-2 ${
+                activeTab === disc.id
+                  ? "bg-indigo-500 text-white shadow-md shadow-indigo-500/20 ring-2 ring-indigo-500/50"
+                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 hover:bg-zinc-200 dark:hover:bg-zinc-700 hover:text-zinc-700 dark:hover:text-zinc-300"
               }`}
             >
-              <Icon className="w-4 h-4" />
-              {DISCIPLINE_NAMES[r.kind] || r.kind}
+              {activeTab === disc.id && <Zap className="w-3.5 h-3.5" />}
+              {disc.name}
             </button>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
-      {/* Standings Table */}
-      <PremiumCard className="p-0 border-none ring-1 ring-zinc-200 dark:ring-zinc-800">
+      {/* Table Content */}
+      <div className="p-6">
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50">
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 w-24">Pos</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">Atleta</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">Traguardo Raggiunto</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-right">Status</th>
+              <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                <th className="pb-3 text-[10px] font-black uppercase tracking-widest text-zinc-400 w-12 text-center">Pos</th>
+                <th className="pb-3 text-[10px] font-black uppercase tracking-widest text-zinc-400">Atleta</th>
+                <th className="pb-3 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-center">Punteggio</th>
+                <th className="pb-3 text-[10px] font-black uppercase tracking-widest text-zinc-400">Traguardo Raggiunto</th>
+                <th className="pb-3 text-[10px] font-black uppercase tracking-widest text-zinc-400 text-right">Status</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-50 dark:divide-zinc-800/50">
-              {current.standings.length > 0 ? (
-                current.standings.map((s, idx) => (
-                  <tr key={idx} className="group hover:bg-zinc-50/80 dark:hover:bg-zinc-800/50 transition-colors">
-                    <td className="px-6 py-2">
-                      <div className={`flex h-8 w-8 items-center justify-center rounded-lg font-black text-sm ${
-                        s.pos === 1 ? "bg-amber-100 text-amber-700" :
-                        s.pos === 2 ? "bg-zinc-100 text-zinc-500" :
-                        s.pos === 3 ? "bg-orange-100 text-orange-700" :
-                        "text-zinc-400"
-                      }`}>
-                        {s.pos}
-                      </div>
-                    </td>
-                    <td className="px-6 py-2">
-                      <span className="font-bold text-foreground">{s.name}</span>
-                    </td>
-                    <td className="px-6 py-2">
-                      <span className="text-xs font-black uppercase tracking-tighter text-zinc-400">
-                        {s.stage}
-                      </span>
-                    </td>
-                    <td className="px-6 py-2 text-right">
-                      {s.isWinner ? (
-                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 text-[10px] font-black uppercase">
-                          <Trophy className="w-3 h-3" />
-                          Vincitore
+              {activeDiscipline?.standings && activeDiscipline.standings.length > 0 ? (
+                activeDiscipline.standings.map((s: any, idx: number) => {
+                  const isFinished = s.finalPos !== 99;
+                  const isPodium = isFinished && s.finalPos <= 3;
+                  
+                  return (
+                    <tr key={idx} className="group hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors">
+                      <td className="py-4 text-center">
+                        <div className={`inline-flex w-7 h-7 items-center justify-center rounded-lg font-black text-[11px] ${
+                          isFinished && s.finalPos === 1 ? "bg-amber-400 text-amber-900 shadow-sm shadow-amber-400/30" :
+                          isFinished && s.finalPos === 2 ? "bg-zinc-300 text-zinc-700" :
+                          isFinished && s.finalPos === 3 ? "bg-orange-300 text-orange-900" :
+                          "bg-zinc-100 dark:bg-zinc-800 text-zinc-400"
+                        }`}>
+                          {s.displayPos}
                         </div>
-                      ) : (
-                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-400 text-[10px] font-black uppercase">
-                          Eliminato
+                      </td>
+                      <td className="py-4">
+                        <span className={`font-bold text-sm ${isFinished && s.finalPos === 1 ? "text-amber-600" : "text-zinc-700 dark:text-zinc-200"}`}>
+                          {s.name}
+                        </span>
+                      </td>
+                      <td className="py-4 text-center">
+                        <span className="font-mono text-xs font-bold text-zinc-600 dark:text-zinc-300">
+                          {s.score !== undefined && s.score !== null ? Number(s.score).toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : "-"}
+                        </span>
+                      </td>
+                      <td className="py-4">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-bold ${
+                            !isFinished ? "text-zinc-400 italic" :
+                            s.finalPos === 1 ? "text-amber-500" :
+                            "text-zinc-600 dark:text-zinc-300"
+                          }`}>
+                            {s.stage}
+                          </span>
                         </div>
-                      )}
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="py-4 text-right">
+                        {!isFinished ? (
+                          <span className="inline-flex items-center px-2 py-1 rounded bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[9px] font-black uppercase tracking-widest">
+                            In Gara
+                          </span>
+                        ) : (
+                          <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-[9px] font-black uppercase tracking-widest ${
+                            s.finalPos === 1 ? "bg-amber-50 text-amber-600" :
+                            "bg-red-50 text-red-600"
+                          }`}>
+                            {s.finalPos === 1 ? <Trophy className="w-3 h-3" /> : null}
+                            {s.finalPos === 1 ? "Vincitore" : "Eliminato"}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-zinc-400 font-medium italic">
-                    Nessun risultato disponibile per questa disciplina nella Fase 2.
+                  <td colSpan={5} className="py-12 text-center text-sm font-bold text-zinc-400">
+                    Nessun qualificato disponibile.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-      </PremiumCard>
-    </section>
+      </div>
+    </div>
   );
 }

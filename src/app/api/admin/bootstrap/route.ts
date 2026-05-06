@@ -112,6 +112,7 @@ export async function GET() {
         m.discipline_id,
         m.phase,
         m.final_stage,
+        m.target_victory,
         ms.side,
         ms.points AS points_scored,
         (SELECT points FROM match_sides WHERE match_id = m.id AND side != ms.side LIMIT 1) AS points_conceded,
@@ -124,6 +125,15 @@ export async function GET() {
       JOIN matches m ON m.id = ms.match_id;
 
       CREATE OR REPLACE VIEW classifica_qualificazione_disciplina AS
+      WITH athlete_stats AS (
+        SELECT 
+          athlete_id, 
+          discipline_id, 
+          COUNT(*) as total_matches
+        FROM v_participations
+        WHERE phase = 'QUALIFICAZIONE'
+        GROUP BY athlete_id, discipline_id
+      )
       SELECT 
         v.athlete_id,
         v.discipline_id,
@@ -134,37 +144,38 @@ export async function GET() {
         SUM(v.points_conceded) AS total_conceded,
         COUNT(*) AS matches_played,
         SUM(
-          ((v.points_scored::float / GREATEST(v.points_scored, v.points_conceded)::float) * 210.0) - (v.points_conceded::float / 1000.0)
+          (LEAST(v.points_scored::float, v.target_victory::float) * (840.0 / NULLIF(ast.total_matches, 0)::float / NULLIF(v.target_victory, 0)::float))
+          - ((LEAST(v.points_conceded::float, v.target_victory::float) * (840.0 / NULLIF(ast.total_matches, 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
         ) AS qualification_weighted
       FROM v_participations v
       JOIN disciplines d ON d.id = v.discipline_id
+      JOIN athlete_stats ast ON ast.athlete_id = v.athlete_id AND ast.discipline_id = v.discipline_id
       WHERE v.phase = 'QUALIFICAZIONE'
-      GROUP BY v.athlete_id, v.discipline_id, d.kind, d.name;
+      GROUP BY v.athlete_id, v.discipline_id, d.kind, d.name, ast.total_matches;
 
       CREATE OR REPLACE VIEW classifica_complessiva AS
-      WITH athlete_discipline_scores AS (
+      WITH athlete_match_scores AS (
         SELECT 
           v.athlete_id,
           v.discipline_id,
           v.phase,
-          SUM(
-            ((v.points_scored::float / GREATEST(v.points_scored, v.points_conceded)::float) * 210.0) - (v.points_conceded::float / 1000.0)
-          ) AS score,
-          COUNT(v.match_id) AS matches_count
+          v.match_id,
+          (
+            (LEAST(v.points_scored::float, v.target_victory::float) * ( (CASE WHEN v.phase = 'FINALI' THEN 1260.0 ELSE 840.0 END) / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float))
+            - ((LEAST(v.points_conceded::float, v.target_victory::float) * ( (CASE WHEN v.phase = 'FINALI' THEN 1260.0 ELSE 840.0 END) / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
+          ) AS match_score
         FROM v_participations v
-        JOIN disciplines d ON d.id = v.discipline_id
-        GROUP BY v.athlete_id, v.discipline_id, v.phase
       )
       SELECT 
         a.id AS athlete_id,
         a.name,
         a.letter,
-        COALESCE(SUM(CASE WHEN ads.phase = 'QUALIFICAZIONE' THEN ads.score ELSE 0 END), 0) AS qualification_weighted,
-        COALESCE(SUM(CASE WHEN ads.phase = 'FINALI' THEN ads.score ELSE 0 END), 0) AS finals_weighted,
-        COALESCE(SUM(ads.score), 0) AS total_weighted,
-        COALESCE(SUM(ads.matches_count), 0)::int AS matches_played
+        COALESCE(SUM(CASE WHEN ams.phase = 'QUALIFICAZIONE' THEN ams.match_score ELSE 0 END), 0) AS qualification_weighted,
+        COALESCE(SUM(CASE WHEN ams.phase = 'FINALI' THEN ams.match_score ELSE 0 END), 0) AS finals_weighted,
+        COALESCE(SUM(ams.match_score), 0) AS total_weighted,
+        COUNT(DISTINCT ams.match_id) FILTER (WHERE ams.match_id IS NOT NULL)::int AS matches_played
       FROM athletes a
-      LEFT JOIN athlete_discipline_scores ads ON ads.athlete_id = a.id
+      LEFT JOIN athlete_match_scores ams ON ams.athlete_id = a.id
       GROUP BY a.id, a.name, a.letter;
     `;
 

@@ -1,27 +1,66 @@
-import Link from "next/link";
-import { ArrowLeft, Medal } from "lucide-react";
-import PremiumCard from "@/components/ui/PremiumCard";
+import { prisma } from "@/lib/prisma";
+import { Medal } from "lucide-react";
+import TournamentBracketList from "@/components/ui/admin/TournamentBracketList";
 
-export default function ClassificaFase2Placeholder() {
+export default async function ClassificaFase2Page() {
+  // 1. Recupera le classifiche di qualificazione per popolare le card
+  const rawRankings = await prisma.$queryRaw`
+    SELECT 
+      c.*,
+      a.name as athlete_name
+    FROM classifica_qualificazione_disciplina c
+    JOIN athletes a ON a.id = c.athlete_id
+    ORDER BY c.kind ASC, c.qualification_weighted DESC
+  `;
+
+  // 2. Recupera tutti i match della Fase Finale
+  const finalMatches = await prisma.match.findMany({
+    where: { phase: "FINALI" },
+    include: {
+      sides: {
+        include: { athletes: true }
+      }
+    }
+  });
+
+  // Raggruppa i dati per disciplina
+  const disciplineRankings: Record<string, any> = {};
+  (rawRankings as any[]).forEach((row) => {
+    if (!disciplineRankings[row.kind]) {
+      disciplineRankings[row.kind] = {
+        id: row.discipline_id,
+        kind: row.kind,
+        name: row.discipline_name,
+        rankings: [],
+      };
+    }
+    disciplineRankings[row.kind].rankings.push({
+      id: row.athlete_id,
+      name: row.athlete_name,
+      score: row.qualification_weighted,
+      wins: row.wins,
+      total_scored: row.total_scored,
+      total_conceded: row.total_conceded,
+      matches_played: row.matches_played,
+    });
+  });
+
   return (
     <div className="mx-auto w-full max-w-7xl">
-
       <header className="mb-12">
         <h1 className="text-4xl font-black tracking-tight text-foreground flex items-center gap-4">
           <Medal className="w-10 h-10 text-amber-500" />
-          FASE FINALE
+          GESTIONE FASE FINALE
         </h1>
-        <p className="mt-2 text-zinc-500 font-medium">Playoff, finali e 2ª fase.</p>
+        <p className="mt-2 text-zinc-500 font-medium">
+          Inserisci i risultati dei match nel tabellone a eliminazione diretta. Il Ranking Assoluto verrà aggiornato automaticamente.
+        </p>
       </header>
 
-      <PremiumCard className="p-12 text-center border-none ring-1 ring-amber-500/30 bg-amber-50/50">
-        <Medal className="w-16 h-16 text-amber-500 mx-auto mb-6 opacity-50" />
-        <h2 className="text-2xl font-black text-amber-900 mb-2">Sezione in Costruzione</h2>
-        <p className="text-amber-700 font-medium max-w-lg mx-auto">
-          In questa sezione verranno generati automaticamente i tabelloni per le finali (Quarti, Semifinali e Finali) 
-          prendendo i primi classificati dalla Fase 1, secondo lo schema dell'anno precedente.
-        </p>
-      </PremiumCard>
+      <TournamentBracketList 
+        disciplines={disciplineRankings} 
+        matches={finalMatches}
+      />
     </div>
   );
 }

@@ -89,9 +89,45 @@ export async function GET() {
       });
     }
 
+    // 4. Fetch active FINALI matches
+    const activeFinalsMatches = await prisma.match.findMany({
+      where: {
+        phase: "FINALI",
+        sides: {
+          some: {
+            points: -1
+          }
+        }
+      },
+      include: {
+        discipline: true,
+        sides: {
+          include: {
+            athletes: {
+              include: { athlete: true }
+            }
+          },
+          orderBy: { side: 'asc' }
+        }
+      }
+    });
+
+    const activeFinals = (activeFinalsMatches as any[]).map((m: any) => {
+      const s1 = m.sides[0]?.athletes.map((a: any) => a.athlete.name) || [];
+      const s2 = m.sides[1]?.athletes.map((a: any) => a.athlete.name) || [];
+      return {
+        id: m.id,
+        disciplineName: m.discipline.name,
+        disciplineKind: m.discipline.kind,
+        s1,
+        s2
+      };
+    });
+
     const responseData = {
       phases: Object.values(blocks),
       athletes: athleteDict,
+      activeFinals
     };
 
     return NextResponse.json({ ok: true, data: responseData });
