@@ -128,16 +128,12 @@ export default async function Home() {
                       Le Quattro Discipline <br />
                       <span className="text-blue-600 italic">della Gloria.</span>
                     </h2>
-                    <video
-                      src="/immagini/mp.mp4"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      poster="/immagini/mascot/Nolimpius giudice con fischietto.png"
-                      className="h-28 md:h-36 drop-shadow-xl -mb-4"
-                      style={{ objectFit: "contain" }}
-                    ></video>
+                    {/* Mascot Nolimpius */}
+                    <img
+                      src="/immagini/mascot/Nolimpius giudice con fischietto.png"
+                      alt="Nolimpius"
+                      className="h-36 md:h-44 drop-shadow-2xl -mb-4 object-contain select-none"
+                    />
                   </div>
                   <p className="text-lg text-[#86868b] font-medium leading-relaxed">
                     Dalle freccette millimetriche alla velocità pura dell&apos;air hockey. Ogni disciplina mette alla prova un talento diverso. Sei pronto a dominarle tutte?
