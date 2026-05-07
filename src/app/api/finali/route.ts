@@ -139,8 +139,8 @@ export async function GET() {
           for (const m of schedule) {
             const label = `Partita ${m.n}`;
             const dbM = dms.find(dm =>
-              (hasExact(dm.sides[0], m.s1.map(x => x.id)) && hasExact(dm.sides[1], m.s2.map(x => x.id))) ||
-              (hasExact(dm.sides[0], m.s2.map(x => x.id)) && hasExact(dm.sides[1], m.s1.map(x => x.id)))
+              (hasExact(dm.sides[0], m.s1.map((x: any) => x.id)) && hasExact(dm.sides[1], m.s2.map((x: any) => x.id))) ||
+              (hasExact(dm.sides[0], m.s2.map((x: any) => x.id)) && hasExact(dm.sides[1], m.s1.map((x: any) => x.id)))
             );
             if (dbM) {
               const s = slotStatus(dbM);

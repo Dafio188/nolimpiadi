@@ -25,8 +25,8 @@ export async function POST(request: Request) {
     });
 
     const exactExistingMatch = existingMatches.find(m => {
-      const s1Athletes = m.sides[0]?.athletes.map(a => a.athleteId).sort().join(",") || "";
-      const s2Athletes = m.sides[1]?.athletes.map(a => a.athleteId).sort().join(",") || "";
+      const s1Athletes = m.sides[0]?.athletes.map((a: any) => a.athleteId).sort().join(",") || "";
+      const s2Athletes = m.sides[1]?.athletes.map((a: any) => a.athleteId).sort().join(",") || "";
       const targetS1 = [...side1AthleteIds].sort().join(",");
       const targetS2 = [...side2AthleteIds].sort().join(",");
       
