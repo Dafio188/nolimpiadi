@@ -306,7 +306,8 @@ function CalcioBalillaColumn({ data, onOpenAthlete }: { data: DisciplineData; on
                         </span>
                       ))}
                     </span>
-                  </span>
+
+
 
                   <span className={`shrink-0 font-black tabular-nums px-2 ${
                     isLive ? "text-emerald-200 text-sm" : isDone ? "text-white text-sm" : "text-amber-600/70 text-xs"
