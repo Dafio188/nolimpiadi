@@ -178,7 +178,7 @@ function MatchRow({ match, isLast, onOpenAthlete }: { match: FinalMatch; isLast:
                 }`}
                 onClick={() => a.id && onOpenAthlete(a.id)}
               >
-                {a.name ?? a.firstName}
+                {a.name}
                 {a.id && isLive && <Info className="w-2.5 h-2.5 text-emerald-300 opacity-50" />}
               </div>
             ))}
@@ -216,7 +216,7 @@ function MatchRow({ match, isLast, onOpenAthlete }: { match: FinalMatch; isLast:
                 onClick={() => a.id && onOpenAthlete(a.id)}
               >
                 {a.id && isLive && <Info className="w-2.5 h-2.5 text-emerald-300 opacity-50" />}
-                {a.name ?? a.firstName}
+                {a.name}
               </div>
             ))}
           </div>
