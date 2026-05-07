@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Zap, Target, Activity, Shield, Radio, RefreshCw, ArrowLeft } from "lucide-react";
+import { Trophy, Zap, Target, Activity, Shield, Radio, RefreshCw, ArrowLeft, Info } from "lucide-react";
 import Link from "next/link";
+import AthleteMatchModal from "@/components/ui/AthleteMatchModal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,8 +15,8 @@ interface FinalMatch {
   stage: string | null;
   label: string;
   status: MatchStatus;
-  s1: string[];
-  s2: string[];
+  s1: { id: string | null; name: string }[];
+  s2: { id: string | null; name: string }[];
   points1: number | null;
   points2: number | null;
   targetVictory: number;
@@ -91,14 +92,14 @@ function firstName(name: string): string {
 
 // ─── Single Match Row ─────────────────────────────────────────────────────────
 
-function MatchRow({ match, isLast }: { match: FinalMatch; isLast: boolean }) {
+function MatchRow({ match, isLast, onOpenAthlete }: { match: FinalMatch; isLast: boolean; onOpenAthlete: (id: string) => void }) {
   const isLive = match.status === "LIVE";
   const isDone = match.status === "DONE";
   const isUpcoming = match.status === "UPCOMING";
   const isFinal = match.stage === "FINALE";
 
-  const s1 = match.s1.length > 0 ? match.s1.map(firstName) : ["????"];
-  const s2 = match.s2.length > 0 ? match.s2.map(firstName) : ["????"];
+  const s1 = match.s1.length > 0 ? match.s1.map(a => ({ ...a, firstName: firstName(a.name) })) : [{ id: null, name: "????", firstName: "????" }];
+  const s2 = match.s2.length > 0 ? match.s2.map(a => ({ ...a, firstName: firstName(a.name) })) : [{ id: null, name: "????", firstName: "????" }];
 
   return (
     <motion.div
@@ -163,18 +164,22 @@ function MatchRow({ match, isLast }: { match: FinalMatch; isLast: boolean }) {
         <div className="flex items-center gap-2">
           {/* Side 1 */}
           <div className="flex-1 text-right">
-            {s1.map((n, i) => (
+            {match.s1.map((a, i) => (
               <div
                 key={i}
-                className={`leading-tight font-bold truncate text-right ${
+                className={`leading-tight font-bold truncate text-right flex items-center justify-end gap-1 ${
+                  a.id ? "cursor-pointer hover:text-blue-400" : ""
+                } ${
                   isLive
                     ? "text-white text-sm"
                     : isDone
                     ? "text-red-100 text-sm"
                     : "text-amber-200/80 text-xs"
                 }`}
+                onClick={() => a.id && onOpenAthlete(a.id)}
               >
-                {n}
+                {a.name ?? a.firstName}
+                {a.id && isLive && <Info className="w-2.5 h-2.5 text-emerald-300 opacity-50" />}
               </div>
             ))}
           </div>
@@ -196,18 +201,22 @@ function MatchRow({ match, isLast }: { match: FinalMatch; isLast: boolean }) {
 
           {/* Side 2 */}
           <div className="flex-1 text-left">
-            {s2.map((n, i) => (
+            {match.s2.map((a, i) => (
               <div
                 key={i}
-                className={`leading-tight font-bold truncate text-left ${
+                className={`leading-tight font-bold truncate text-left flex items-center justify-start gap-1 ${
+                  a.id ? "cursor-pointer hover:text-blue-400" : ""
+                } ${
                   isLive
                     ? "text-white text-sm"
                     : isDone
                     ? "text-red-100 text-sm"
                     : "text-amber-200/80 text-xs"
                 }`}
+                onClick={() => a.id && onOpenAthlete(a.id)}
               >
-                {n}
+                {a.id && isLive && <Info className="w-2.5 h-2.5 text-emerald-300 opacity-50" />}
+                {a.name ?? a.firstName}
               </div>
             ))}
           </div>
@@ -219,7 +228,7 @@ function MatchRow({ match, isLast }: { match: FinalMatch; isLast: boolean }) {
 
 // ─── Calcio Balilla Column (round-robin girone) ───────────────────────────────
 
-function CalcioBalillaColumn({ data }: { data: DisciplineData }) {
+function CalcioBalillaColumn({ data, onOpenAthlete }: { data: DisciplineData; onOpenAthlete: (id: string) => void }) {
   const colors = DISCIPLINE_COLORS["CALCIO_BALILLA"];
   const Icon = DISCIPLINE_ICONS["CALCIO_BALILLA"];
   const liveCount = data.matches.filter((m) => m.status === "LIVE").length;
@@ -286,10 +295,17 @@ function CalcioBalillaColumn({ data }: { data: DisciplineData }) {
 
                 {/* Sfidanti */}
                 <div className="flex-1 flex items-center justify-between gap-1 min-w-0">
-                  <span className={`text-xs font-bold truncate ${
-                    isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"
-                  }`}>
-                    {s1.join(" & ")}
+                    <span className="flex flex-wrap items-center justify-end gap-1">
+                      {match.s1.map((a, i) => (
+                        <span 
+                          key={i} 
+                          className={`cursor-pointer hover:text-blue-400 ${isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"}`}
+                          onClick={() => a.id && onOpenAthlete(a.id)}
+                        >
+                          {firstName(a.name)}{i < match.s1.length - 1 ? " & " : ""}
+                        </span>
+                      ))}
+                    </span>
                   </span>
 
                   <span className={`shrink-0 font-black tabular-nums px-2 ${
@@ -302,10 +318,18 @@ function CalcioBalillaColumn({ data }: { data: DisciplineData }) {
                       : "–"}
                   </span>
 
-                  <span className={`text-xs font-bold truncate text-right ${
-                    isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"
-                  }`}>
-                    {s2.join(" & ")}
+                  <span className="flex-1 min-w-0 text-xs font-bold text-right flex flex-col justify-center">
+                    <span className="flex flex-wrap items-center justify-start gap-1">
+                      {match.s2.map((a, i) => (
+                        <span 
+                          key={i} 
+                          className={`cursor-pointer hover:text-blue-400 ${isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"}`}
+                          onClick={() => a.id && onOpenAthlete(a.id)}
+                        >
+                          {firstName(a.name)}{i < match.s2.length - 1 ? " & " : ""}
+                        </span>
+                      ))}
+                    </span>
                   </span>
                 </div>
 
@@ -329,7 +353,7 @@ function CalcioBalillaColumn({ data }: { data: DisciplineData }) {
 
 // ─── Discipline Column (bracket: QUARTI → SEMIFINALI → FINALE) ───────────────
 
-function DisciplineColumn({ data }: { data: DisciplineData }) {
+function DisciplineColumn({ data, onOpenAthlete }: { data: DisciplineData; onOpenAthlete: (id: string) => void }) {
   const colors = DISCIPLINE_COLORS[data.kind] ?? DISCIPLINE_COLORS["PING_PONG"];
   const Icon = DISCIPLINE_ICONS[data.kind] ?? Trophy;
   const liveCount = data.matches.filter((m) => m.status === "LIVE").length;
@@ -371,11 +395,12 @@ function DisciplineColumn({ data }: { data: DisciplineData }) {
         ) : (
           <AnimatePresence mode="popLayout">
             {data.matches.map((match, i) => (
-              <MatchRow
-                key={match.id}
-                match={match}
-                isLast={i === data.matches.length - 1}
-              />
+                <MatchRow
+                  key={match.id}
+                  match={match}
+                  isLast={i === data.matches.length - 1}
+                  onOpenAthlete={onOpenAthlete}
+                />
             ))}
           </AnimatePresence>
         )}
@@ -392,6 +417,15 @@ export default function FinaliTVPage() {
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Modal State
+  const [selectedAthleteId, setSelectedAthleteId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (id: string) => {
+    setSelectedAthleteId(id);
+    setIsModalOpen(true);
+  };
 
   const fetchData = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
@@ -438,6 +472,12 @@ export default function FinaliTVPage() {
   return (
     // Layout TV: 100vh, nessuno scroll
     <div className="fixed inset-0 bg-zinc-950 flex flex-col overflow-hidden">
+      {/* Athlete Detail Modal */}
+      <AthleteMatchModal 
+        athleteId={selectedAthleteId} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
 
       {/* ─── Header fisso ─── */}
       <header className="shrink-0 flex items-center justify-between px-6 py-3 border-b border-white/5 bg-black/40 backdrop-blur-xl">
@@ -513,8 +553,8 @@ export default function FinaliTVPage() {
       <main className="flex-1 flex gap-4 p-4 min-h-0 overflow-hidden">
         {disciplines.map((d) =>
           d.kind === "CALCIO_BALILLA"
-            ? <CalcioBalillaColumn key={d.kind} data={d} />
-            : <DisciplineColumn key={d.kind} data={d} />
+            ? <CalcioBalillaColumn key={d.kind} data={d} onOpenAthlete={openModal} />
+            : <DisciplineColumn key={d.kind} data={d} onOpenAthlete={openModal} />
         )}
 
         {/* Fallback se non ci sono dati */}

@@ -22,7 +22,8 @@ export async function GET() {
         CASE 
           WHEN ms.points > (SELECT points FROM match_sides WHERE match_id = m.id AND side != ms.side LIMIT 1) THEN 1 
           ELSE 0 
-        END AS is_win
+        END AS is_win,
+        m.played_at
       FROM match_side_athletes msa
       JOIN match_sides ms ON ms.id = msa.side_id
       JOIN matches m ON m.id = ms.match_id;

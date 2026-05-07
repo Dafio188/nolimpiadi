@@ -10,8 +10,8 @@ type Slot = {
   stage: string;
   label: string;
   status: "DONE" | "LIVE" | "UPCOMING";
-  s1: string[];
-  s2: string[];
+  s1: { id: string | null; name: string }[];
+  s2: { id: string | null; name: string }[];
   points1: number | null;
   points2: number | null;
   targetVictory: number;
@@ -68,20 +68,20 @@ export async function GET() {
       return {
         id: m.id, stage, label,
         status: slotStatus(m),
-        s1: s1?.athletes.map((a: any) => a.athlete.name) ?? [],
-        s2: s2?.athletes.map((a: any) => a.athlete.name) ?? [],
+        s1: s1?.athletes.map((a: any) => ({ id: a.athlete.id, name: a.athlete.name })) ?? [],
+        s2: s2?.athletes.map((a: any) => ({ id: a.athlete.id, name: a.athlete.name })) ?? [],
         points1: p0 !== null && p0 >= 0 ? p0 : null,
         points2: p1 !== null && p1 >= 0 ? p1 : null,
         targetVictory: m.targetVictory,
       };
     };
 
-    const upcoming = (stage: string, label: string, a1: string | null, a2: string | null, tv = 0): Slot => ({
+    const upcoming = (stage: string, label: string, a1: string | null, a2: string | null, tv = 0, a1Id: string | null = null, a2Id: string | null = null): Slot => ({
       id: `up-${stage}-${label.replace(/\s/g, "_")}-${a1 ?? "?"}-${a2 ?? "?"}`,
       stage, label,
       status: "UPCOMING",
-      s1: [a1 ?? "????"],
-      s2: [a2 ?? "????"],
+      s1: [{ id: a1Id, name: a1 ?? "????" }],
+      s2: [{ id: a2Id, name: a2 ?? "????" }],
       points1: null, points2: null,
       targetVictory: tv,
     });
@@ -150,14 +150,16 @@ export async function GET() {
               const p1 = side1?.points ?? null;
               slots.push({
                 id: dbM.id, stage: "GIRONE", label, status: s,
-                s1: m.s1.map(a => a.name), s2: m.s2.map(a => a.name),
+                s1: m.s1.map(a => ({ id: a.id, name: a.name })), 
+                s2: m.s2.map(a => ({ id: a.id, name: a.name })),
                 points1: p0 !== null && p0 >= 0 ? p0 : null,
                 points2: p1 !== null && p1 >= 0 ? p1 : null,
                 targetVictory: dbM.targetVictory,
               });
             } else {
               slots.push({ id: `up-cb-${m.n}`, stage: "GIRONE", label, status: "UPCOMING",
-                s1: m.s1.map(a => a.name), s2: m.s2.map(a => a.name),
+                s1: m.s1.map(a => ({ id: a.id, name: a.name })), 
+                s2: m.s2.map(a => ({ id: a.id, name: a.name })),
                 points1: null, points2: null, targetVictory: tv });
             }
           }
@@ -195,26 +197,26 @@ export async function GET() {
         // QUARTI (solo se 6 qualificati)
         if (rankings.length >= 6) {
           const lq1 = "3° vs 6°";
-          slots.push(q1 ? fromDb(q1, "QUARTI", lq1) : upcoming("QUARTI", lq1, rankings[2]?.name ?? null, rankings[5]?.name ?? null, tv));
+          slots.push(q1 ? fromDb(q1, "QUARTI", lq1) : upcoming("QUARTI", lq1, rankings[2]?.name ?? null, rankings[5]?.name ?? null, tv, rankings[2]?.id ?? null, rankings[5]?.id ?? null));
           const lq2 = "4° vs 5°";
-          slots.push(q2 ? fromDb(q2, "QUARTI", lq2) : upcoming("QUARTI", lq2, rankings[3]?.name ?? null, rankings[4]?.name ?? null, tv));
+          slots.push(q2 ? fromDb(q2, "QUARTI", lq2) : upcoming("QUARTI", lq2, rankings[3]?.name ?? null, rankings[4]?.name ?? null, tv, rankings[3]?.id ?? null, rankings[4]?.id ?? null));
         }
 
         // SEMIFINALI
         const ls1 = rankings.length >= 5 ? "1° vs Vinc. Quarti" : "1° vs 4°";
         const aS1_2 = wQ2 ? byId(wQ2)?.name ?? null : null;
-        slots.push(s1 ? fromDb(s1, "SEMIFINALI", ls1) : upcoming("SEMIFINALI", ls1, rankings[0]?.name ?? null, aS1_2, tv));
+        slots.push(s1 ? fromDb(s1, "SEMIFINALI", ls1) : upcoming("SEMIFINALI", ls1, rankings[0]?.name ?? null, aS1_2, tv, rankings[0]?.id ?? null, wQ2));
 
         const ls2 = rankings.length >= 6 ? "2° vs Vinc. Quarti" : "2° vs 3°";
         const aS2_2 = wQ1 ? byId(wQ1)?.name ?? null : null;
-        slots.push(s2 ? fromDb(s2, "SEMIFINALI", ls2) : upcoming("SEMIFINALI", ls2, rankings[1]?.name ?? null, aS2_2, tv));
+        slots.push(s2 ? fromDb(s2, "SEMIFINALI", ls2) : upcoming("SEMIFINALI", ls2, rankings[1]?.name ?? null, aS2_2, tv, rankings[1]?.id ?? null, wQ1));
 
         // FINALI
         slots.push(f1 ? fromDb(f1, "FINALE", "🥇 1° – 2° posto")
-          : upcoming("FINALE", "🥇 1° – 2° posto", byId(wS1)?.name ?? null, byId(wS2)?.name ?? null, tv));
+          : upcoming("FINALE", "🥇 1° – 2° posto", byId(wS1)?.name ?? null, byId(wS2)?.name ?? null, tv, wS1, wS2));
 
         slots.push(f3 ? fromDb(f3, "FINALE", "🥉 3° – 4° posto")
-          : upcoming("FINALE", "🥉 3° – 4° posto", byId(lS1)?.name ?? null, byId(lS2)?.name ?? null, tv));
+          : upcoming("FINALE", "🥉 3° – 4° posto", byId(lS1)?.name ?? null, byId(lS2)?.name ?? null, tv, lS1, lS2));
       }
 
       for (const s of slots) {

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, RefreshCw, User, Medal, TrendingUp } from "lucide-react";
+import { Trophy, RefreshCw, User, Medal, TrendingUp, Info } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
+import AthleteMatchModal from "@/components/ui/AthleteMatchModal";
 
 type Row = {
   athlete_id: string;
@@ -30,6 +31,15 @@ export default function ClassificaLive({ initialRows = [] }: Props) {
   const [loading, setLoading] = useState(!initialRows.length);
   const [error, setError] = useState<string | null>(null);
   const [updatedAt, setUpdatedAt] = useState<number | null>(null);
+
+  // Modal State
+  const [selectedAthleteId, setSelectedAthleteId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (id: string) => {
+    setSelectedAthleteId(id);
+    setIsModalOpen(true);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -73,12 +83,22 @@ export default function ClassificaLive({ initialRows = [] }: Props) {
 
   return (
     <div className="flex flex-col gap-8">
+      {/* Athlete Detail Modal */}
+      <AthleteMatchModal 
+        athleteId={selectedAthleteId} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
+
       {/* Top Leader Card */}
       <PremiumCard className="relative overflow-visible bg-accent/5 ring-1 ring-accent/20">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             <div className="relative">
-              <div className="bg-accent p-4 rounded-3xl shadow-xl shadow-accent/40 rotate-3">
+              <div 
+                className="bg-accent p-4 rounded-3xl shadow-xl shadow-accent/40 rotate-3 cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => leader && openModal(leader.athlete_id)}
+              >
                 <Trophy className="w-10 h-10 text-white" />
               </div>
               <motion.div 
@@ -91,7 +111,10 @@ export default function ClassificaLive({ initialRows = [] }: Props) {
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/70 mb-1">In Vetta</p>
-              <h2 className="text-3xl font-black text-foreground leading-none">
+              <h2 
+                className="text-3xl font-black text-foreground leading-none cursor-pointer hover:text-accent transition-colors"
+                onClick={() => leader && openModal(leader.athlete_id)}
+              >
                 {loading ? "Caricamento..." : leader ? leader.name : "Nessun dato"}
               </h2>
               <div className="mt-2 flex items-center gap-2 text-zinc-500 font-bold text-sm">
@@ -154,12 +177,20 @@ export default function ClassificaLive({ initialRows = [] }: Props) {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <Link href={`/atleti/${r.athlete_id}`} className="flex items-center gap-3 group/link">
-                        <div className="bg-zinc-100 p-2 rounded-lg group-hover/link:bg-accent/10 transition-colors">
-                          <User className="w-4 h-4 text-zinc-500 group-hover/link:text-accent transition-colors" />
+                      <div 
+                        className="flex items-center gap-3 cursor-pointer group/athlete"
+                        onClick={() => openModal(r.athlete_id)}
+                      >
+                        <div className="bg-zinc-100 p-2 rounded-lg group-hover/athlete:bg-accent/10 transition-colors">
+                          <User className="w-4 h-4 text-zinc-500 group-hover/athlete:text-accent transition-colors" />
                         </div>
-                        <span className="font-bold text-foreground group-hover/link:text-accent transition-colors">{r.name}</span>
-                      </Link>
+                        <div className="flex flex-col">
+                          <span className="font-bold text-foreground group-hover/athlete:text-accent transition-colors flex items-center gap-1.5">
+                            {r.name}
+                            <Info className="w-3 h-3 text-zinc-300 opacity-0 group-hover/athlete:opacity-100 transition-all" />
+                          </span>
+                        </div>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-center font-bold text-zinc-600 text-sm">{formatNumber(r.qualification_weighted)}</td>
                     <td className="px-6 py-4 text-center font-bold text-zinc-600 text-sm">{formatNumber(r.finals_weighted)}</td>

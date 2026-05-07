@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import PremiumCard from "@/components/ui/PremiumCard";
-import { Trophy, Save, Trash2 } from "lucide-react";
+import { Trophy, Save, Trash2, Info } from "lucide-react";
 import { toast } from "sonner";
+import AthleteMatchModal from "@/components/ui/AthleteMatchModal";
 
 interface TournamentBracketListProps {
   disciplines: Record<string, any>;
@@ -58,6 +59,15 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
   };
 
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Modal State
+  const [selectedAthleteId, setSelectedAthleteId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (id: string) => {
+    setSelectedAthleteId(id);
+    setIsModalOpen(true);
+  };
 
   const getPlayableMatches = () => {
     const playable: { discId: string, disc: string, title: string, athletes: string, athleteIds: string[] }[] = [];
@@ -217,6 +227,13 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
 
   return (
     <div className="space-y-12">
+      {/* Athlete Detail Modal */}
+      <AthleteMatchModal 
+        athleteId={selectedAthleteId} 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
+
       <div className="flex justify-end bg-amber-50 p-4 rounded-xl border border-amber-200 shadow-sm">
         <div className="flex-1">
           <h3 className="font-bold text-amber-800">Risoluzione Problemi (Giocatori Bloccati)</h3>
@@ -281,10 +298,10 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
         const discMatches = matches.filter(m => m.disciplineId === disc.id);
         
         if (disc.kind === "CALCIO_BALILLA") {
-          return <CalcioBalillaFinals key={disc.kind} discipline={disc} matches={discMatches} onDeleteMatch={handleDeleteMatch} busyAthletes={busyAthleteIds} />;
+          return <CalcioBalillaFinals key={disc.kind} discipline={disc} matches={discMatches} onDeleteMatch={handleDeleteMatch} busyAthletes={busyAthleteIds} onOpenAthlete={openModal} />;
         }
         
-        return <DisciplineBracket key={disc.kind} discipline={disc} matches={discMatches} onDeleteMatch={handleDeleteMatch} busyAthletes={busyAthleteIds} />;
+        return <DisciplineBracket key={disc.kind} discipline={disc} matches={discMatches} onDeleteMatch={handleDeleteMatch} busyAthletes={busyAthleteIds} onOpenAthlete={openModal} />;
       })}
     </div>
   );
@@ -293,7 +310,7 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
 // --------------------------------------------------------------------------------------
 // 1. CALCIO-BALILLA: GIRONE ALL'ITALIANA (5 PLAYERS, IN DOPPIO)
 // --------------------------------------------------------------------------------------
-function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes }: { discipline: any, matches: any[], onDeleteMatch: (id: string) => void, busyAthletes: Set<string> }) {
+function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes, onOpenAthlete }: { discipline: any, matches: any[], onDeleteMatch: (id: string) => void, busyAthletes: Set<string>, onOpenAthlete: (id: string) => void }) {
   const rankings = discipline.rankings || [];
   
   // Top 5 athletes
@@ -440,10 +457,20 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes 
                 <div className="flex items-center justify-between gap-4">
                   {/* SQUADRA 1 */}
                   <div className="flex-1 flex flex-col items-center">
-                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"}`}>
-                      <span className={busyAthletes.has(m.s1[0]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s1[0].name}</span>
-                      {" + "}
-                      <span className={busyAthletes.has(m.s1[1]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s1[1].name}</span>
+                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center gap-1`}>
+                      <span 
+                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                        onClick={() => onOpenAthlete(m.s1[0]?.id)}
+                      >
+                        {m.s1[0].name}
+                      </span>
+                      <span>+</span>
+                      <span 
+                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                        onClick={() => onOpenAthlete(m.s1[1]?.id)}
+                      >
+                        {m.s1[1].name}
+                      </span>
                     </span>
                     {!isStarted && isS1Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
                     {isStarted && (
@@ -460,10 +487,20 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes 
 
                   {/* SQUADRA 2 */}
                   <div className="flex-1 flex flex-col items-center">
-                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"}`}>
-                      <span className={busyAthletes.has(m.s2[0]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s2[0].name}</span>
-                      {" + "}
-                      <span className={busyAthletes.has(m.s2[1]?.id) && !isStarted ? "text-orange-500" : ""}>{m.s2[1].name}</span>
+                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center gap-1`}>
+                      <span 
+                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                        onClick={() => onOpenAthlete(m.s2[0]?.id)}
+                      >
+                        {m.s2[0].name}
+                      </span>
+                      <span>+</span>
+                      <span 
+                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                        onClick={() => onOpenAthlete(m.s2[1]?.id)}
+                      >
+                        {m.s2[1].name}
+                      </span>
                     </span>
                     {!isStarted && isS2Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
                     {isStarted && (
@@ -524,7 +561,7 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes 
 // --------------------------------------------------------------------------------------
 // 2. ALTRE DISCIPLINE: TABELLONE A ELIMINAZIONE DIRETTA (TENNIS)
 // --------------------------------------------------------------------------------------
-function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes }: { discipline: any, matches: any[], onDeleteMatch: (id: string) => void, busyAthletes: Set<string> }) {
+function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, onOpenAthlete }: { discipline: any, matches: any[], onDeleteMatch: (id: string) => void, busyAthletes: Set<string>, onOpenAthlete: (id: string) => void }) {
   const rankings = discipline.rankings || [];
   
   const [overrides, setOverrides] = useState<Record<string, string>>({});
@@ -811,6 +848,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes }:
             onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f3_2: id}))}
             onDelete={f3 ? () => onDeleteMatch(f3.id) : undefined}
             busyAthletes={busyAthletes}
+            onOpenAthlete={onOpenAthlete}
           />
         </div>
       </div>
@@ -820,7 +858,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes }:
 
 function MatchBox({ 
   title, a1, a2, p1, p2, onChange, onSave, disabled, isSaved, waitingLabel = "In attesa...", accent, isInProgress, onSendToCourt,
-  allAthletes, onOverrideA1, onOverrideA2, onDelete, busyAthletes
+  allAthletes, onOverrideA1, onOverrideA2, onDelete, busyAthletes, onOpenAthlete
 }: any) {
   const isStarted = isSaved || isInProgress;
   const isA1Busy = a1 && busyAthletes?.has(a1.id);
@@ -855,8 +893,14 @@ function MatchBox({
               {isA1Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
             </div>
           ) : (
-            <div className={`flex-1 text-sm font-bold truncate ${!a1 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}>
-              {a1 ? a1.name : waitingLabel}
+            <div className="flex-1 flex items-center gap-2">
+              <span 
+                className={`text-sm font-bold truncate transition-colors ${a1 ? "cursor-pointer hover:text-blue-600" : "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                onClick={() => a1 && onOpenAthlete(a1.id)}
+              >
+                {a1 ? a1.name : waitingLabel}
+              </span>
+              {a1 && <Info className="w-3 h-3 text-zinc-300 opacity-0 group-hover:opacity-100 transition-all cursor-pointer" onClick={() => onOpenAthlete(a1.id)} />}
             </div>
           )}
           {isStarted && (
@@ -885,8 +929,14 @@ function MatchBox({
               {isA2Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
             </div>
           ) : (
-            <div className={`flex-1 text-sm font-bold truncate ${!a2 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}>
-              {a2 ? a2.name : waitingLabel}
+            <div className="flex-1 flex items-center gap-2">
+              <span 
+                className={`text-sm font-bold truncate transition-colors ${a2 ? "cursor-pointer hover:text-blue-600" : "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                onClick={() => a2 && onOpenAthlete(a2.id)}
+              >
+                {a2 ? a2.name : waitingLabel}
+              </span>
+              {a2 && <Info className="w-3 h-3 text-zinc-300 opacity-0 group-hover:opacity-100 transition-all cursor-pointer" onClick={() => onOpenAthlete(a2.id)} />}
             </div>
           )}
           {isStarted && (
