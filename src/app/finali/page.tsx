@@ -272,8 +272,8 @@ function CalcioBalillaColumn({ data, onOpenAthlete }: { data: DisciplineData; on
           data.matches.map((match, i) => {
             const isLive = match.status === "LIVE";
             const isDone = match.status === "DONE";
-            const s1 = match.s1.length > 0 ? match.s1.map(firstName) : ["????"];
-            const s2 = match.s2.length > 0 ? match.s2.map(firstName) : ["????"];
+            const s1 = match.s1.length > 0 ? match.s1.map(a => firstName(a.name)) : ["????"];
+            const s2 = match.s2.length > 0 ? match.s2.map(a => firstName(a.name)) : ["????"];
 
             return (
               <div
