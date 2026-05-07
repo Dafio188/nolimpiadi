@@ -116,9 +116,10 @@ export async function GET() {
         orderBy: { playedAt: "asc" },
       });
 
-      type StageKey = "QUARTI" | "SEMIFINALI" | "FINALE";
-      const winnersByKindStageKey = new Map<string, string>();
+      type StageKey = "QUARTI" | "SEMIFINALI" | "FINALE" | "FINALE_34" | "FINALE_56";
       const playedByKindStageKey = new Set<string>();
+      const winnersByKindStageKey = new Map<string, string>();
+      const losersByKindStageKey = new Map<string, string>();
 
       for (const m of finalsMatches) {
         const kind = m.discipline.kind;
@@ -135,7 +136,9 @@ export async function GET() {
         if (typeof sideA?.points !== "number" || typeof sideB?.points !== "number") continue;
         if (sideA.points === sideB.points) continue;
         const winnerId = sideA.points > sideB.points ? ids0[0] : ids1[0];
+        const loserId = sideA.points < sideB.points ? ids0[0] : ids1[0];
         winnersByKindStageKey.set(playedKey, winnerId);
+        losersByKindStageKey.set(playedKey, loserId);
       }
 
       function nextFinalsForSix(kind: DisciplineKind, seeds: string[]) {
@@ -154,6 +157,17 @@ export async function GET() {
         if (!q2Played) return { finalStage: "QUARTI" as const, side1: [s4], side2: [s5], label: "Quarti (4 vs 5)" };
         const wQ1 = winnersByKindStageKey.get(`${kind}:QUARTI:${q1Key}`) ?? null;
         const wQ2 = winnersByKindStageKey.get(`${kind}:QUARTI:${q2Key}`) ?? null;
+        const lQ1 = losersByKindStageKey.get(`${kind}:QUARTI:${q1Key}`) ?? null;
+        const lQ2 = losersByKindStageKey.get(`${kind}:QUARTI:${q2Key}`) ?? null;
+
+        // Finale 5°/6° (non appena i quarti sono finiti)
+        if (lQ1 && lQ2) {
+          const f56Key = matchKeySingles(lQ1, lQ2);
+          if (!playedByKindStageKey.has(`${kind}:FINALE_56:${f56Key}`)) {
+            return { finalStage: "FINALE_56" as const, side1: [lQ1], side2: [lQ2], label: "Finale 5°/6°" };
+          }
+        }
+
         if (!wQ1 || !wQ2) return null;
         const sf1Key = matchKeySingles(s1, wQ2);
         const sf2Key = matchKeySingles(s2, wQ1);
@@ -161,12 +175,28 @@ export async function GET() {
         const sf2Played = playedByKindStageKey.has(`${kind}:SEMIFINALI:${sf2Key}`);
         if (!sf1Played) return { finalStage: "SEMIFINALI" as const, side1: [s1], side2: [wQ2], label: "Semifinale 1" };
         if (!sf2Played) return { finalStage: "SEMIFINALI" as const, side1: [s2], side2: [wQ1], label: "Semifinale 2" };
+        
         const wSF1 = winnersByKindStageKey.get(`${kind}:SEMIFINALI:${sf1Key}`) ?? null;
         const wSF2 = winnersByKindStageKey.get(`${kind}:SEMIFINALI:${sf2Key}`) ?? null;
+        const lSF1 = losersByKindStageKey.get(`${kind}:SEMIFINALI:${sf1Key}`) ?? null;
+        const lSF2 = losersByKindStageKey.get(`${kind}:SEMIFINALI:${sf2Key}`) ?? null;
+
         if (!wSF1 || !wSF2) return null;
+
+        // Finale 1°/2°
         const fKey = matchKeySingles(wSF1, wSF2);
-        const fPlayed = playedByKindStageKey.has(`${kind}:FINALE:${fKey}`);
-        if (!fPlayed) return { finalStage: "FINALE" as const, side1: [wSF1], side2: [wSF2], label: "Finale" };
+        if (!playedByKindStageKey.has(`${kind}:FINALE:${fKey}`)) {
+          return { finalStage: "FINALE" as const, side1: [wSF1], side2: [wSF2], label: "Finale 1°/2°" };
+        }
+
+        // Finale 3°/4°
+        if (lSF1 && lSF2) {
+          const f34Key = matchKeySingles(lSF1, lSF2);
+          if (!playedByKindStageKey.has(`${kind}:FINALE_34:${f34Key}`)) {
+            return { finalStage: "FINALE_34" as const, side1: [lSF1], side2: [lSF2], label: "Finale 3°/4°" };
+          }
+        }
+
         return null;
       }
 

@@ -30,7 +30,7 @@ export const disciplineSeeds = [
     name: "Freccette",
     coefficient: 1,
     teamSize: 1,
-    targetFixed: 220,
+    targetFixed: 210,
     targetMin: null,
     targetMax: null,
   },

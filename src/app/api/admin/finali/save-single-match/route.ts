@@ -45,7 +45,7 @@ export async function POST(req: Request) {
       data: {
         disciplineId,
         phase: "FINALI",
-        finalStage: stage as FinalStage,
+        finalStage: "FINALE",
         targetVictory: target,
       }
     });

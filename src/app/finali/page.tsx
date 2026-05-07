@@ -15,8 +15,8 @@ interface FinalMatch {
   stage: string | null;
   label: string;
   status: MatchStatus;
-  s1: { id: string | null; name: string }[];
-  s2: { id: string | null; name: string }[];
+  s1: { id: string | null; name: string; letter: string | null }[];
+  s2: { id: string | null; name: string; letter: string | null }[];
   points1: number | null;
   points2: number | null;
   targetVictory: number;
@@ -80,7 +80,9 @@ const DISCIPLINE_COLORS: Record<string, { border: string; bg: string; icon: stri
 const STAGE_LABELS: Record<string, string> = {
   QUARTI: "Quarti",
   SEMIFINALI: "Semifinale",
-  FINALE: "Finale",
+  FINALE: "Finale 1°/2°",
+  FINALE_34: "Finale 3°/4°",
+  FINALE_56: "Finale 5°/6°",
   GIRONE: "Girone",
 };
 
@@ -90,13 +92,32 @@ function firstName(name: string): string {
   return name.split(" ")[0] ?? name;
 }
 
+// ─── Badge Lettera ───────────────────────────────────────────────────────────
+
+function LetterBadge({ letter, isLive, isDone }: { letter: string | null; isLive: boolean; isDone: boolean }) {
+  if (!letter) return null;
+  return (
+    <span
+      className={`inline-flex items-center justify-center w-4 h-4 rounded-full text-[9px] font-black shrink-0 ${
+        isLive
+          ? "bg-emerald-400/30 text-emerald-200 border border-emerald-400/50"
+          : isDone
+          ? "bg-red-500/30 text-red-200 border border-red-500/40"
+          : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+      }`}
+    >
+      {letter}
+    </span>
+  );
+}
+
 // ─── Single Match Row ─────────────────────────────────────────────────────────
 
 function MatchRow({ match, isLast, onOpenAthlete }: { match: FinalMatch; isLast: boolean; onOpenAthlete: (id: string) => void }) {
   const isLive = match.status === "LIVE";
   const isDone = match.status === "DONE";
   const isUpcoming = match.status === "UPCOMING";
-  const isFinal = match.stage === "FINALE";
+  const isFinal = match.stage?.startsWith("FINALE");
 
   const s1 = match.s1.length > 0 ? match.s1.map(a => ({ ...a, firstName: firstName(a.name) })) : [{ id: null, name: "????", firstName: "????" }];
   const s2 = match.s2.length > 0 ? match.s2.map(a => ({ ...a, firstName: firstName(a.name) })) : [{ id: null, name: "????", firstName: "????" }];
@@ -178,7 +199,8 @@ function MatchRow({ match, isLast, onOpenAthlete }: { match: FinalMatch; isLast:
                 }`}
                 onClick={() => a.id && onOpenAthlete(a.id)}
               >
-                {a.name}
+                <LetterBadge letter={a.letter} isLive={isLive} isDone={isDone} />
+                {firstName(a.name)}
                 {a.id && isLive && <Info className="w-2.5 h-2.5 text-emerald-300 opacity-50" />}
               </div>
             ))}
@@ -216,7 +238,8 @@ function MatchRow({ match, isLast, onOpenAthlete }: { match: FinalMatch; isLast:
                 onClick={() => a.id && onOpenAthlete(a.id)}
               >
                 {a.id && isLive && <Info className="w-2.5 h-2.5 text-emerald-300 opacity-50" />}
-                {a.name}
+                <LetterBadge letter={a.letter} isLive={isLive} isDone={isDone} />
+                {firstName(a.name)}
               </div>
             ))}
           </div>
@@ -299,9 +322,10 @@ function CalcioBalillaColumn({ data, onOpenAthlete }: { data: DisciplineData; on
                       {match.s1.map((a, i) => (
                         <span 
                           key={i} 
-                          className={`cursor-pointer hover:text-blue-400 ${isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"}`}
+                          className={`flex items-center gap-1 cursor-pointer hover:text-blue-400 ${isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"}`}
                           onClick={() => a.id && onOpenAthlete(a.id)}
                         >
+                          <LetterBadge letter={a.letter} isLive={isLive} isDone={isDone} />
                           {firstName(a.name)}{i < match.s1.length - 1 ? " & " : ""}
                         </span>
                       ))}
@@ -324,9 +348,10 @@ function CalcioBalillaColumn({ data, onOpenAthlete }: { data: DisciplineData; on
                       {match.s2.map((a, i) => (
                         <span 
                           key={i} 
-                          className={`cursor-pointer hover:text-blue-400 ${isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"}`}
+                          className={`flex items-center gap-1 cursor-pointer hover:text-blue-400 ${isLive ? "text-white" : isDone ? "text-red-100" : "text-amber-200/80"}`}
                           onClick={() => a.id && onOpenAthlete(a.id)}
                         >
+                          <LetterBadge letter={a.letter} isLive={isLive} isDone={isDone} />
                           {firstName(a.name)}{i < match.s2.length - 1 ? " & " : ""}
                         </span>
                       ))}

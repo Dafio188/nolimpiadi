@@ -117,7 +117,56 @@ export default async function ClassificaGeneraleAdmin() {
         existing.score += side2.points;
       });
     } else {
-      if (match.finalStage === "FINALE") {
+      // Identificazione della finale (1-2, 3-4 o 5-6) se lo stage è genericamente 'FINALE'
+      let isTrueFinal = match.finalStage === "FINALE";
+      let isConsolation34 = match.finalStage === ("FINALE_34" as any);
+      let isConsolation56 = match.finalStage === ("FINALE_56" as any);
+
+      if (isTrueFinal) {
+        // 1. Recuperiamo i vincitori delle semi per questo sport
+        const winnersOfSemis = finalMatches
+          .filter(m => m.discipline.kind === kind && m.finalStage === "SEMIFINALI")
+          .map(m => {
+            const s1 = m.sides.find(s => s.side === 1);
+            const s2 = m.sides.find(s => s.side === 2);
+            if (s1 && s2 && s1.points >= 0 && s2.points >= 0) {
+              return s1.points > s2.points ? s1.athletes[0]?.athleteId : s2.athletes[0]?.athleteId;
+            }
+            return null;
+          })
+          .filter(Boolean);
+
+        // 2. Recuperiamo i perdenti dei quarti per questo sport
+        const losersOfQuarts = finalMatches
+          .filter(m => m.discipline.kind === kind && m.finalStage === "QUARTI")
+          .map(m => {
+            const s1 = m.sides.find(s => s.side === 1);
+            const s2 = m.sides.find(s => s.side === 2);
+            if (s1 && s2 && s1.points >= 0 && s2.points >= 0) {
+              return s1.points < s2.points ? s1.athletes[0]?.athleteId : s2.athletes[0]?.athleteId;
+            }
+            return null;
+          })
+          .filter(Boolean);
+
+        const playersInMatch = [...side1.athletes, ...side2.athletes].map(a => a.athleteId);
+
+        if (winnersOfSemis.length > 0) {
+          const hasWinner = playersInMatch.some(id => winnersOfSemis.includes(id));
+          if (!hasWinner) {
+            // Se non ci sono vincitori di semi, è una finale di consolazione
+            isTrueFinal = false;
+            // Verifichiamo se sono perdenti dei quarti (5-6) o altro (3-4)
+            if (losersOfQuarts.length > 0 && playersInMatch.some(id => losersOfQuarts.includes(id))) {
+              isConsolation56 = true;
+            } else {
+              isConsolation34 = true;
+            }
+          }
+        }
+      }
+
+      if (isTrueFinal) {
         winner.athletes.forEach(sa => {
           disciplineRankingsMap[kind].standings.push({
             pos: 1,
@@ -134,23 +183,63 @@ export default async function ClassificaGeneraleAdmin() {
             isWinner: false
           });
         });
-      } else if (match.finalStage === "SEMIFINALI") {
-        loser.athletes.forEach(sa => {
+      } else if (isConsolation34) {
+        winner.athletes.forEach(sa => {
           disciplineRankingsMap[kind].standings.push({
             pos: 3,
             name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
-            stage: "Semifinalista",
+            stage: "3° Posto",
             isWinner: false
           });
         });
-      } else if (match.finalStage === "QUARTI") {
-         loser.athletes.forEach(sa => {
+        loser.athletes.forEach(sa => {
+          disciplineRankingsMap[kind].standings.push({
+            pos: 4,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "4° Posto",
+            isWinner: false
+          });
+        });
+      } else if (isConsolation56) {
+        winner.athletes.forEach(sa => {
           disciplineRankingsMap[kind].standings.push({
             pos: 5,
             name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
-            stage: "Quarti di Finale",
+            stage: "5° Posto",
             isWinner: false
           });
+        });
+        loser.athletes.forEach(sa => {
+          disciplineRankingsMap[kind].standings.push({
+            pos: 6,
+            name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+            stage: "6° Posto",
+            isWinner: false
+          });
+        });
+      } else if (match.finalStage === "SEMIFINALI") {
+        loser.athletes.forEach(sa => {
+          // Solo se non abbiamo già un piazzamento specifico da una finale 3/4
+          if (!disciplineRankingsMap[kind].standings.find((s: any) => s.name === sa.athlete.name.split(' ').slice(0, 2).join(' ') && s.pos < 5)) {
+            disciplineRankingsMap[kind].standings.push({
+              pos: 3,
+              name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+              stage: "Semifinalista",
+              isWinner: false
+            });
+          }
+        });
+      } else if (match.finalStage === "QUARTI") {
+         loser.athletes.forEach(sa => {
+          // Solo se non abbiamo già un piazzamento specifico da una finale 5/6
+          if (!disciplineRankingsMap[kind].standings.find((s: any) => s.name === sa.athlete.name.split(' ').slice(0, 2).join(' '))) {
+            disciplineRankingsMap[kind].standings.push({
+              pos: 5,
+              name: sa.athlete.name.split(' ').slice(0, 2).join(' '),
+              stage: "Quarti di Finale",
+              isWinner: false
+            });
+          }
         });
       }
     }

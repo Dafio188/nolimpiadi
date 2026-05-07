@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
   const disciplineKind = parseEnumValue(DisciplineKind, body.disciplineKind);
   const phase = parseEnumValue(MatchPhase, body.phase);
-  const finalStage = body.finalStage ? parseEnumValue(FinalStage, body.finalStage) : null;
+  const finalStage = body.finalStage as any;
   const targetVictory = parseIntField(body.targetVictory);
   const plannedSlotId = typeof body.plannedSlotId === "string" && body.plannedSlotId.trim() ? body.plannedSlotId : null;
 
@@ -183,7 +183,7 @@ if (plannedSlotId) {
       disciplineId: discipline.id,
       phase,
       targetVictory,
-      finalStage: phase === MatchPhase.FINALI ? finalStage : null,
+      finalStage: phase === MatchPhase.FINALI ? (finalStage as any) : null,
       plannedSlotId,
       sides: {
         create: [

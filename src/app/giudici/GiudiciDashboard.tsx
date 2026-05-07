@@ -3,7 +3,7 @@
 // Import di tipi rimosso da @prisma/client per evitare errori nel browser con Turbopack
 export type DisciplineKind = "AIR_HOCKEY" | "PING_PONG" | "FRECCETTE" | "CALCIO_BALILLA";
 export type MatchPhase = "QUALIFICAZIONE" | "FINALI";
-export type FinalStage = "QUARTI" | "SEMIFINALI" | "FINALE_34" | "FINALE_12";
+export type FinalStage = "QUARTI" | "SEMIFINALI" | "FINALE" | "FINALE_34" | "FINALE_56";
 
 import { type ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -74,8 +74,8 @@ function defaultFormState(discipline: Discipline): FormState {
   const blankSide = (): SideState => ({ points: "", athleteIds: Array.from({ length: teamSize }, () => "") });
   let defaultTarget = discipline.targetOverride ?? discipline.targetFixed;
   // Safety fix: se Basket è impostato a 4 per errore, forza a 10
-  if (discipline.kind === "AIR_HOCKEY" && (defaultTarget === 4 || defaultTarget === null)) {
-    defaultTarget = 10;
+  if (discipline.kind === "AIR_HOCKEY" && (defaultTarget === 4 || defaultTarget === null || defaultTarget === 10)) {
+    defaultTarget = 20;
   }
   return {
     phase: "QUALIFICAZIONE",
@@ -464,8 +464,8 @@ export default function GiudiciDashboard({ athletes, disciplines }: Props) {
           
           let disciplineTarget = d.targetOverride ?? d.targetFixed;
           // Safety fix grafico per Basket
-          if (d.kind === "AIR_HOCKEY" && (disciplineTarget === 4 || disciplineTarget === null)) {
-            disciplineTarget = 10;
+          if (d.kind === "AIR_HOCKEY" && (disciplineTarget === 4 || disciplineTarget === null || disciplineTarget === 10)) {
+            disciplineTarget = 20;
           }
 
 

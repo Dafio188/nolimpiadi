@@ -11,6 +11,27 @@ interface TournamentBracketListProps {
   matches: any[];
 }
 
+function firstName(name: string): string {
+  return name.split(" ")[0] ?? name;
+}
+
+function LetterBadge({ letter, isBusy, isStarted }: { letter: string | null; isBusy?: boolean; isStarted?: boolean }) {
+  if (!letter) return null;
+  
+  let colorClass = "bg-zinc-200 text-zinc-600 ring-zinc-300";
+  if (isBusy && !isStarted) {
+    colorClass = "bg-orange-100 text-orange-600 ring-orange-200";
+  } else if (isStarted) {
+    colorClass = "bg-green-100 text-green-600 ring-green-200";
+  }
+
+  return (
+    <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-black shrink-0 ring-1 shadow-sm ${colorClass}`}>
+      {letter}
+    </span>
+  );
+}
+
 export default function TournamentBracketList({ disciplines, matches }: TournamentBracketListProps) {
   // Calcolo atleti attualmente in campo (status IN_PROGRESS / points: -1)
   const busyAthleteIds = new Set<string>();
@@ -100,7 +121,7 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
                 discId: disc.id,
                 disc: disc.name, 
                 title: m.title, 
-                athletes: `${m.s1.map(a=>a.name).join(" + ")} VS ${m.s2.map(a=>a.name).join(" + ")}`,
+                athletes: `${m.s1.map(a=>`${a.letter ? `[${a.letter}] ` : ""}${firstName(a.name)}`).join(" + ")} VS ${m.s2.map(a=>`${a.letter ? `[${a.letter}] ` : ""}${firstName(a.name)}`).join(" + ")}`,
                 athleteIds: [...m.s1.map(a=>a.id), ...m.s2.map(a=>a.id)]
               });
             }
@@ -109,7 +130,9 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
       } else {
         const quarti = discMatches.filter(m => m.finalStage === "QUARTI");
         const semi = discMatches.filter(m => m.finalStage === "SEMIFINALI");
-        const finali = discMatches.filter(m => m.finalStage === "FINALE");
+        const f12 = discMatches.filter(m => m.finalStage === "FINALE");
+        const f34 = discMatches.filter(m => m.finalStage === "FINALE_34");
+        const f56 = discMatches.filter(m => m.finalStage === "FINALE_56");
 
         const getAthleteId = (side: any) => side?.athletes?.[0]?.athleteId;
         const hasAthlete = (match: any, athleteId: string) => match && (getAthleteId(match.sides[0]) === athleteId || getAthleteId(match.sides[1]) === athleteId);
@@ -144,10 +167,15 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
         if (!s1) s1 = semi.find((m:any) => m.id !== s2?.id);
         if (!s2) s2 = semi.find((m:any) => m.id !== s1?.id);
 
-        let f1 = finali.find(m => hasAthlete(m, getWinner(s1)));
-        let f3 = finali.find(m => m.id !== f1?.id);
-        if (!f1) f1 = finali.find((m:any) => m.id !== f3?.id);
-        if (!f3) f3 = finali.find((m:any) => m.id !== f1?.id);
+        // Identificazione specifica per le finali (possono essere tutte in 'f12' causa limiti DB)
+        let f1 = f12.find(m => hasAthlete(m, getWinner(s1)));
+        let f3 = f34.find(m => hasAthlete(m, getLoser(s1))) || f12.find(m => m.id !== f1?.id && hasAthlete(m, getLoser(s1)));
+        let f5 = f56.find(m => hasAthlete(m, getLoser(q1))) || f12.find(m => m.id !== f1?.id && m.id !== f3?.id && hasAthlete(m, getLoser(q1)));
+
+        // Fallback estremo se non li troviamo per atleta (es. match appena popolati e senza risultati)
+        if (!f1 && f12.length > 0) f1 = f12[0];
+        if (!f3 && (f34.length > 0 || f12.length > 1)) f3 = f34[0] || f12.find(m => m.id !== f1?.id);
+        if (!f5 && (f56.length > 0 || f12.length > 2)) f5 = f56[0] || f12.find(m => m.id !== f1?.id && m.id !== f3?.id);
 
         const checkPlayable = (match: any, a1: any, a2: any, title: string) => {
           if (!a1 || !a2) return;
@@ -157,7 +185,7 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
               discId: disc.id,
               disc: disc.name, 
               title, 
-              athletes: `${a1.name} VS ${a2.name}`,
+              athletes: `${firstName(a1.name)} VS ${firstName(a2.name)}`,
               athleteIds: [a1.id, a2.id]
             });
           }
@@ -183,9 +211,12 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
         const wS2 = getWinner(s2);
         const lS1 = getLoser(s1);
         const lS2 = getLoser(s2);
+        const lQ1 = getLoser(q1);
+        const lQ2 = getLoser(q2);
         
         checkPlayable(f1, rankings.find((a:any)=>a.id===wS1), rankings.find((a:any)=>a.id===wS2), "Finale 1°/2°");
         checkPlayable(f3, rankings.find((a:any)=>a.id===lS1), rankings.find((a:any)=>a.id===lS2), "Finale 3°/4°");
+        checkPlayable(f5, rankings.find((a:any)=>a.id===lQ1), rankings.find((a:any)=>a.id===lQ2), "Finale 5°/6°");
       }
     });
     return playable;
@@ -457,20 +488,26 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
                 <div className="flex items-center justify-between gap-4">
                   {/* SQUADRA 1 */}
                   <div className="flex-1 flex flex-col items-center">
-                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center gap-1`}>
-                      <span 
-                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                        onClick={() => onOpenAthlete(m.s1[0]?.id)}
-                      >
-                        {m.s1[0].name}
-                      </span>
+                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center items-center gap-2`}>
+                      <div className="flex items-center gap-1">
+                        <LetterBadge letter={m.s1[0]?.letter} isBusy={busyAthletes.has(m.s1[0]?.id)} isStarted={isStarted} />
+                        <span 
+                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                          onClick={() => onOpenAthlete(m.s1[0]?.id)}
+                        >
+                          {firstName(m.s1[0].name)}
+                        </span>
+                      </div>
                       <span>+</span>
-                      <span 
-                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                        onClick={() => onOpenAthlete(m.s1[1]?.id)}
-                      >
-                        {m.s1[1].name}
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <LetterBadge letter={m.s1[1]?.letter} isBusy={busyAthletes.has(m.s1[1]?.id)} isStarted={isStarted} />
+                        <span 
+                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                          onClick={() => onOpenAthlete(m.s1[1]?.id)}
+                        >
+                          {firstName(m.s1[1].name)}
+                        </span>
+                      </div>
                     </span>
                     {!isStarted && isS1Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
                     {isStarted && (
@@ -487,20 +524,26 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
 
                   {/* SQUADRA 2 */}
                   <div className="flex-1 flex flex-col items-center">
-                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center gap-1`}>
-                      <span 
-                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                        onClick={() => onOpenAthlete(m.s2[0]?.id)}
-                      >
-                        {m.s2[0].name}
-                      </span>
+                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center items-center gap-2`}>
+                      <div className="flex items-center gap-1">
+                        <LetterBadge letter={m.s2[0]?.letter} isBusy={busyAthletes.has(m.s2[0]?.id)} isStarted={isStarted} />
+                        <span 
+                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                          onClick={() => onOpenAthlete(m.s2[0]?.id)}
+                        >
+                          {firstName(m.s2[0].name)}
+                        </span>
+                      </div>
                       <span>+</span>
-                      <span 
-                        className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                        onClick={() => onOpenAthlete(m.s2[1]?.id)}
-                      >
-                        {m.s2[1].name}
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <LetterBadge letter={m.s2[1]?.letter} isBusy={busyAthletes.has(m.s2[1]?.id)} isStarted={isStarted} />
+                        <span 
+                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
+                          onClick={() => onOpenAthlete(m.s2[1]?.id)}
+                        >
+                          {firstName(m.s2[1].name)}
+                        </span>
+                      </div>
                     </span>
                     {!isStarted && isS2Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
                     {isStarted && (
@@ -608,7 +651,9 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
   // Prima di tutto, classifichiamo i match del DB
   const quarti = matches.filter(m => m.finalStage === "QUARTI");
   const semi = matches.filter(m => m.finalStage === "SEMIFINALI");
-  const finali = matches.filter(m => m.finalStage === "FINALE");
+  const f12 = matches.filter(m => m.finalStage === "FINALE");
+  const f34 = matches.filter(m => m.finalStage === "FINALE_34");
+  const f56 = matches.filter(m => m.finalStage === "FINALE_56");
 
   let q1 = quarti.find(m => hasAthlete(m, rankings[2]?.id) || hasAthlete(m, rankings[5]?.id));
   let q2 = quarti.find(m => m.id !== q1?.id && (hasAthlete(m, rankings[3]?.id) || hasAthlete(m, rankings[4]?.id)));
@@ -620,18 +665,30 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
   if (!s1) s1 = semi.find((m:any) => m.id !== s2?.id);
   if (!s2) s2 = semi.find((m:any) => m.id !== s1?.id);
 
-  let f1 = finali.find(m => hasAthlete(m, getWinner(s1)));
-  let f3 = finali.find(m => m.id !== f1?.id);
-  if (!f1) f1 = finali.find((m:any) => m.id !== f3?.id);
-  if (!f3) f3 = finali.find((m:any) => m.id !== f1?.id);
+  const wQ1 = getWinner(q1);
+  const wQ2 = getWinner(q2);
+  const lQ1 = getLoser(q1);
+  const lQ2 = getLoser(q2);
+
+  const wS1 = getWinner(s1);
+  const wS2 = getWinner(s2);
+  const lS1 = getLoser(s1);
+  const lS2 = getLoser(s2);
+
+  // Identificazione specifica basata sugli atleti (vincitori/perdenti delle fasi precedenti)
+  let f1 = f12.find(m => hasAthlete(m, wS1));
+  let f3 = f34.find(m => hasAthlete(m, lS1)) || f12.find(m => m.id !== f1?.id && hasAthlete(m, lS1));
+  let f5 = f56.find(m => hasAthlete(m, lQ1)) || f12.find(m => m.id !== f1?.id && m.id !== f3?.id && hasAthlete(m, lQ1));
+
+  // Fallback se la logica degli atleti fallisce (match nuovi o dati parziali)
+  if (!f1 && f12.length > 0) f1 = f12[0];
+  if (!f3 && (f34.length > 0 || f12.length > 1)) f3 = f34[0] || f12.find(m => m.id !== f1?.id);
+  if (!f5 && (f56.length > 0 || f12.length > 2)) f5 = f56[0] || f12.find(m => m.id !== f1?.id && m.id !== f3?.id);
 
   const aQ1_1 = getA(rankings[2], "q1_1", q1, 1);
   const aQ1_2 = getA(rankings[5], "q1_2", q1, 2);
   const aQ2_1 = getA(rankings[3], "q2_1", q2, 1);
   const aQ2_2 = getA(rankings[4], "q2_2", q2, 2);
-
-  const wQ1 = getWinner(q1);
-  const wQ2 = getWinner(q2);
 
   const defaultS1_2 = rankings[4] ? wQ2 : rankings[3]?.id; 
   const defaultS2_2 = rankings[5] ? wQ1 : rankings[2]?.id; 
@@ -641,15 +698,12 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
   const aS2_1 = getA(rankings[1], "s2_1", s2, 1);
   const aS2_2 = getA(rankings.find((a:any)=>a.id===defaultS2_2), "s2_2", s2, 2);
 
-  const wS1 = getWinner(s1);
-  const wS2 = getWinner(s2);
-  const lS1 = getLoser(s1);
-  const lS2 = getLoser(s2);
-
   const aF1_1 = getA(rankings.find((a:any)=>a.id===wS1), "f1_1", f1, 1);
   const aF1_2 = getA(rankings.find((a:any)=>a.id===wS2), "f1_2", f1, 2);
   const aF3_1 = getA(rankings.find((a:any)=>a.id===lS1), "f3_1", f3, 1);
   const aF3_2 = getA(rankings.find((a:any)=>a.id===lS2), "f3_2", f3, 2);
+  const aF5_1 = getA(rankings.find((a:any)=>a.id===lQ1), "f5_1", f5, 1);
+  const aF5_2 = getA(rankings.find((a:any)=>a.id===lQ2), "f5_2", f5, 2);
 
   const [scores, setScores] = useState({
     q1: { p1: q1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: q1?.sides.find((s:any)=>s.side===2)?.points || 0 },
@@ -658,6 +712,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
     s2: { p1: s2?.sides.find((s:any)=>s.side===1)?.points || 0, p2: s2?.sides.find((s:any)=>s.side===2)?.points || 0 },
     f1: { p1: f1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f1?.sides.find((s:any)=>s.side===2)?.points || 0 },
     f3: { p1: f3?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f3?.sides.find((s:any)=>s.side===2)?.points || 0 },
+    f5: { p1: f5?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f5?.sides.find((s:any)=>s.side===2)?.points || 0 },
   });
 
   const handleSave = async (stageKey: keyof typeof scores, stageLabel: string, athlete1Id: string, athlete2Id: string) => {
@@ -837,16 +892,34 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             a1={aF3_1} a2={aF3_2}
             p1={scores.f3.p1} p2={scores.f3.p2}
             onChange={(p1: number, p2: number) => updateScore("f3", p1, p2)}
-            onSave={() => handleSave("f3", "FINALE", aF3_1.id, aF3_2.id)}
+            onSave={() => handleSave("f3", "FINALE_34", aF3_1.id, aF3_2.id)}
             disabled={!aF3_1 || !aF3_2}
             isSaved={!!f3 && f3.sides[0]?.points >= 0}
             isInProgress={!!f3 && f3.sides[0]?.points === -1}
-            onSendToCourt={() => handleSetActive("f3", "FINALE", aF3_1.id, aF3_2.id)}
+            onSendToCourt={() => handleSetActive("f3", "FINALE_34", aF3_1.id, aF3_2.id)}
             waitingLabel="In attesa Semifinali"
             allAthletes={rankings}
             onOverrideA1={(id: string) => setOverrides(prev => ({...prev, f3_1: id}))}
             onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f3_2: id}))}
             onDelete={f3 ? () => onDeleteMatch(f3.id) : undefined}
+            busyAthletes={busyAthletes}
+            onOpenAthlete={onOpenAthlete}
+          />
+          <MatchBox 
+            title="Finale 5°/6° Posto"
+            a1={aF5_1} a2={aF5_2}
+            p1={scores.f5.p1} p2={scores.f5.p2}
+            onChange={(p1: number, p2: number) => updateScore("f5", p1, p2)}
+            onSave={() => handleSave("f5", "FINALE_56", aF5_1.id, aF5_2.id)}
+            disabled={!aF5_1 || !aF5_2}
+            isSaved={!!f5 && f5.sides[0]?.points >= 0}
+            isInProgress={!!f5 && f5.sides[0]?.points === -1}
+            onSendToCourt={() => handleSetActive("f5", "FINALE_56", aF5_1.id, aF5_2.id)}
+            waitingLabel="In attesa Quarti"
+            allAthletes={rankings}
+            onOverrideA1={(id: string) => setOverrides(prev => ({...prev, f5_1: id}))}
+            onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f5_2: id}))}
+            onDelete={f5 ? () => onDeleteMatch(f5.id) : undefined}
             busyAthletes={busyAthletes}
             onOpenAthlete={onOpenAthlete}
           />
@@ -882,18 +955,26 @@ function MatchBox({
         <div className="flex items-center gap-3">
           {allAthletes && !isStarted ? (
             <div className="flex-1 flex flex-col">
-              <select 
-                value={a1?.id || ""} 
-                onChange={(e) => onOverrideA1 && onOverrideA1(e.target.value)}
-                className={`w-full text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a1 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
-              >
-                <option value="" disabled>{waitingLabel}</option>
-                {allAthletes.map((a:any) => <option key={a.id} value={a.id}>{a.name}</option>)}
-              </select>
+              <div className="flex items-center gap-2">
+                <LetterBadge letter={a1?.letter} isBusy={isA1Busy} isStarted={isStarted} />
+                <select 
+                  value={a1?.id || ""} 
+                  onChange={(e) => onOverrideA1 && onOverrideA1(e.target.value)}
+                  className={`flex-1 text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a1 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                >
+                  <option value="" disabled>{waitingLabel}</option>
+                  {allAthletes.map((a:any) => (
+                    <option key={a.id} value={a.id}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               {isA1Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
             </div>
           ) : (
             <div className="flex-1 flex items-center gap-2">
+              <LetterBadge letter={a1?.letter} isBusy={isA1Busy} isStarted={isStarted} />
               <span 
                 className={`text-sm font-bold truncate transition-colors ${a1 ? "cursor-pointer hover:text-blue-600" : "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
                 onClick={() => a1 && onOpenAthlete(a1.id)}
@@ -918,18 +999,26 @@ function MatchBox({
         <div className="flex items-center gap-3">
           {allAthletes && !isStarted ? (
             <div className="flex-1 flex flex-col">
-              <select 
-                value={a2?.id || ""} 
-                onChange={(e) => onOverrideA2 && onOverrideA2(e.target.value)}
-                className={`w-full text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a2 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
-              >
-                <option value="" disabled>{waitingLabel}</option>
-                {allAthletes.map((a:any) => <option key={a.id} value={a.id}>{a.name}</option>)}
-              </select>
+              <div className="flex items-center gap-2">
+                <LetterBadge letter={a2?.letter} isBusy={isA2Busy} isStarted={isStarted} />
+                <select 
+                  value={a2?.id || ""} 
+                  onChange={(e) => onOverrideA2 && onOverrideA2(e.target.value)}
+                  className={`flex-1 text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a2 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                >
+                  <option value="" disabled>{waitingLabel}</option>
+                  {allAthletes.map((a:any) => (
+                    <option key={a.id} value={a.id}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               {isA2Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
             </div>
           ) : (
             <div className="flex-1 flex items-center gap-2">
+              <LetterBadge letter={a2?.letter} isBusy={isA2Busy} isStarted={isStarted} />
               <span 
                 className={`text-sm font-bold truncate transition-colors ${a2 ? "cursor-pointer hover:text-blue-600" : "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
                 onClick={() => a2 && onOpenAthlete(a2.id)}

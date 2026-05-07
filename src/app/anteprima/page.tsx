@@ -161,7 +161,7 @@ export default function AnteprimaPage() {
               badge="Singolo · peso 1"
               left="Gustavo (100)"
               right="Alessandro (75)"
-              target="220"
+              target="210"
             />
             <DisciplineCard
               title="Calcio-balilla"

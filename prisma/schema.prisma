@@ -28,6 +28,8 @@ enum FinalStage {
   QUARTI
   SEMIFINALI
   FINALE
+  FINALE_34
+  FINALE_56
 }
 
 enum Tier {

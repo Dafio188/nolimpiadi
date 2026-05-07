@@ -62,19 +62,36 @@ function stageLabel(stage: string | null) {
 export default function AthleteMatchModal({ athleteId, isOpen, onClose }: AthleteMatchModalProps) {
   const [data, setData] = useState<AthleteData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedDiscipline, setSelectedDiscipline] = useState<string>("all");
 
   useEffect(() => {
     if (isOpen && athleteId) {
       setLoading(true);
       fetch(`/api/atleti/${athleteId}`)
         .then(res => res.json())
-        .then(setData)
+        .then((res) => {
+          setData(res);
+          setSelectedDiscipline("all");
+        })
         .catch(console.error)
         .finally(() => setLoading(false));
     } else {
       setData(null);
     }
   }, [isOpen, athleteId]);
+
+  const disciplines = data?.rows 
+    ? Array.from(new Set(data.rows.map(r => r.disciplineName))).sort()
+    : [];
+
+  const filteredRows = data?.rows
+    ? selectedDiscipline === "all" 
+      ? data.rows 
+      : data.rows.filter(r => r.disciplineName === selectedDiscipline)
+    : [];
+
+  const filteredMatchesCount = filteredRows.length;
+  const filteredPointsSum = filteredRows.reduce((acc, r) => acc + r.weighted, 0);
 
   return (
     <AnimatePresence>
@@ -154,9 +171,54 @@ export default function AthleteMatchModal({ athleteId, isOpen, onClose }: Athlet
                       />
                       <StatItem 
                         icon={<Activity className="w-4 h-4" />} 
-                        label="Match Giocati" 
-                        value={data.totals.matches.toString()} 
+                        label={selectedDiscipline === "all" ? "Match Giocati" : `Match ${selectedDiscipline}`} 
+                        value={selectedDiscipline === "all" ? data.totals.matches.toString() : filteredMatchesCount.toString()} 
+                        subValue={selectedDiscipline !== "all" ? `PT: ${formatNumber(filteredPointsSum).slice(0, -2)}` : undefined}
                       />
+                    </div>
+
+                    {/* Filter Section */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between px-2">
+                        <div className="flex items-center gap-3">
+                          <Target className="w-4 h-4 text-zinc-400" />
+                          <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Filtra per Disciplina</h3>
+                        </div>
+                        {selectedDiscipline !== "all" && (
+                          <motion.span 
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="text-[10px] font-black text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-100 dark:border-indigo-500/20 uppercase"
+                          >
+                            Visualizzazione Filtrata
+                          </motion.span>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-2 px-1">
+                        <button
+                          onClick={() => setSelectedDiscipline("all")}
+                          className={`px-4 py-2 rounded-xl text-xs font-black transition-all duration-300 border ${
+                            selectedDiscipline === "all"
+                              ? "bg-zinc-900 text-white border-zinc-900 shadow-lg shadow-zinc-900/20"
+                              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 border-zinc-100 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600"
+                          }`}
+                        >
+                          Tutte le discipline
+                        </button>
+                        {disciplines.map(disc => (
+                          <button
+                            key={disc}
+                            onClick={() => setSelectedDiscipline(disc)}
+                            className={`px-4 py-2 rounded-xl text-xs font-black transition-all duration-300 border ${
+                              selectedDiscipline === disc
+                                ? "bg-indigo-500 text-white border-indigo-500 shadow-lg shadow-indigo-500/20"
+                                : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 border-zinc-100 dark:border-zinc-800 hover:border-indigo-500/30"
+                            }`}
+                          >
+                            {disc}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Match List */}
@@ -167,7 +229,7 @@ export default function AthleteMatchModal({ athleteId, isOpen, onClose }: Athlet
                           <h3 className="text-sm font-black text-zinc-900 dark:text-zinc-100 uppercase tracking-widest">Cronostoria Incontri</h3>
                         </div>
                         <span className="text-[10px] font-black text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-3 py-1 rounded-full uppercase tracking-tighter">
-                          Punteggi Ponderati
+                          {selectedDiscipline === "all" ? "Punteggi Ponderati" : `Dettaglio ${selectedDiscipline}`}
                         </span>
                       </div>
 
@@ -182,7 +244,7 @@ export default function AthleteMatchModal({ athleteId, isOpen, onClose }: Athlet
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-zinc-50 dark:divide-zinc-800/50">
-                            {data.rows.map((r, idx) => (
+                            {filteredRows.map((r, idx) => (
                               <tr key={r.id} className="group hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-all duration-300">
                                 <td className="px-6 py-5">
                                   <div className="flex flex-col">
@@ -212,12 +274,16 @@ export default function AthleteMatchModal({ athleteId, isOpen, onClose }: Athlet
                                 </td>
                               </tr>
                             ))}
-                            {data.rows.length === 0 && (
+                            {filteredRows.length === 0 && (
                               <tr>
                                 <td colSpan={4} className="px-6 py-16 text-center">
                                   <div className="flex flex-col items-center gap-3">
                                     <Activity className="w-10 h-10 text-zinc-200 dark:text-zinc-800" />
-                                    <p className="text-sm font-bold text-zinc-400 italic">Nessun match disputato in questa edizione.</p>
+                                    <p className="text-sm font-bold text-zinc-400 italic">
+                                      {selectedDiscipline === "all" 
+                                        ? "Nessun match disputato in questa edizione." 
+                                        : `Nessun match di ${selectedDiscipline} disputato.`}
+                                    </p>
                                   </div>
                                 </td>
                               </tr>
@@ -254,7 +320,7 @@ export default function AthleteMatchModal({ athleteId, isOpen, onClose }: Athlet
   );
 }
 
-function StatItem({ icon, label, value, highlight = false }: { icon: any; label: string; value: string; highlight?: boolean }) {
+function StatItem({ icon, label, value, subValue, highlight = false }: { icon: any; label: string; value: string; subValue?: string; highlight?: boolean }) {
   return (
     <div className={`p-5 rounded-3xl border transition-all duration-300 group ${
       highlight 
@@ -265,7 +331,14 @@ function StatItem({ icon, label, value, highlight = false }: { icon: any; label:
         <div className={highlight ? "" : "group-hover:text-indigo-500 transition-colors"}>{icon}</div>
         <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
       </div>
-      <div className="text-2xl font-black tracking-tight tabular-nums">{value}</div>
+      <div className="flex flex-col">
+        <div className="text-2xl font-black tracking-tight tabular-nums">{value}</div>
+        {subValue && (
+          <div className={`text-[10px] font-black mt-1 uppercase tracking-wider ${highlight ? "text-white/50" : "text-indigo-500"}`}>
+            {subValue}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

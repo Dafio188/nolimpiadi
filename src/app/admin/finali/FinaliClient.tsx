@@ -105,7 +105,9 @@ export default function FinaliClient() {
         { label: `Quarti B${getTarget("Q")}`, match: `${name(2)} vs ${name(5)}` },
         { label: `Semifinale 1${getTarget("SF")}`, match: `${name(0)} vs Vincente Q-A` },
         { label: `Semifinale 2${getTarget("SF")}`, match: `${name(1)} vs Vincente Q-B` },
-        { label: `FINALE${getTarget("F")}`, match: "Vincente SF1 vs Vincente SF2", isFinal: true },
+        { label: `FINALE 1°/2°${getTarget("F")}`, match: "Vincente SF1 vs Vincente SF2", isFinal: true },
+        { label: `FINALE 3°/4°`, match: "Perdente SF1 vs Perdente SF2" },
+        { label: `FINALE 5°/6°`, match: "Perdente Q-A vs Perdente Q-B" },
       ];
     }
 

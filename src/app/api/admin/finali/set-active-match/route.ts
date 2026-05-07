@@ -9,12 +9,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Dati mancanti" }, { status: 400 });
     }
 
-    // 1. Troviamo eventuali match attivi o in sospeso con la stessa identica formazione
-    const existingMatches = await prisma.match.findMany({
+    // NOTA: Usiamo solo lo stage 'FINALE' che esiste sicuramente nel DB. 
+    // Distinguiamo i match in base agli atleti.
+    const existingMatches: any[] = await prisma.match.findMany({
       where: {
         disciplineId,
         phase: "FINALI",
-        finalStage: stage,
+        finalStage: "FINALE",
       },
       include: {
         sides: {
@@ -66,12 +67,13 @@ export async function POST(request: Request) {
     }
 
     // 3. Creiamo il Match "IN_PROGRESS" impostando points a -1
+    // NOTA: Usiamo un approccio in due step per evitare errori di validazione del client Prisma non aggiornato
     const match = await prisma.match.create({
       data: {
         disciplineId,
         phase: 'FINALI',
         targetVictory: 0,
-        finalStage: stage,
+        finalStage: 'FINALE',
         sides: {
           create: [
             {

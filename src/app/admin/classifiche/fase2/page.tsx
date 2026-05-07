@@ -7,7 +7,8 @@ export default async function ClassificaFase2Page() {
   const rawRankings = await prisma.$queryRaw`
     SELECT 
       c.*,
-      a.name as athlete_name
+      a.name as athlete_name,
+      a.letter as athlete_letter
     FROM classifica_qualificazione_disciplina c
     JOIN athletes a ON a.id = c.athlete_id
     ORDER BY c.kind ASC, c.qualification_weighted DESC, a.name ASC
@@ -18,7 +19,11 @@ export default async function ClassificaFase2Page() {
     where: { phase: "FINALI" },
     include: {
       sides: {
-        include: { athletes: true }
+        include: { 
+          athletes: {
+            include: { athlete: true }
+          }
+        }
       }
     }
   });
@@ -37,6 +42,7 @@ export default async function ClassificaFase2Page() {
     disciplineRankings[row.kind].rankings.push({
       id: row.athlete_id,
       name: row.athlete_name,
+      letter: row.athlete_letter,
       score: row.qualification_weighted,
       wins: row.wins,
       total_scored: row.total_scored,

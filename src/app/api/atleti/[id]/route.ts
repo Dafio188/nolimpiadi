@@ -72,12 +72,21 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
       const scoreFor = Number(p.points_scored) || 0;
       const scoreAgainst = Number(p.points_conceded) || 0;
+      const baseWeight = 840.0;
       const target = Number(p.target_victory) || 1;
-      const baseWeight = p.phase === 'FINALI' ? 1260.0 : 840.0;
       const key = `${p.discipline_id}-${p.phase}`;
       const n = matchCountByPhase[key] || 1;
-      const weighted = (Math.min(scoreFor, target) * (baseWeight / n / target))
-                     - (Math.min(scoreAgainst, target) * (baseWeight / n / target)) / 1000.0;
+      
+      let weighted = 0;
+      if (p.disciplineKind === 'FRECCETTE') {
+        const maxScore = Math.max(scoreFor, scoreAgainst);
+        weighted = maxScore > 0 
+          ? (scoreFor / maxScore * (baseWeight / n)) - (scoreAgainst / maxScore * (baseWeight / n / 1000.0))
+          : 0;
+      } else {
+        weighted = (Math.min(scoreFor, target) * (baseWeight / n / target))
+                 - (Math.min(scoreAgainst, target) * (baseWeight / n / target)) / 1000.0;
+      }
 
       return {
         id: p.match_id,

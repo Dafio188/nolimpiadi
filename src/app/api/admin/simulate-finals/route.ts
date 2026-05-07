@@ -88,7 +88,9 @@ export async function GET() {
         } else {
           const quarti = discMatches.filter(m => m.finalStage === "QUARTI");
           const semi = discMatches.filter(m => m.finalStage === "SEMIFINALI");
-          const finali = discMatches.filter(m => m.finalStage === "FINALE");
+          const f12 = discMatches.filter(m => m.finalStage === ("FINALE" as any));
+          const f34 = discMatches.filter(m => m.finalStage === ("FINALE_34" as any));
+          const f56 = discMatches.filter(m => m.finalStage === ("FINALE_56" as any));
 
           const getAthleteId = (side: any) => side?.athletes?.[0]?.athleteId;
           const hasAthlete = (match: any, athleteId: string) => match && (getAthleteId(match.sides[0]) === athleteId || getAthleteId(match.sides[1]) === athleteId);
@@ -123,10 +125,13 @@ export async function GET() {
           if (!s1) s1 = semi.find((m:any) => m.id !== s2?.id);
           if (!s2) s2 = semi.find((m:any) => m.id !== s1?.id);
 
-          let f1 = finali.find(m => hasAthlete(m, getWinner(s1)));
-          let f3 = finali.find(m => m.id !== f1?.id);
-          if (!f1) f1 = finali.find((m:any) => m.id !== f3?.id);
-          if (!f3) f3 = finali.find((m:any) => m.id !== f1?.id);
+          let f1 = f12.find(m => hasAthlete(m, getWinner(s1)));
+          let f3 = f34.find(m => hasAthlete(m, getLoser(s1)));
+          let f5 = f56.find(m => hasAthlete(m, getLoser(q1)));
+
+          if (!f1) f1 = f12[0];
+          if (!f3) f3 = f34[0];
+          if (!f5) f5 = f56[0];
 
           const checkPlayable = (match: any, a1: any, a2: any, stage: string) => {
             if (!a1 || !a2) return;
@@ -158,9 +163,12 @@ export async function GET() {
           const wS2 = getWinner(s2);
           const lS1 = getLoser(s1);
           const lS2 = getLoser(s2);
+          const lQ1 = getLoser(q1);
+          const lQ2 = getLoser(q2);
           
           checkPlayable(f1, rankings.find((a:any)=>a.id===wS1), rankings.find((a:any)=>a.id===wS2), "FINALE");
-          checkPlayable(f3, rankings.find((a:any)=>a.id===lS1), rankings.find((a:any)=>a.id===lS2), "FINALE");
+          checkPlayable(f3, rankings.find((a:any)=>a.id===lS1), rankings.find((a:any)=>a.id===lS2), "FINALE_34");
+          checkPlayable(f5, rankings.find((a:any)=>a.id===lQ1), rankings.find((a:any)=>a.id===lQ2), "FINALE_56");
         }
       }
 
