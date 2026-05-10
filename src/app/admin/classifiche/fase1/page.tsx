@@ -45,14 +45,6 @@ export default async function ClassificaFase1() {
             </h1>
             <p className="mt-2 text-zinc-500 font-medium">Classifica completa di tutte le discipline.</p>
           </div>
-          <div className="flex gap-4">
-            <a
-              href="/admin/classifiche/generale"
-              className="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all hover:scale-105"
-            >
-              Vai alla Fase Finale &rarr;
-            </a>
-          </div>
         </div>
       </header>
 

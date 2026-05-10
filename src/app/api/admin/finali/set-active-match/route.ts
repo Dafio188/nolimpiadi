@@ -15,7 +15,6 @@ export async function POST(request: Request) {
       where: {
         disciplineId,
         phase: "FINALI",
-        finalStage: "FINALE",
       },
       include: {
         sides: {
@@ -67,13 +66,12 @@ export async function POST(request: Request) {
     }
 
     // 3. Creiamo il Match "IN_PROGRESS" impostando points a -1
-    // NOTA: Usiamo un approccio in due step per evitare errori di validazione del client Prisma non aggiornato
     const match = await prisma.match.create({
       data: {
         disciplineId,
         phase: 'FINALI',
         targetVictory: 0,
-        finalStage: 'FINALE',
+        finalStage: stage,
         sides: {
           create: [
             {
