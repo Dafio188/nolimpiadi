@@ -50,7 +50,7 @@ export default async function ClassificaFase1() {
               href="/admin/classifiche/generale"
               className="inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 hover:bg-indigo-700 transition-all hover:scale-105"
             >
-              Vai alla Hall of Fame &rarr;
+              Vai alla Fase Finale &rarr;
             </a>
           </div>
         </div>

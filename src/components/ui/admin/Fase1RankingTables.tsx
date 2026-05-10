@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Target, Info } from "lucide-react";
+import { Target, Info, ChevronDown, ChevronUp, Users } from "lucide-react";
 import PremiumCard from "@/components/ui/PremiumCard";
 import AthleteMatchModal from "@/components/ui/AthleteMatchModal";
 
@@ -13,6 +13,11 @@ interface Fase1RankingTablesProps {
 export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fase1RankingTablesProps) {
   const [selectedAthleteId, setSelectedAthleteId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expandedDisciplines, setExpandedDisciplines] = useState<Record<string, boolean>>({});
+
+  const toggleExpand = (kind: string) => {
+    setExpandedDisciplines(prev => ({ ...prev, [kind]: !prev[kind] }));
+  };
 
   const openModal = (id: string) => {
     setSelectedAthleteId(id);
@@ -58,11 +63,16 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                     <tbody className="divide-y divide-zinc-50">
                       {disciplineRows.map((r, idx) => {
                         const isQualified = idx < qualLimit;
+                        const isExpanded = expandedDisciplines[kind];
+                        
+                        // Se non è espanso e non è qualificato, non visualizziamo la riga
+                        if (!isExpanded && !isQualified) return null;
+
                         const isCutoff = idx === qualLimit;
 
                         return (
                           <React.Fragment key={r.athlete_id}>
-                            {isCutoff && (
+                            {isCutoff && isExpanded && (
                               <tr className="bg-zinc-50/80 border-y border-zinc-200/50">
                                 <td colSpan={4} className="px-4 py-2">
                                   <div className="text-[8px] font-black uppercase tracking-[0.25em] text-zinc-400 text-center">
@@ -114,6 +124,27 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                     </tbody>
                   </table>
                 </div>
+
+                {disciplineRows.length > qualLimit && (
+                  <div className="p-3 bg-zinc-50/30 border-t border-zinc-100 flex justify-center">
+                    <button
+                      onClick={() => toggleExpand(kind)}
+                      className="flex items-center gap-2 px-6 py-2 rounded-xl bg-white border border-zinc-200 text-[10px] font-black uppercase tracking-widest text-zinc-500 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm active:scale-95"
+                    >
+                      {expandedDisciplines[kind] ? (
+                        <>
+                          <ChevronUp className="w-3 h-3" />
+                          Nascondi non qualificati
+                        </>
+                      ) : (
+                        <>
+                          <Users className="w-3 h-3" />
+                          Mostra tutti ({disciplineRows.length - qualLimit} altri)
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
               </PremiumCard>
             </section>
           );

@@ -169,7 +169,7 @@ export async function POST(req: Request) {
           }
         }
       }
-    }, { timeout: 30000 });
+    }, { timeout: 120000 });
 
     return NextResponse.json({ ok: true, message: "Ripristino completato con successo" });
   } catch (error) {
