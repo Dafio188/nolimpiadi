@@ -10,9 +10,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Dati mancanti o formato non valido" }, { status: 400 });
     }
 
-    // Rimuoviamo eventuali null/undefined
-    const cleanSide1 = side1AthleteIds.filter(Boolean);
-    const cleanSide2 = side2AthleteIds.filter(Boolean);
+    // Rimuoviamo eventuali null/undefined ed evitiamo duplicati
+    const cleanSide1 = Array.from(new Set(side1AthleteIds.filter(Boolean)));
+    const cleanSide2 = Array.from(new Set(side2AthleteIds.filter(Boolean)));
 
     if (cleanSide1.length === 0 || cleanSide2.length === 0) {
       return NextResponse.json({ error: "Atleti non validi forniti" }, { status: 400 });
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     }
 
     // 2. Controllo: Nessuno degli atleti deve essere in un altro match IN_PROGRESS (punti = -1)
-    const allIds = [...cleanSide1, ...cleanSide2];
+    const allIds = Array.from(new Set([...cleanSide1, ...cleanSide2]));
     
     const activeMatches = await prisma.match.findMany({
       where: {
@@ -81,30 +81,38 @@ export async function POST(request: Request) {
       }, { status: 400 });
     }
 
-    // 3. Creiamo il Match "IN_PROGRESS" impostando points a -1
+    // 3. Recuperiamo il targetVictory dalla disciplina
+    const disc = await prisma.discipline.findUnique({ where: { id: disciplineId } });
+    const target = disc?.targetFixed || 210;
+
+    // 4. Creiamo il Match "IN_PROGRESS"
     const match = await prisma.match.create({
       data: {
         disciplineId,
         phase: 'FINALI',
-        targetVictory: 0,
+        targetVictory: target,
         finalStage: stage as FinalStage,
-        sides: {
-          create: [
-            {
-              side: 1,
-              points: -1,
-              athletes: {
-                create: cleanSide1.map((id: string) => ({ athleteId: id }))
-              }
-            },
-            {
-              side: 2,
-              points: -1,
-              athletes: {
-                create: cleanSide2.map((id: string) => ({ athleteId: id }))
-              }
-            }
-          ]
+      }
+    });
+
+    await prisma.matchSide.create({
+      data: {
+        matchId: match.id,
+        side: 1,
+        points: -1,
+        athletes: {
+          create: cleanSide1.map((id: string) => ({ athleteId: id }))
+        }
+      }
+    });
+
+    await prisma.matchSide.create({
+      data: {
+        matchId: match.id,
+        side: 2,
+        points: -1,
+        athletes: {
+          create: cleanSide2.map((id: string) => ({ athleteId: id }))
         }
       }
     });
