@@ -351,6 +351,23 @@ export default async function ClassificaGeneraleAdmin() {
     select: { id: true, name: true }
   });
 
+  // 4. Calcolo totali punti/gol per disciplina
+  const totalPointsRaw = await prisma.$queryRaw<{ kind: string; total: string | number }[]>`
+    SELECT 
+      d.kind, 
+      SUM(s.points) as total
+    FROM match_sides s
+    JOIN matches m ON s.match_id = m.id
+    JOIN disciplines d ON m.discipline_id = d.id
+    WHERE s.points > 0
+    GROUP BY d.kind
+  `;
+
+  const totalPoints: Record<string, number> = {};
+  totalPointsRaw.forEach((row) => {
+    totalPoints[row.kind] = Number(row.total);
+  });
+
   return (
     <div className="mx-auto w-full max-w-[1600px] pb-20 px-4 sm:px-6 lg:px-8">
       {/* Header Dashboard */}
@@ -419,14 +436,40 @@ export default async function ClassificaGeneraleAdmin() {
           <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800 shadow-xl shadow-zinc-200/20 overflow-hidden">
              <DisciplineRankings rankings={rankings} athletes={allAthletes} />
           </div>
-
-
-
         </aside>
-
       </div>
-    </div>
 
+      {/* STATISTICHE GLOBALI */}
+      <section className="mt-12 space-y-6">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-3">
+            <div className="bg-emerald-500/10 p-2 rounded-lg">
+              <Activity className="w-5 h-5 text-emerald-600" />
+            </div>
+            <h2 className="text-xl font-black text-foreground">Statistiche Globali</h2>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <PremiumCard className="p-6 flex flex-col items-center justify-center text-center">
+            <span className="text-4xl font-black text-emerald-500">{totalPoints["CALCIO_BALILLA"] || 0}</span>
+            <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest mt-2">Gol Calcio-Balilla</span>
+          </PremiumCard>
+          <PremiumCard className="p-6 flex flex-col items-center justify-center text-center">
+            <span className="text-4xl font-black text-emerald-500">{totalPoints["FRECCETTE"] || 0}</span>
+            <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest mt-2">Punti Freccette</span>
+          </PremiumCard>
+          <PremiumCard className="p-6 flex flex-col items-center justify-center text-center">
+            <span className="text-4xl font-black text-emerald-500">{totalPoints["PING_PONG"] || 0}</span>
+            <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest mt-2">Punti Ping-Pong</span>
+          </PremiumCard>
+          <PremiumCard className="p-6 flex flex-col items-center justify-center text-center">
+            <span className="text-4xl font-black text-emerald-500">{totalPoints["AIR_HOCKEY"] || 0}</span>
+            <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest mt-2">Gol Air-Hockey</span>
+          </PremiumCard>
+        </div>
+      </section>
+    </div>
   );
 }
 
