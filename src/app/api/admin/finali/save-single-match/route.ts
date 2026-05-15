@@ -6,8 +6,15 @@ export async function POST(req: Request) {
   try {
     const { disciplineId, stage, side1AthleteIds, side2AthleteIds, points1, points2 } = await req.json();
 
-    if (!disciplineId || !stage || !side1AthleteIds || !side2AthleteIds) {
-      return NextResponse.json({ ok: false, error: "Dati mancanti" }, { status: 400 });
+    if (!disciplineId || !stage || !Array.isArray(side1AthleteIds) || !Array.isArray(side2AthleteIds)) {
+      return NextResponse.json({ ok: false, error: "Dati mancanti o formato non valido" }, { status: 400 });
+    }
+
+    const cleanSide1 = side1AthleteIds.filter(Boolean);
+    const cleanSide2 = side2AthleteIds.filter(Boolean);
+
+    if (cleanSide1.length === 0 || cleanSide2.length === 0) {
+      return NextResponse.json({ ok: false, error: "Atleti non validi forniti" }, { status: 400 });
     }
 
     // 1. Troviamo eventuali match esistenti tra queste esatte formazioni
@@ -24,10 +31,17 @@ export async function POST(req: Request) {
     });
 
     const matchesToDelete = existingMatches.filter(m => {
-      const s1Athletes = m.sides[0]?.athletes.map(a => a.athleteId).sort().join(",") || "";
-      const s2Athletes = m.sides[1]?.athletes.map(a => a.athleteId).sort().join(",") || "";
-      const targetS1 = [...side1AthleteIds].sort().join(",");
-      const targetS2 = [...side2AthleteIds].sort().join(",");
+      const getSideStr = (sideIdx: number) => {
+        const side = m.sides.find((s: any) => s.side === sideIdx);
+        if (!side || !side.athletes) return "";
+        return side.athletes.map((a: any) => a.athleteId).filter(Boolean).sort().join(",");
+      };
+      
+      const s1Athletes = getSideStr(1);
+      const s2Athletes = getSideStr(2);
+      
+      const targetS1 = [...cleanSide1].sort().join(",");
+      const targetS2 = [...cleanSide2].sort().join(",");
       
       return (s1Athletes === targetS1 && s2Athletes === targetS2) || 
              (s1Athletes === targetS2 && s2Athletes === targetS1);
@@ -45,7 +59,7 @@ export async function POST(req: Request) {
       data: {
         disciplineId,
         phase: "FINALI",
-        finalStage: stage,
+        finalStage: stage as FinalStage,
         targetVictory: target,
       }
     });
@@ -56,7 +70,7 @@ export async function POST(req: Request) {
         side: 1,
         points: points1,
         athletes: {
-          create: side1AthleteIds.map((id: string) => ({ athleteId: id }))
+          create: cleanSide1.map((id: string) => ({ athleteId: id }))
         }
       }
     });
@@ -67,7 +81,7 @@ export async function POST(req: Request) {
         side: 2,
         points: points2,
         athletes: {
-          create: side2AthleteIds.map((id: string) => ({ athleteId: id }))
+          create: cleanSide2.map((id: string) => ({ athleteId: id }))
         }
       }
     });
