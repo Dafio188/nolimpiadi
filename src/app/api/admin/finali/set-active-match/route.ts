@@ -18,8 +18,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Atleti non validi forniti" }, { status: 400 });
     }
 
-    // NOTA: Usiamo solo lo stage 'FINALE' che esiste sicuramente nel DB. 
-    // Distinguiamo i match in base agli atleti.
+    // 1. Cerchiamo se esiste già una partita esatta
     const existingMatches: any[] = await prisma.match.findMany({
       where: {
         disciplineId,
@@ -50,7 +49,16 @@ export async function POST(request: Request) {
     });
 
     if (exactExistingMatch) {
-      // Se esiste già esattamente questa partita, restituiamo successo
+      // Se esiste già questa partita, dobbiamo assicurarci che sia "in campo", ovvero punti = -1
+      // Aggiorniamo i lati della partita
+      for (const side of exactExistingMatch.sides) {
+        if (side.points !== -1) {
+          await prisma.matchSide.update({
+            where: { id: side.id },
+            data: { points: -1 }
+          });
+        }
+      }
       return NextResponse.json({ success: true, match: exactExistingMatch });
     }
 
@@ -118,8 +126,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, match });
-  } catch (error) {
+  } catch (error: any) {
     console.error("[SetActiveMatch Error]", error);
-    return NextResponse.json({ error: "Errore interno: " + (error instanceof Error ? error.message : String(error)) }, { status: 500 });
+    return NextResponse.json({ error: "Errore interno: " + (error?.message || String(error)) }, { status: 500 });
   }
 }
