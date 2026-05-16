@@ -263,76 +263,46 @@ export default async function ClassificaGeneraleAdmin() {
     });
   }
 
-  // 2.2 Qualificati dalla Fase 1 (per popolare la lista da 1 a 6)
-  const phase1Rankings = await prisma.$queryRaw<any[]>`
+  // 2.2 Classifica Finale per Disciplina (Somma Fase 1 + Fase 2 per tutti i 12 atleti - Richiesta 4 e 6)
+  const finalDisciplineRankings = await prisma.$queryRaw<any[]>`
     SELECT 
       c.discipline_id, 
       c.athlete_id, 
       a.name as athlete_name, 
-      c.qualification_weighted as score
-    FROM classifica_qualificazione_disciplina c
+      c.total_weighted as total_score,
+      c.qualification_weighted as phase1_score,
+      c.finals_weighted as phase2_score
+    FROM classifica_finale_disciplina c
     JOIN athletes a ON a.id = c.athlete_id
-    ORDER BY c.discipline_id, c.qualification_weighted DESC, a.name ASC
-  `;
-
-  // 2.3 Punteggi totali pesati per disciplina (Fase 2 - coefficiente fisso 840)
-  const disciplineTotalScores = await prisma.$queryRaw<any[]>`
-    WITH athlete_match_scores AS (
-      SELECT 
-        v.athlete_id,
-        v.discipline_id,
-        v.phase,
-        v.match_id,
-        (
-          CASE 
-            WHEN d.kind IN ('FRECCETTE') THEN
-              (v.points_scored::float / NULLIF(GREATEST(v.points_scored::float, v.points_conceded::float), 0)::float * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float))
-              - (v.points_conceded::float / NULLIF(GREATEST(v.points_scored::float, v.points_conceded::float), 0)::float * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float) / 1000.0)
-            ELSE
-              (LEAST(v.points_scored::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float))
-              - ((LEAST(v.points_conceded::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
-          END
-        ) AS match_score
-      FROM v_participations v
-      JOIN disciplines d ON d.id = v.discipline_id
-      WHERE v.phase = 'FINALI'
-    )
-    SELECT 
-      athlete_id, 
-      discipline_id, 
-      SUM(match_score) as total_weighted
-    FROM athlete_match_scores
-    GROUP BY athlete_id, discipline_id
+    ORDER BY c.discipline_id, c.total_weighted DESC, a.name ASC
   `;
 
   // Manteniamo l'ordine basato su allDisciplines per l'output finale
     const rankings = allDisciplines.map(d => {
-      const discPhase1 = phase1Rankings.filter(r => r.discipline_id === d.id);
-      // Rimosso il limite per visualizzare tutti e 12 i giocatori (Richiesta 4)
-      const allAthletesInDiscipline = discPhase1;
+      const discResults = finalDisciplineRankings.filter(r => r.discipline_id === d.id);
+      
+      // Calcoliamo il rank di fase 1 internamente per determinare "Qualificato"
+      const phase1Sorted = [...discResults].sort((a, b) => Number(b.phase1_score) - Number(a.phase1_score));
+      const qualLimit = d.kind === "CALCIO_BALILLA" ? 5 : 6;
 
       const finalStandings = disciplineRankingsMap[d.kind]?.standings || [];
 
       // Creiamo la lista mergiando i dati
-      const mergedStandings = allAthletesInDiscipline.map((q, idx) => {
-        const qName = q.athlete_name.split(' ').slice(0, 2).join(' ');
+      const mergedStandings = discResults.map((r) => {
+        const qName = r.athlete_name.split(' ').slice(0, 2).join(' ');
         const finalS = finalStandings.find((s: any) => s.name === qName);
         
-        const phase2Score = disciplineTotalScores.find(
-          (ts: any) => ts.athlete_id === q.athlete_id && ts.discipline_id === d.id
-        )?.total_weighted || 0;
-
-        // Somma dei punti Fase 1 + Fase 2 (Richiesta 6)
-        const totalScore = Number(q.score) + Number(phase2Score);
+        const phase1Rank = phase1Sorted.findIndex(p => p.athlete_id === r.athlete_id) + 1;
+        const wasQualified = phase1Rank <= qualLimit;
 
         return {
-          athleteId: q.athlete_id,
-          originalPos: idx + 1,
-          finalPos: finalS ? finalS.pos : 99, // 99 means not finalized yet
+          athleteId: r.athlete_id,
+          originalPos: phase1Rank,
+          finalPos: finalS ? finalS.pos : 99, 
           name: qName,
-          stage: finalS ? finalS.stage : (idx < (d.kind === "CALCIO_BALILLA" ? 5 : 6) ? "Qualificato" : "Non qualificato"),
+          stage: finalS ? finalS.stage : (wasQualified ? "Qualificato" : "Non qualificato"),
           isWinner: finalS ? finalS.isWinner : false,
-          score: totalScore
+          score: Number(r.total_score)
         };
       });
 
@@ -344,7 +314,7 @@ export default async function ClassificaGeneraleAdmin() {
         return b.score - a.score;
       });
 
-    // Assegniamo la pos visuale (1 a 6)
+    // Assegniamo la pos visuale (1 a 12)
     mergedStandings.forEach((s, i) => {
       (s as any).displayPos = i + 1;
     });

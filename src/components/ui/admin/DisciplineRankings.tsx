@@ -132,7 +132,7 @@ export default function DisciplineRankings({ rankings }: DisciplineRankingsProps
               ) : (
                 <tr>
                   <td colSpan={5} className="py-12 text-center text-sm font-bold text-zinc-400">
-                    Nessun qualificato disponibile.
+                    Nessun dato disponibile.
                   </td>
                 </tr>
               )}

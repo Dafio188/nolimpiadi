@@ -93,15 +93,10 @@ export async function GET() {
       });
     }
 
-    // 4. Fetch active FINALI matches
-    const activeFinalsMatches = await prisma.match.findMany({
+    // 4. Fetch ALL FINALI matches (Request 5)
+    const allFinalsMatches = await prisma.match.findMany({
       where: {
         phase: "FINALI",
-        sides: {
-          some: {
-            points: -1
-          }
-        }
       },
       include: {
         discipline: true,
@@ -113,25 +108,60 @@ export async function GET() {
           },
           orderBy: { side: 'asc' }
         }
-      }
+      },
+      orderBy: { playedAt: "asc" }
     });
 
-    const activeFinals = (activeFinalsMatches as any[]).map((m: any) => {
-      const s1 = m.sides[0]?.athletes.map((a: any) => a.athlete.name) || [];
-      const s2 = m.sides[1]?.athletes.map((a: any) => a.athlete.name) || [];
-      return {
-        id: m.id,
-        disciplineName: m.discipline.name,
-        disciplineKind: m.discipline.kind,
-        s1,
-        s2
+    if (allFinalsMatches.length > 0) {
+      const finalsBlock = {
+        id: 999, // Unique ID for finals
+        name: "FINALI",
+        partite: [] as any[]
       };
-    });
+
+      // Group finals by discipline or just list them
+      // To fit the "Partita" structure, we can group them by some criteria or just show them as individual entries
+      // Let's create one "Partita" per unique combination of matches if they were played together, 
+      // but usually finals are sequential. We'll show each final match as a "virtual partita".
+      
+      allFinalsMatches.forEach((m, idx) => {
+        const s1 = m.sides[0];
+        const s2 = m.sides[1];
+        const p1 = s1?.points ?? null;
+        const p2 = s2?.points ?? null;
+        const isLive = p1 === -1 || p2 === -1;
+
+        const sports: Record<string, any> = {};
+        sports[m.discipline.kind] = {
+          slotId: `final-${m.id}`,
+          targetVictory: m.targetVictory,
+          side1Letters: s1?.athletes.map(a => a.athlete.letter).filter(Boolean) || [],
+          side2Letters: s2?.athletes.map(a => a.athlete.letter).filter(Boolean) || [],
+          side1Names: s1?.athletes.map(a => a.athlete.name) || [],
+          side2Names: s2?.athletes.map(a => a.athlete.name) || [],
+          state: isLive ? "IN_PROGRESS" : "DONE",
+          matchId: m.id,
+          points1: p1,
+          points2: p2,
+          finalStage: m.finalStage
+        };
+
+        finalsBlock.partite.push({
+          partitaId: `final-turn-${m.id}`,
+          partitaIndex: idx + 1,
+          partitaName: m.finalStage ? m.finalStage.replace(/_/g, " ") : "Finale",
+          sports,
+          restingLetters: [],
+          restingNames: [],
+        });
+      });
+
+      blocks[999] = finalsBlock;
+    }
 
     const responseData = {
-      phases: Object.values(blocks),
+      phases: Object.values(blocks).sort((a: any, b: any) => a.id - b.id),
       athletes: athleteDict,
-      activeFinals
     };
 
     return NextResponse.json({ ok: true, data: responseData });

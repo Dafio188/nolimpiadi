@@ -99,17 +99,19 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                                   className="flex items-center gap-3 cursor-pointer group/item"
                                   onClick={() => openModal(r.athlete_id)}
                                 >
-                                  <span className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-100 text-[10px] font-black text-zinc-500 uppercase">
-                                    {r.letter}
-                                  </span>
-                                  <div className="flex items-center gap-2">
-                                    <span className={`font-black text-lg tracking-tight transition-colors ${isQualified ? "text-foreground group-hover/item:text-indigo-600" : "text-zinc-500 group-hover/item:text-zinc-700"}`}>
-                                      {r.athlete_name}
+                                  <div className="flex items-center gap-3">
+                                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-100 text-xs font-black text-zinc-500 uppercase border border-zinc-200 shadow-sm">
+                                      {r.letter}
                                     </span>
-                                    {isQualified && (
-                                      <div className="bg-cyan-500 w-1.5 h-1.5 rounded-full animate-pulse" />
-                                    )}
-                                    <Info className="w-4 h-4 text-zinc-300 opacity-0 group-hover/item:opacity-100 transition-all" />
+                                    <div className="flex items-center gap-2">
+                                      <span className={`font-black text-2xl tracking-tight transition-colors ${isQualified ? "text-foreground group-hover/item:text-indigo-600" : "text-zinc-500 group-hover/item:text-zinc-700"}`}>
+                                        {r.athlete_name}
+                                      </span>
+                                      {isQualified && (
+                                        <div className="bg-cyan-500 w-2 h-2 rounded-full animate-pulse" />
+                                      )}
+                                      <Info className="w-5 h-5 text-zinc-300 opacity-0 group-hover/item:opacity-100 transition-all" />
+                                    </div>
                                   </div>
                                 </div>
                               </td>
@@ -117,12 +119,12 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                                 {r.matches_played}
                               </td>
                               <td className="px-4 py-3 text-right">
-                                <span className={`text-lg font-black tabular-nums ${isQualified ? "text-cyan-600" : "text-zinc-400"}`}>
+                                <span className={`text-2xl font-black tabular-nums ${isQualified ? "text-cyan-600" : "text-zinc-400"}`}>
                                   {Number(r.qualification_weighted).toFixed(2)}
                                 </span>
                               </td>
                               <td className="px-4 py-3 text-right">
-                                <span className="text-[10px] font-bold text-zinc-400 tabular-nums">
+                                <span className="text-xs font-bold text-zinc-400 tabular-nums">
                                   {percentage}%
                                 </span>
                               </td>

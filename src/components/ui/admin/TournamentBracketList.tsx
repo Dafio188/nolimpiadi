@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import PremiumCard from "@/components/ui/PremiumCard";
-import { Trophy, Save, Trash2, Info } from "lucide-react";
+import { Trophy, Save, Trash2, Info, Users, ChevronUp, ChevronDown, Swords } from "lucide-react";
 import { toast } from "sonner";
 import AthleteMatchModal from "@/components/ui/AthleteMatchModal";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TournamentBracketListProps {
   disciplines: Record<string, any>;
@@ -18,15 +19,15 @@ function firstName(name: string): string {
 function LetterBadge({ letter, isBusy, isStarted }: { letter: string | null; isBusy?: boolean; isStarted?: boolean }) {
   if (!letter) return null;
   
-  let colorClass = "bg-zinc-200 text-zinc-600 ring-zinc-300";
+  let colorClass = "bg-white/80 text-zinc-600 border-zinc-200";
   if (isBusy && !isStarted) {
-    colorClass = "bg-orange-100 text-orange-600 ring-orange-200";
+    colorClass = "bg-orange-100/80 text-orange-600 border-orange-200 shadow-[0_0_10px_rgba(249,115,22,0.1)]";
   } else if (isStarted) {
-    colorClass = "bg-green-100 text-green-600 ring-green-200";
+    colorClass = "bg-green-100/80 text-green-600 border-green-200 shadow-[0_0_10px_rgba(34,197,94,0.1)]";
   }
 
   return (
-    <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-black shrink-0 ring-1 shadow-sm ${colorClass}`}>
+    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-lg text-[11px] font-black shrink-0 border backdrop-blur-sm shadow-sm transition-all ${colorClass}`}>
       {letter}
     </span>
   );
@@ -290,39 +291,49 @@ export default function TournamentBracketList({ disciplines, matches }: Tourname
       </div>
 
       {showSuggestions && (
-        <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-200 shadow-sm mb-8 animate-in fade-in slide-in-from-top-4">
-          <div className="mb-4">
-            <h3 className="text-xl font-black text-indigo-900 flex items-center gap-2">
-              <span className="text-2xl">💡</span> Turno Ottimale Consigliato
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="bg-indigo-50/50 backdrop-blur-md p-6 rounded-3xl border border-indigo-200/50 shadow-xl mb-12"
+        >
+          <div className="mb-6">
+            <h3 className="text-2xl font-black text-indigo-900 flex items-center gap-3">
+              <Swords className="w-6 h-6 text-indigo-500" />
+              Turno Ottimale Consigliato
             </h3>
-            <p className="text-indigo-700 text-sm font-medium mt-1">
-              Questi {suggestedMatches.length} incontri possono essere giocati <strong>tutti in contemporanea</strong>. Non ci sono conflitti di atleti o di campi.
+            <p className="text-indigo-700/70 text-sm font-semibold mt-1">
+              Flusso di gioco massimizzato: questi incontri non hanno conflitti e possono partire insieme.
             </p>
           </div>
           
           {suggestedMatches.length === 0 ? (
-            <div className="bg-white/50 rounded-lg p-4 border border-indigo-100 text-center">
-              <p className="text-indigo-700 font-bold">Nessun set di incontri contemporanei disponibile al momento.</p>
-              <p className="text-indigo-500 text-sm mt-1">Attendi la fine dei match in corso o verifica che non manchino giocatori qualificati.</p>
+            <div className="bg-white/50 rounded-2xl p-8 border border-indigo-100 text-center">
+              <p className="text-indigo-700 font-bold">Nessun set di incontri contemporanei disponibile.</p>
+              <p className="text-indigo-500 text-xs mt-1">Attendi la fine dei match live o verifica i qualificati.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {suggestedMatches.map((sm, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-xl shadow-sm border-2 border-indigo-100 flex flex-col gap-2 relative overflow-hidden group hover:border-indigo-300 transition-colors">
-                  <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                <motion.div 
+                  key={idx} 
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-sm border border-indigo-100/50 flex flex-col gap-2 relative overflow-hidden group hover:border-indigo-300 transition-all"
+                >
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-500/20 group-hover:bg-indigo-500 transition-colors"></div>
                   <div className="flex justify-between items-start">
-                    <span className="text-xs font-black text-indigo-600 uppercase tracking-wider">{sm.disc}</span>
-                    <span className="text-[10px] bg-green-100 text-green-700 font-black px-2 py-0.5 rounded-full ring-1 ring-green-200 shadow-sm">PRONTO</span>
+                    <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{sm.disc}</span>
+                    <span className="text-[9px] bg-green-500 text-white font-black px-2 py-0.5 rounded-full shadow-sm">PRONTO</span>
                   </div>
-                  <span className="font-bold text-sm text-zinc-900 leading-tight">{sm.title}</span>
-                  <div className="bg-zinc-50 p-2 rounded-lg border border-zinc-100 mt-1">
-                    <span className="text-sm font-bold text-zinc-700 block text-center">{sm.athletes}</span>
+                  <span className="font-black text-sm text-zinc-800 leading-tight">{sm.title}</span>
+                  <div className="bg-indigo-50/30 p-2 rounded-xl border border-indigo-100/50 mt-1">
+                    <span className="text-xs font-bold text-indigo-900/80 block text-center">{sm.athletes}</span>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       )}
 
       {Object.values(disciplines).map((disc: any) => {
@@ -401,7 +412,7 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           disciplineId: discipline.id,
-          stage: "FINALE", // We just use FINALE as stage for all these
+          stage: "FINALE",
           side1AthleteIds: matchDef.s1.map(a => a.id),
           side2AthleteIds: matchDef.s2.map(a => a.id),
           points1: matchScores.p1,
@@ -410,7 +421,7 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
       });
 
       if (res.ok) {
-        toast.success("Match di Calcio-balilla salvato!");
+        toast.success("Match salvato!");
         window.location.reload();
       } else {
         toast.error("Errore salvataggio");
@@ -447,23 +458,27 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
   const isReady = c1 && c2 && c3 && c4 && c5;
 
   return (
-    <PremiumCard className="p-8 relative overflow-hidden ring-2 ring-blue-500/20">
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-          <Trophy className="w-6 h-6 text-blue-600" />
+    <PremiumCard className="p-8 relative overflow-hidden border-2 border-indigo-500/10 shadow-2xl bg-white/40 backdrop-blur-sm">
+      <div className="flex items-center gap-5 mb-10">
+        <div className="w-14 h-14 rounded-2xl bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <Trophy className="w-8 h-8" />
         </div>
         <div>
-          <h2 className="text-3xl font-black">{discipline.name}</h2>
-          <p className="text-blue-600 font-bold text-sm">Girone Finale all'Italiana (5 Giocatori)</p>
+          <h2 className="text-4xl font-black tracking-tight text-zinc-900">{discipline.name}</h2>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+            <p className="text-indigo-600 font-black text-xs uppercase tracking-widest">Girone Finale all'Italiana (5 Giocatori)</p>
+          </div>
         </div>
       </div>
 
       {!isReady ? (
-        <div className="p-6 bg-red-50 text-red-600 rounded-xl font-bold">
-          Attenzione: Servono i primi 5 classificati per generare il girone. (Attualmente ne hai {rankings.length}).
+        <div className="p-10 bg-red-50/50 backdrop-blur-md border-2 border-red-100 rounded-3xl text-center">
+          <p className="text-red-600 font-black text-lg">QUALIFICAZIONI INCOMPLETE</p>
+          <p className="text-red-500/80 text-sm mt-1 font-bold">Servono i primi 5 classificati. Attualmente: {rankings.length}/5</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {schedule.map(m => {
             const savedMatch = getSavedMatch(m.s1.map(x=>x.id), m.s2.map(x=>x.id));
             const isSaved = !!savedMatch && savedMatch.sides[0].points >= 0;
@@ -475,123 +490,121 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
             const isBlocked = !isStarted && (isS1Busy || isS2Busy);
 
             return (
-              <div key={m.id} className={`p-5 rounded-2xl border flex flex-col gap-4 transition-all ${
-                isInProgress ? "bg-green-100 border-green-500 shadow-md shadow-green-500/20 ring-2 ring-green-500" :
-                "bg-white border-zinc-200 shadow-sm"
+              <motion.div 
+                key={m.id} 
+                whileHover={{ y: -4 }}
+                className={`p-6 rounded-3xl border-2 transition-all relative overflow-hidden ${
+                isInProgress ? "bg-green-50/80 border-green-500 shadow-xl shadow-green-500/10 ring-4 ring-green-500/10 backdrop-blur-sm" :
+                isSaved ? "bg-zinc-50/50 border-zinc-200/50 grayscale-[0.5]" :
+                "bg-white border-zinc-100 shadow-xl shadow-zinc-200/20"
               }`}>
-                <div className="flex justify-between items-center">
-                  <h4 className={`text-[10px] font-black uppercase tracking-widest ${isInProgress ? "text-green-700" : "text-zinc-500"}`}>{m.title}</h4>
-                  {isSaved && <div className="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">COMPLETATO</div>}
-                  {isInProgress && <div className="text-[10px] font-bold text-white bg-green-500 px-2 py-0.5 rounded-full animate-pulse">IN CAMPO</div>}
+                <div className="flex justify-between items-center mb-6">
+                  <h4 className={`text-[11px] font-black uppercase tracking-[0.2em] ${isInProgress ? "text-green-700" : "text-zinc-400"}`}>{m.title}</h4>
+                  {isSaved && <div className="text-[10px] font-black text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-100">COMPLETATO</div>}
+                  {isInProgress && (
+                    <div className="flex items-center gap-2 text-[10px] font-black text-white bg-green-500 px-3 py-1 rounded-full shadow-lg shadow-green-500/20 animate-pulse">
+                      <div className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                      LIVE
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center justify-between gap-6 mb-6">
                   {/* SQUADRA 1 */}
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center items-center gap-2`}>
-                      <div className="flex items-center gap-1">
-                        <LetterBadge letter={m.s1[0]?.letter} isBusy={busyAthletes.has(m.s1[0]?.id)} isStarted={isStarted} />
-                        <span 
-                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                          onClick={() => onOpenAthlete(m.s1[0]?.id)}
-                        >
-                          {firstName(m.s1[0].name)}
-                        </span>
-                      </div>
-                      <span>+</span>
-                      <div className="flex items-center gap-1">
-                        <LetterBadge letter={m.s1[1]?.letter} isBusy={busyAthletes.has(m.s1[1]?.id)} isStarted={isStarted} />
-                        <span 
-                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s1[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                          onClick={() => onOpenAthlete(m.s1[1]?.id)}
-                        >
-                          {firstName(m.s1[1].name)}
-                        </span>
-                      </div>
-                    </span>
-                    {!isStarted && isS1Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
+                  <div className="flex-1 flex flex-col items-center gap-3">
+                    <div className="flex flex-col gap-2 w-full">
+                      {[m.s1[0], m.s1[1]].map((a, idx) => (
+                        <div key={idx} className="flex items-center gap-3 bg-zinc-50/50 p-2 rounded-xl border border-zinc-100/50">
+                          <LetterBadge letter={a?.letter} isBusy={busyAthletes.has(a?.id)} isStarted={isStarted} />
+                          <span 
+                            className={`text-sm font-black truncate ${busyAthletes.has(a?.id) && !isStarted ? "text-orange-500" : "text-zinc-800"}`}
+                            onClick={() => onOpenAthlete(a.id)}
+                          >
+                            {firstName(a.name)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                     {isStarted && (
-                      <input 
+                      <motion.input 
+                        initial={false}
                         type="number" 
                         value={scores[m.id]?.p1 === -1 ? 0 : scores[m.id]?.p1} 
                         onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p1: parseInt(e.target.value) || 0 }}))}
-                        className={`mt-2 w-16 h-12 text-center rounded-lg border-none text-xl font-black focus:ring-blue-500 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+                        className={`w-full h-14 text-center rounded-2xl border-none text-3xl font-black shadow-inner transition-all focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
                       />
                     )}
                   </div>
                   
-                  <span className={`font-black ${isInProgress ? "text-green-500" : "text-zinc-300"}`}>VS</span>
+                  <div className="flex flex-col items-center">
+                    <div className="w-0.5 h-12 bg-zinc-100 rounded-full" />
+                    <span className={`my-2 text-[10px] font-black ${isInProgress ? "text-green-500" : "text-zinc-300"}`}>VS</span>
+                    <div className="w-0.5 h-12 bg-zinc-100 rounded-full" />
+                  </div>
 
                   {/* SQUADRA 2 */}
-                  <div className="flex-1 flex flex-col items-center">
-                    <span className={`text-xs font-bold ${isInProgress ? "text-green-900" : "text-zinc-600"} flex flex-wrap justify-center items-center gap-2`}>
-                      <div className="flex items-center gap-1">
-                        <LetterBadge letter={m.s2[0]?.letter} isBusy={busyAthletes.has(m.s2[0]?.id)} isStarted={isStarted} />
-                        <span 
-                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[0]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                          onClick={() => onOpenAthlete(m.s2[0]?.id)}
-                        >
-                          {firstName(m.s2[0].name)}
-                        </span>
-                      </div>
-                      <span>+</span>
-                      <div className="flex items-center gap-1">
-                        <LetterBadge letter={m.s2[1]?.letter} isBusy={busyAthletes.has(m.s2[1]?.id)} isStarted={isStarted} />
-                        <span 
-                          className={`cursor-pointer hover:text-blue-600 transition-colors ${busyAthletes.has(m.s2[1]?.id) && !isStarted ? "text-orange-500" : ""}`}
-                          onClick={() => onOpenAthlete(m.s2[1]?.id)}
-                        >
-                          {firstName(m.s2[1].name)}
-                        </span>
-                      </div>
-                    </span>
-                    {!isStarted && isS2Busy && <span className="text-[10px] text-orange-500 font-bold mt-1">Impegnati altrove</span>}
+                  <div className="flex-1 flex flex-col items-center gap-3">
+                    <div className="flex flex-col gap-2 w-full">
+                      {[m.s2[0], m.s2[1]].map((a, idx) => (
+                        <div key={idx} className="flex items-center gap-3 bg-zinc-50/50 p-2 rounded-xl border border-zinc-100/50">
+                          <LetterBadge letter={a?.letter} isBusy={busyAthletes.has(a?.id)} isStarted={isStarted} />
+                          <span 
+                            className={`text-sm font-black truncate ${busyAthletes.has(a?.id) && !isStarted ? "text-orange-500" : "text-zinc-800"}`}
+                            onClick={() => onOpenAthlete(a.id)}
+                          >
+                            {firstName(a.name)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                     {isStarted && (
-                      <input 
+                      <motion.input 
+                        initial={false}
                         type="number" 
                         value={scores[m.id]?.p2 === -1 ? 0 : scores[m.id]?.p2} 
                         onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p2: parseInt(e.target.value) || 0 }}))}
-                        className={`mt-2 w-16 h-12 text-center rounded-lg border-none text-xl font-black focus:ring-blue-500 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+                        className={`w-full h-14 text-center rounded-2xl border-none text-3xl font-black shadow-inner transition-all focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
                       />
                     )}
                   </div>
                 </div>
 
-                {!isStarted ? (
-                  <button 
-                    onClick={() => handleSetActive(m)}
-                    disabled={isBlocked}
-                    className={`mt-2 w-full py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
-                      isBlocked
-                        ? "bg-zinc-200 text-zinc-500 cursor-not-allowed"
-                        : "bg-indigo-500 hover:bg-indigo-600 text-white shadow-indigo-500/20"
-                    }`}
-                  >
-                    {isBlocked ? "GIOCATORI OCCUPATI" : "MANDA IN CAMPO"}
-                  </button>
-                ) : (
-                  <div className="flex gap-2 mt-2">
+                <div className="flex gap-3">
+                  {!isStarted ? (
                     <button 
-                      onClick={() => onDeleteMatch(savedMatch!.id)}
-                      className="w-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all"
-                      title="Annulla Match"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                    <button 
-                      onClick={() => handleSave(m)}
-                      className={`flex-1 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-                        isSaved 
-                          ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20" 
-                          : "bg-green-600 hover:bg-green-700 text-white shadow-md shadow-green-600/20"
+                      onClick={() => handleSetActive(m)}
+                      disabled={isBlocked}
+                      className={`w-full py-4 rounded-2xl font-black text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-3 transition-all shadow-xl ${
+                        isBlocked
+                          ? "bg-zinc-100 text-zinc-400 cursor-not-allowed border border-zinc-200"
+                          : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/30 active:scale-95"
                       }`}
                     >
-                      <Save className="w-4 h-4" />
-                      {isSaved ? "AGGIORNA" : "SALVA MATCH"}
+                      {isBlocked ? "ATLETI OCCUPATI" : "MANDA IN CAMPO"}
                     </button>
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <>
+                      <button 
+                        onClick={() => onDeleteMatch(savedMatch!.id)}
+                        className="w-14 flex-shrink-0 h-14 flex items-center justify-center rounded-2xl bg-red-50 hover:bg-red-100 text-red-500 border border-red-100 transition-all active:scale-90"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                      <button 
+                        onClick={() => handleSave(m)}
+                        className={`flex-1 h-14 rounded-2xl font-black text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-3 transition-all shadow-xl active:scale-[0.98] ${
+                          isSaved 
+                            ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/30" 
+                            : "bg-green-600 hover:bg-green-700 text-white shadow-green-600/30"
+                        }`}
+                      >
+                        <Save className="w-5 h-5" />
+                        {isSaved ? "AGGIORNA" : "SALVA MATCH"}
+                      </button>
+                    </>
+                  )}
+                </div>
+              </motion.div>
             );
           })}
         </div>
@@ -939,28 +952,36 @@ function MatchBox({
   const isBlocked = !isStarted && (isA1Busy || isA2Busy);
 
   return (
-    <div className={`p-4 rounded-2xl border transition-all ${
-      isInProgress ? "bg-green-100 border-green-500 shadow-md shadow-green-500/20 ring-2 ring-green-500" :
-      accent ? "bg-amber-50 border-amber-200" : 
-      "bg-white border-zinc-200 shadow-sm"
+    <motion.div 
+      whileHover={!isBlocked ? { y: -2 } : {}}
+      className={`p-6 rounded-3xl border-2 transition-all relative overflow-hidden backdrop-blur-md shadow-xl ${
+      isInProgress ? "bg-green-50/80 border-green-500 ring-4 ring-green-500/10 shadow-green-500/10" :
+      accent ? "bg-amber-50/50 border-amber-200/50 shadow-amber-500/5" : 
+      isSaved ? "bg-zinc-50/50 border-zinc-100 opacity-80" :
+      "bg-white/80 border-zinc-100 shadow-zinc-200/20"
     }`}>
-      <div className="flex justify-between items-center mb-3">
-        <h4 className={`text-[10px] font-black uppercase tracking-widest ${isInProgress ? "text-green-700" : "text-zinc-500"}`}>{title}</h4>
-        {isSaved && <div className="text-[10px] font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">COMPLETATO</div>}
-        {isInProgress && <div className="text-[10px] font-bold text-white bg-green-500 px-2 py-0.5 rounded-full animate-pulse">IN CAMPO</div>}
+      <div className="flex justify-between items-center mb-5">
+        <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] ${isInProgress ? "text-green-700" : "text-zinc-400"}`}>{title}</h4>
+        {isSaved && <div className="text-[9px] font-black text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 uppercase">OK</div>}
+        {isInProgress && (
+          <div className="flex items-center gap-1.5 text-[9px] font-black text-white bg-green-500 px-2 py-0.5 rounded-full shadow-lg shadow-green-500/20">
+            <div className="w-1 h-1 rounded-full bg-white animate-ping" />
+            LIVE
+          </div>
+        )}
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {/* A1 */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {allAthletes && !isStarted ? (
             <div className="flex-1 flex flex-col">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 bg-zinc-50/50 p-2 rounded-xl border border-zinc-100/30">
                 <LetterBadge letter={a1?.letter} isBusy={isA1Busy} isStarted={isStarted} />
                 <select 
                   value={a1?.id || ""} 
                   onChange={(e) => onOverrideA1 && onOverrideA1(e.target.value)}
-                  className={`flex-1 text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a1 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                  className={`flex-1 text-sm font-black truncate bg-transparent border-none p-0 focus:ring-0 appearance-none ${!a1 && "text-zinc-300 italic"}`}
                 >
                   <option value="" disabled>{waitingLabel}</option>
                   {allAthletes.map((a:any) => (
@@ -970,18 +991,17 @@ function MatchBox({
                   ))}
                 </select>
               </div>
-              {isA1Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
+              {isA1Busy && <span className="text-[9px] text-orange-500 font-black mt-1 ml-1 uppercase tracking-wider">Impegnato</span>}
             </div>
           ) : (
-            <div className="flex-1 flex items-center gap-2">
+            <div className="flex-1 flex items-center gap-3">
               <LetterBadge letter={a1?.letter} isBusy={isA1Busy} isStarted={isStarted} />
               <span 
-                className={`text-sm font-bold truncate transition-colors ${a1 ? "cursor-pointer hover:text-blue-600" : "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                className={`text-sm font-black truncate transition-colors ${a1 ? "cursor-pointer hover:text-indigo-600" : "text-zinc-300 italic"} ${isInProgress ? "text-green-900" : ""}`}
                 onClick={() => a1 && onOpenAthlete(a1.id)}
               >
                 {a1 ? a1.name : waitingLabel}
               </span>
-              {a1 && <Info className="w-3 h-3 text-zinc-300 opacity-0 group-hover:opacity-100 transition-all cursor-pointer" onClick={() => onOpenAthlete(a1.id)} />}
             </div>
           )}
           {isStarted && (
@@ -990,21 +1010,21 @@ function MatchBox({
               value={p1 === -1 ? 0 : p1} 
               onChange={(e) => onChange(parseInt(e.target.value) || 0, p2)}
               disabled={disabled}
-              className={`w-16 h-8 text-center rounded-lg border-none text-sm font-black focus:ring-amber-500 disabled:opacity-50 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+              className={`w-14 h-10 text-center rounded-xl border-none text-lg font-black shadow-inner focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
             />
           )}
         </div>
 
         {/* A2 */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {allAthletes && !isStarted ? (
             <div className="flex-1 flex flex-col">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 bg-zinc-50/50 p-2 rounded-xl border border-zinc-100/30">
                 <LetterBadge letter={a2?.letter} isBusy={isA2Busy} isStarted={isStarted} />
                 <select 
                   value={a2?.id || ""} 
                   onChange={(e) => onOverrideA2 && onOverrideA2(e.target.value)}
-                  className={`flex-1 text-sm font-bold truncate bg-transparent border-none p-0 focus:ring-0 ${!a2 && "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                  className={`flex-1 text-sm font-black truncate bg-transparent border-none p-0 focus:ring-0 appearance-none ${!a2 && "text-zinc-300 italic"}`}
                 >
                   <option value="" disabled>{waitingLabel}</option>
                   {allAthletes.map((a:any) => (
@@ -1014,18 +1034,17 @@ function MatchBox({
                   ))}
                 </select>
               </div>
-              {isA2Busy && <span className="text-[10px] text-orange-500 font-bold ml-1">In campo in altra disciplina</span>}
+              {isA2Busy && <span className="text-[9px] text-orange-500 font-black mt-1 ml-1 uppercase tracking-wider">Impegnato</span>}
             </div>
           ) : (
-            <div className="flex-1 flex items-center gap-2">
+            <div className="flex-1 flex items-center gap-3">
               <LetterBadge letter={a2?.letter} isBusy={isA2Busy} isStarted={isStarted} />
               <span 
-                className={`text-sm font-bold truncate transition-colors ${a2 ? "cursor-pointer hover:text-blue-600" : "text-zinc-400 italic"} ${isInProgress ? "text-green-900" : ""}`}
+                className={`text-sm font-black truncate transition-colors ${a2 ? "cursor-pointer hover:text-indigo-600" : "text-zinc-300 italic"} ${isInProgress ? "text-green-900" : ""}`}
                 onClick={() => a2 && onOpenAthlete(a2.id)}
               >
                 {a2 ? a2.name : waitingLabel}
               </span>
-              {a2 && <Info className="w-3 h-3 text-zinc-300 opacity-0 group-hover:opacity-100 transition-all cursor-pointer" onClick={() => onOpenAthlete(a2.id)} />}
             </div>
           )}
           {isStarted && (
@@ -1034,55 +1053,57 @@ function MatchBox({
               value={p2 === -1 ? 0 : p2} 
               onChange={(e) => onChange(p1, parseInt(e.target.value) || 0)}
               disabled={disabled}
-              className={`w-16 h-8 text-center rounded-lg border-none text-sm font-black focus:ring-amber-500 disabled:opacity-50 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-100"}`}
+              className={`w-14 h-10 text-center rounded-xl border-none text-lg font-black shadow-inner focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
             />
           )}
         </div>
       </div>
 
-      {!isStarted && a1 && a2 ? (
-        <button 
-          onClick={onSendToCourt}
-          disabled={disabled || isBlocked}
-          className={`mt-4 w-full py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md ${
-            isBlocked
-              ? "bg-zinc-200 text-zinc-500 cursor-not-allowed"
-              : "bg-indigo-500 hover:bg-indigo-600 text-white shadow-indigo-500/20"
-          }`}
-        >
-          {isBlocked ? "ATLETI OCCUPATI" : "MANDA IN CAMPO"}
-        </button>
-      ) : isStarted ? (
-        <div className="flex gap-2 mt-4">
-          {onDelete && (
-            <button 
-              onClick={onDelete}
-              className="w-10 flex-shrink-0 flex items-center justify-center rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-all"
-              title="Annulla Match"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-          )}
+      <div className="mt-5 pt-4 border-t border-zinc-100/50">
+        {!isStarted && a1 && a2 ? (
           <button 
-            onClick={onSave}
-            disabled={disabled || !a1 || !a2}
-            className={`flex-1 py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-              disabled || !a1 || !a2 
-                ? "bg-zinc-100 text-zinc-400 cursor-not-allowed" 
-                : isSaved 
-                  ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20" 
-                  : "bg-green-600 hover:bg-green-700 text-white shadow-md shadow-green-600/20"
+            onClick={onSendToCourt}
+            disabled={disabled || isBlocked}
+            className={`w-full py-3 rounded-2xl font-black text-[10px] tracking-[0.15em] uppercase flex items-center justify-center gap-2 transition-all shadow-xl active:scale-95 ${
+              isBlocked
+                ? "bg-zinc-50 text-zinc-300 cursor-not-allowed border border-zinc-100"
+                : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20"
             }`}
           >
-            <Save className="w-4 h-4" />
-            {isSaved ? "AGGIORNA" : "SALVA MATCH"}
+            {isBlocked ? "ATLETI OCCUPATI" : "MANDA IN CAMPO"}
           </button>
-        </div>
-      ) : (
-        <button disabled className="mt-4 w-full py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all bg-zinc-100 text-zinc-400 cursor-not-allowed">
-          ATTESA SFIDANTI
-        </button>
-      )}
-    </div>
+        ) : isStarted ? (
+          <div className="flex gap-2">
+            {onDelete && (
+              <button 
+                onClick={onDelete}
+                className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-2xl bg-red-50 hover:bg-red-100 text-red-500 border border-red-100 transition-all active:scale-90"
+                title="Annulla Match"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            )}
+            <button 
+              onClick={onSave}
+              disabled={disabled || !a1 || !a2}
+              className={`flex-1 h-12 rounded-2xl font-black text-[10px] tracking-[0.15em] uppercase flex items-center justify-center gap-2 transition-all shadow-xl active:scale-[0.98] ${
+                disabled || !a1 || !a2 
+                  ? "bg-zinc-50 text-zinc-300 cursor-not-allowed" 
+                  : isSaved 
+                    ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/30" 
+                    : "bg-green-600 hover:bg-green-700 text-white shadow-green-600/30"
+              }`}
+            >
+              <Save className="w-4 h-4" />
+              {isSaved ? "AGGIORNA" : "SALVA MATCH"}
+            </button>
+          </div>
+        ) : (
+          <div className="w-full py-3 rounded-2xl font-black text-[9px] tracking-[0.15em] uppercase flex items-center justify-center gap-2 bg-zinc-50 text-zinc-300 border border-zinc-100">
+            ATTESA SFIDANTI
+          </div>
+        )}
+      </div>
+    </motion.div>
   );
 }

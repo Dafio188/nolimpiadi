@@ -1,151 +1,75 @@
-# NOLImpiadi Manager
+# NOLImpiadi 2026 — Tournament Engine
 
-Gestione competizioni sportive con 12 atleti e 4 discipline in parallelo.
+Sistema avanzato di gestione per il torneo **NOLImpiadi 2026**, progettato per gestire competizioni multisport in parallelo con scoring engine proporzionale e dashboard in tempo reale.
 
-## Caratteristiche
+## 🚀 Caratteristiche Principali
 
-- **12 atleti** con categorie (100/75/50/25)
-- **4 discipline**: Calcio-balilla, Freccette, Ping-pong, Air Hockey
-- **Qualificazioni**: turni con 4 match paralleli, 2 atleti a riposo
-- **Finali**: tabelloni per disciplina (quarti/semifinali/finale)
-- **Classifica generale**: aggiornata in tempo reale
+- **Multisport Parallelo**: Gestione simultanea di 4 discipline (Calcio Balilla, Freccette, Ping Pong, Air Hockey).
+- **Ecosistema Multi-Agente**: Design premium ispirato all'estetica Apple (Glassmorphism, Framer Motion, micro-interazioni).
+- **Scoring Engine Proporzionale**: Sistema di punteggio basato su una base fissa di **840 punti** per fase, garantendo equità tra discipline diverse.
+- **Fase 1 (Qualificazioni)**: 24 turni generati algoritmicamente per garantire equità di accoppiamenti e riposi.
+- **Fase 2 (Finali)**: Gestione dinamica di bracket a eliminazione diretta (Quarti, Semifinali, Finali) e girone all'italiana per il Calcio Balilla.
+- **Live Scoreboard**: Dashboard pubblica sincronizzata in tempo reale per spettatori e atleti.
 
-## Pagine
+## 🛠️ Stack Tecnologico
 
-| Pagina | URL | Descrizione |
-|--------|-----|-------------|
-| Home | `/` | Pagina principale con link |
-| Gare | `/gare` | Programma e risultati live |
-| Classifica | `/classifica` | Classifica generale live |
-| Stampa | `/stampa` | Versione stampabile tabelloni |
-| Finali | `/anteprima.html` | Tabelloni finali |
-| Giudici | `/giudici.html` | Dashboard inserimento risultati |
-| Setup | `/setup.html` | Configurazione |
-| Strumenti Admin | `/admin-tools.html` | Bootstrap e reset |
+- **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS.
+- **Backend**: Next.js API Routes, Prisma ORM.
+- **Database**: PostgreSQL (Neon.tech).
+- **Animazioni**: Framer Motion, Lucide React.
+- **Design System**: Shadcn/UI + Antigravity Custom Premium Style.
 
-## Parametri Discipline
+## 📍 Mappa del Sito (Admin & Public)
 
-| Disciplina | Target | Peso | Team Size | Note |
-|------------|--------|------|----------|------|
-| Calcio-balilla | 4 (configurabile) | 21 | 2 | Target configurable |
-| Freccette | 220 | 1 | 1 | |
-| Ping-pong | 11 | 15 | 1 | |
-| Air Hockey | 4 | 21 | 1 | |
+| Area | Percorso | Descrizione |
+|------|----------|-------------|
+| **Public** | `/` | Home Page con accesso rapido. |
+| **Public** | `/gare` | **Live Scoreboard** per il monitoraggio dei match in corso. |
+| **Public** | `/classifica` | Classifica Generale Assoluta aggiornata live. |
+| **Public** | `/finali` | TV Dashboard per i bracket della Fase Finale. |
+| **Admin** | `/admin/config` | Configurazione atleti (lettere, categorie) e parametri discipline. |
+| **Admin** | `/admin/giudici` | Dashboard operativa per l'inserimento rapido dei risultati. |
+| **Admin** | `/admin/classifiche/fase1` | Dettaglio punteggi e ranking della fase di qualificazione. |
+| **Admin** | `/admin/classifiche/fase2` | Gestione tabelloni finali e attivazione match sul campo. |
+| **Admin** | `/admin/classifiche/generale` | Riepilogo finale con aggregazione automatica Fase 1 + Fase 2. |
 
-## Punteggio
+## 📐 Scoring Engine
 
-### Efficienza match
-```
-eff = (Fatti - (Subiti / P)) / Target
-```
-- Fatti = punti segnati
-- Subiti = punti subiti
-- Target = target vittoria disciplina
-- P = divisore malus (default: 1000)
+Il sistema utilizza una formula di normalizzazione per rendere confrontabili discipline con target diversi:
 
-### Punteggio pesato
-```
-weighted = eff * coefficiente_disciplina
-```
+1. **Efficienza**: `eff = (Punti Fatti - (Punti Subiti / 1000)) / Target`
+2. **Punteggio Ponderato**: Ogni fase (Qualifica/Finali) assegna un massimo di **840 punti** totali per disciplina, distribuiti proporzionalmente alle prestazioni nei match.
+3. **Aggregazione**: La classifica finale per disciplina è data dalla somma `Punti Fase 1 + Punti Fase 2`.
 
-## Flusso Operativo
+## 🗄️ Database Views (SQL)
 
-### 1. Reset Completo (in un click)
-Vai su `/admin-tools.html` e clicca **Reset Completo**:
-- Cancella tutti i match, slot e turni
-- Esegue bootstrap (discipline + atleti)
-- Genera calendario (24 turni)
+Il motore si appoggia su viste SQL ottimizzate per il calcolo dei ranking in tempo reale:
+- `v_participations`: Appiattimento dei match per analisi singola prestazione.
+- `classifica_qualificazione_disciplina`: Ranking normalizzato per la Fase 1.
+- `classifica_finale_disciplina`: Aggregazione multiphase (SUM Fase 1 + Fase 2) per tutti i 12 atleti.
+- `classifica_complessiva`: Ranking assoluto del torneo.
 
-### 2. Bootstrap Separato
-Vai su `/admin-tools.html`:
-- **Esegui Bootstrap**: crea/aggiorna discipline e atleti
-- **Genera Calendario**: crea turni qualificazione
-- **Carica Serie**: carica il turno corrente
+## ⚙️ Installazione e Sviluppo
 
-### 3. Inserimento Risultati
-Vai su `/giudici.html`:
-- Inserisci i punteggi per ogni disciplina
-- Clicca "Inserisci" per salvare
-- Quando tutti e 4 i match sono inseriti, il pulsante **Prossimo Turno** si abilita
-- Clicca "Prossimo Turno" per andare avanti
+1. **Clona il repository**:
+   ```bash
+   git clone https://github.com/Dafio188/nolimpiadi.git
+   ```
+2. **Installa le dipendenze**:
+   ```bash
+   npm install
+   ```
+3. **Configura le variabili d'ambiente**:
+   Crea un file `.env` con la stringa di connessione a PostgreSQL (`DATABASE_URL`).
+4. **Inizializza il Database**:
+   ```bash
+   npx prisma db push
+   # Naviga su /api/admin/bootstrap per caricare i dati iniziali e le viste SQL
+   ```
+5. **Avvia il server**:
+   ```bash
+   npm run dev
+   ```
 
-### 4. Configurazione
-Vai su `/setup.html`:
-- Modifica categorie atleti
-- Modifica target delle discipline (es. calcio-balilla da 4 a 5)
-
-## API Setup
-
-```bash
-# Carica dati per setup
-GET /api/admin/setup
-
-# Aggiorna atleta
-PATCH /api/admin/athletes
-Body: { athleteId, name, categoryScore }
-
-# Aggiorna target disciplina
-PATCH /api/admin/discipline
-Body: { disciplineKind, targetFixed }
-```
-
-## API Principali
-
-| Metodo | Endpoint | Descrizione |
-|--------|----------|-------------|
-| GET | `/api/gare` | Gare in corso |
-| GET | `/api/classifica` | Classifica generale |
-| GET | `/api/turni/suggest` | Turno successivo |
-| POST | `/api/matches` | Salva match |
-| POST | `/api/admin/bootstrap` | Bootstrap dati |
-| POST | `/api/turni/plan` | Genera calendario |
-
-## Struttura File
-
-```
-src/
-├── app/
-│   ├── page.tsx              # Home
-│   ├── gare/                 # Gare (programma)
-│   ├── classifica/            # Classifica live
-│   ├── stampa/              # Stampa tabelloni
-│   ├── anteprima/           # Finali (Next)
-│   └── api/
-│       ├── admin/
-│       │   ├── athletes/    # PATCH athlete
-│       │   ├── bootstrap/ # POST bootstrap
-│       │   ├── discipline/# PATCH disciplina
-│       │   └── setup/     # GET dati setup
-│       ├── gare/            # GET gare
-│       ├── matches/         # POST match
-│       ├── classifica/      # GET classifica
-│       └── turni/         # Plan/suggest
-└── lib/
-    └── nolimpiadi.ts       # Costanti e seed
-public/
-├── setup.html             # Setup (HTML)
-├── admin-tools.html      # Strumenti admin (HTML)
-├── giudici.html       # Giudici (HTML)
-├── anteprima.html     # Finali (HTML)
-└── reset.html         # Reset (HTML)
-```
-
-## Database
-
-Schema Prisma in `prisma/schema.prisma`:
-
-- **Athlete**: id, name, tier, categoryScore
-- **Discipline**: id, kind, name, coefficient, teamSize, targetFixed
-- **QualificationTurn**: id, index, scheduledAt
-- **QualificationSlot**: turnId, kind, targetVictory, side1AthleteIds, side2AthleteIds
-- **Match**: id, disciplineId, phase, targetVictory
-- **MatchSide**: matchId, side, points
-- **MatchSideAthlete**: sideId, athleteId
-
-## Note
-
-- Il target Calcio-balilla è **4** (configurabile da `/setup.html`)
-- La validazione calcio-balilla usa il target del database (non hardcoded)
-- Air Hockey ha sostituito Basket come disciplina
-- Le pagine admin e giudici sono in HTML (`.html`) per maggiore affidabilità
-- La dashboard giudici ha pulsante "Prossimo Turno" che si abilita dopo 4 match inseriti
+---
+*Progettato con cura per le NOLImpiadi 2026.*

@@ -348,7 +348,6 @@ export default function GarePage() {
       const json = await res.json();
       if (json.ok) {
         setData(json.data.phases);
-        setActiveFinals(json.data.activeFinals || []);
         setLastUpdate(new Date());
       }
     } catch { /* silenzioso */ }
@@ -407,37 +406,8 @@ export default function GarePage() {
       {/* ─── Corpo pagina ─── */}
       <div className="mx-auto max-w-screen-2xl px-4 pt-3 pb-32 space-y-1">
 
-        {activeFinals.length > 0 && (
-          <div className="mb-8 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-green-200" />
-              <span className="text-xs font-black uppercase tracking-widest text-green-600 bg-green-100 px-3 py-1 rounded-full animate-pulse flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500" />
-                FINALI IN CORSO ({activeFinals.length})
-              </span>
-              <div className="flex-1 h-px bg-green-200" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {activeFinals.map(fin => (
-                <div key={fin.id} className="p-4 rounded-xl border-2 border-green-500 bg-gradient-to-br from-green-50 to-white shadow-lg shadow-green-500/20 ring-2 ring-green-300/20">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-green-700">{fin.disciplineName}</span>
-                    <span className="text-[10px] font-bold text-white bg-green-500 px-2 py-0.5 rounded-full animate-pulse">IN CAMPO</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1 text-right">
-                      {fin.s1.map((n, i) => <div key={i} className="text-sm font-bold text-zinc-800 truncate leading-tight">{n}</div>)}
-                    </div>
-                    <span className="mx-4 font-black text-green-500 text-sm">VS</span>
-                    <div className="flex-1 text-left">
-                      {fin.s2.map((n, i) => <div key={i} className="text-sm font-bold text-zinc-800 truncate leading-tight">{n}</div>)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Le finali ora appaiono direttamente nella lista delle partite grazie all'update dell'API schedule */}
+
 
         {/* ZONA A: Partite FINITE — scorrono verso l'alto */}
         <AnimatePresence mode="popLayout">
