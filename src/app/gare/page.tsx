@@ -6,7 +6,7 @@ import { Radio, Clock, CheckCircle2, RefreshCw } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type SportState = "TODO" | "DONE";
+type SportState = "TODO" | "IN_PROGRESS" | "DONE";
 
 interface SportSlot {
   slotId: string;
@@ -56,6 +56,7 @@ function firstName(fullName: string): string {
 
 function isPartitaDone(partita: Partita): boolean {
   const slots = DISCIPLINE_ORDER.map(k => partita.sports[k]).filter(Boolean);
+  // Una partita è finita SOLO se TUTTI i suoi slot sono DONE
   return slots.length > 0 && slots.every(s => s.state === "DONE");
 }
 
@@ -213,8 +214,17 @@ function CurrentMatchCard({ partita }: { partita: Partita }) {
                 <span className="text-[8px] text-zinc-400 mt-0.5">Target: {slot.targetVictory}</span>
               )}
               {/* Status */}
-              <div className="text-[10px] font-black text-emerald-500 uppercase tracking-widest animate-pulse mt-0.5">
-                In attesa…
+              <div className="mt-0.5">
+                {slot.state === "IN_PROGRESS" ? (
+                  <span className="flex items-center justify-center gap-1 text-[10px] font-black text-emerald-600 uppercase tracking-widest animate-pulse">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Live
+                  </span>
+                ) : (
+                  <div className="text-[10px] font-black text-zinc-300 uppercase tracking-widest mt-0.5">
+                    In attesa
+                  </div>
+                )}
               </div>
             </div>
           );

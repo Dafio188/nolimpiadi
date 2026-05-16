@@ -8,20 +8,23 @@ export default async function ClassificaPage() {
   const rows = await prisma.$queryRaw<{
     athlete_id: string;
     name: string;
+    letter: string;
     total_weighted: string | number;
     qualification_weighted: string | number;
     finals_weighted: string | number;
     matches_played: number;
   }[]>`
     SELECT
-      athlete_id,
-      name,
-      total_weighted::text AS total_weighted,
-      qualification_weighted::text AS qualification_weighted,
-      finals_weighted::text AS finals_weighted,
-      matches_played::int AS matches_played
-    FROM classifica_complessiva
-    ORDER BY total_weighted::numeric DESC, name ASC
+      c.athlete_id,
+      a.name,
+      a.letter,
+      c.total_weighted::text AS total_weighted,
+      c.qualification_weighted::text AS qualification_weighted,
+      c.finals_weighted::text AS finals_weighted,
+      c.matches_played::int AS matches_played
+    FROM classifica_complessiva c
+    JOIN athletes a ON a.id = c.athlete_id
+    ORDER BY c.total_weighted::numeric DESC, a.name ASC
   `;
 
   const plainRows = rows.map((row) => ({

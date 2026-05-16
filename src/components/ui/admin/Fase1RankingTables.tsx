@@ -58,6 +58,7 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                         <th className="px-4 py-3 text-[9px] font-black uppercase tracking-widest text-zinc-400">Atleta</th>
                         <th className="px-4 py-3 text-[9px] font-black uppercase tracking-widest text-zinc-400 text-center hidden sm:table-cell">M</th>
                         <th className="px-4 py-3 text-[9px] font-black uppercase tracking-widest text-cyan-600 text-right">Ponderato</th>
+                        <th className="px-4 py-3 text-[9px] font-black uppercase tracking-widest text-zinc-400 text-right w-20">%</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-50">
@@ -69,12 +70,13 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                         if (!isExpanded && !isQualified) return null;
 
                         const isCutoff = idx === qualLimit;
+                        const percentage = ((Number(r.qualification_weighted) / 840) * 100).toFixed(2);
 
                         return (
                           <React.Fragment key={r.athlete_id}>
                             {isCutoff && isExpanded && (
                               <tr className="bg-zinc-50/80 border-y border-zinc-200/50">
-                                <td colSpan={4} className="px-4 py-2">
+                                <td colSpan={5} className="px-4 py-2">
                                   <div className="text-[8px] font-black uppercase tracking-[0.25em] text-zinc-400 text-center">
                                     Fine zona qualificazione
                                   </div>
@@ -83,7 +85,7 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                             )}
                             <tr className={`group transition-all ${isQualified ? "hover:bg-cyan-50/30" : "hover:bg-zinc-50/50 opacity-60 grayscale-[0.3]"}`}>
                               <td className="px-4 py-3">
-                                <div className={`flex h-7 w-7 items-center justify-center mx-auto rounded-lg font-black text-[10px] ${
+                                <div className={`flex h-8 w-8 items-center justify-center mx-auto rounded-lg font-black text-xs ${
                                   idx === 0 ? "bg-amber-400 text-white shadow-sm" : 
                                   idx === 1 ? "bg-zinc-300 text-zinc-600 shadow-sm" :
                                   idx === 2 ? "bg-orange-300 text-orange-800 shadow-sm" :
@@ -94,27 +96,34 @@ export default function Fase1RankingTables({ byDiscipline, disciplineOrder }: Fa
                               </td>
                               <td className="px-4 py-3">
                                 <div 
-                                  className="flex flex-col cursor-pointer group/item"
+                                  className="flex items-center gap-3 cursor-pointer group/item"
                                   onClick={() => openModal(r.athlete_id)}
                                 >
+                                  <span className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-100 text-[10px] font-black text-zinc-500 uppercase">
+                                    {r.letter}
+                                  </span>
                                   <div className="flex items-center gap-2">
-                                    <span className={`font-bold text-sm tracking-tight transition-colors ${isQualified ? "text-foreground group-hover/item:text-indigo-600" : "text-zinc-500 group-hover/item:text-zinc-700"}`}>
+                                    <span className={`font-black text-lg tracking-tight transition-colors ${isQualified ? "text-foreground group-hover/item:text-indigo-600" : "text-zinc-500 group-hover/item:text-zinc-700"}`}>
                                       {r.athlete_name}
                                     </span>
                                     {isQualified && (
-                                      <div className="bg-cyan-500 w-1 h-1 rounded-full animate-pulse" />
+                                      <div className="bg-cyan-500 w-1.5 h-1.5 rounded-full animate-pulse" />
                                     )}
-                                    <Info className="w-3 h-3 text-zinc-300 opacity-0 group-hover/item:opacity-100 transition-all" />
+                                    <Info className="w-4 h-4 text-zinc-300 opacity-0 group-hover/item:opacity-100 transition-all" />
                                   </div>
-                                  <span className="text-[9px] font-black text-zinc-300 uppercase tracking-widest">{r.letter}</span>
                                 </div>
                               </td>
-                              <td className="px-4 py-3 text-center font-bold text-zinc-400 text-xs hidden sm:table-cell">
+                              <td className="px-4 py-3 text-center font-bold text-zinc-400 text-sm hidden sm:table-cell">
                                 {r.matches_played}
                               </td>
                               <td className="px-4 py-3 text-right">
-                                <span className={`text-sm font-black tabular-nums ${isQualified ? "text-cyan-600" : "text-zinc-400"}`}>
+                                <span className={`text-lg font-black tabular-nums ${isQualified ? "text-cyan-600" : "text-zinc-400"}`}>
                                   {Number(r.qualification_weighted).toFixed(2)}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 text-right">
+                                <span className="text-[10px] font-bold text-zinc-400 tabular-nums">
+                                  {percentage}%
                                 </span>
                               </td>
                             </tr>

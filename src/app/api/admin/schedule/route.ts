@@ -61,6 +61,10 @@ export async function GET() {
         slot.side1Letters.forEach(l => usedLetters.add(l));
         slot.side2Letters.forEach(l => usedLetters.add(l));
 
+        const p1 = slot.match?.sides[0]?.points ?? null;
+        const p2 = slot.match?.sides[1]?.points ?? null;
+        const isLive = p1 === -1 || p2 === -1;
+
         sports[slot.kind] = {
           slotId: slot.id,
           targetVictory: slot.targetVictory,
@@ -68,10 +72,10 @@ export async function GET() {
           side2Letters: slot.side2Letters,
           side1Names: slot.side1Letters.map(l => athleteDict[l]?.name || l),
           side2Names: slot.side2Letters.map(l => athleteDict[l]?.name || l),
-          state: slot.match ? "DONE" : "TODO",
+          state: isLive ? "IN_PROGRESS" : (slot.match ? "DONE" : "TODO"),
           matchId: slot.match?.id || null,
-          points1: slot.match?.sides[0]?.points ?? null,
-          points2: slot.match?.sides[1]?.points ?? null,
+          points1: p1,
+          points2: p2,
         };
       }
 

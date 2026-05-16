@@ -10,6 +10,7 @@ import AthleteMatchModal from "@/components/ui/AthleteMatchModal";
 type Row = {
   athlete_id: string;
   name: string;
+  letter: string;
   total_weighted: string | number;
   qualification_weighted: string | number;
   finals_weighted: string | number;
@@ -112,10 +113,17 @@ export default function ClassificaLive({ initialRows = [] }: Props) {
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent/70 mb-1">In Vetta</p>
               <h2 
-                className="text-3xl font-black text-foreground leading-none cursor-pointer hover:text-accent transition-colors"
+                className="text-3xl font-black text-foreground leading-none cursor-pointer hover:text-accent transition-colors flex items-center gap-3"
                 onClick={() => leader && openModal(leader.athlete_id)}
               >
-                {loading ? "Caricamento..." : leader ? leader.name : "Nessun dato"}
+                {loading ? "Caricamento..." : (
+                  <>
+                    <span className="bg-white/80 text-accent text-sm font-black px-2 py-1 rounded-lg border border-accent/20">
+                      {leader?.letter}
+                    </span>
+                    {leader?.name}
+                  </>
+                )}
               </h2>
               <div className="mt-2 flex items-center gap-2 text-zinc-500 font-bold text-sm">
                 <TrendingUp className="w-4 h-4 text-emerald-500" />
@@ -186,6 +194,9 @@ export default function ClassificaLive({ initialRows = [] }: Props) {
                         </div>
                         <div className="flex flex-col">
                           <span className="font-bold text-foreground group-hover/athlete:text-accent transition-colors flex items-center gap-1.5">
+                            <span className="bg-zinc-100 text-zinc-500 text-[10px] font-black px-1.5 py-0.5 rounded border border-zinc-200">
+                              {r.letter}
+                            </span>
                             {r.name}
                             <Info className="w-3 h-3 text-zinc-300 opacity-0 group-hover/athlete:opacity-100 transition-all" />
                           </span>

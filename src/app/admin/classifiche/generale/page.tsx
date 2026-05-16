@@ -306,40 +306,43 @@ export default async function ClassificaGeneraleAdmin() {
   `;
 
   // Manteniamo l'ordine basato su allDisciplines per l'output finale
-  const rankings = allDisciplines.map(d => {
-    const discPhase1 = phase1Rankings.filter(r => r.discipline_id === d.id);
-    const limit = d.kind === "CALCIO_BALILLA" ? 5 : 6;
-    const topQualifiers = discPhase1.slice(0, limit);
+    const rankings = allDisciplines.map(d => {
+      const discPhase1 = phase1Rankings.filter(r => r.discipline_id === d.id);
+      // Rimosso il limite per visualizzare tutti e 12 i giocatori (Richiesta 4)
+      const allAthletesInDiscipline = discPhase1;
 
-    const finalStandings = disciplineRankingsMap[d.kind]?.standings || [];
+      const finalStandings = disciplineRankingsMap[d.kind]?.standings || [];
 
-    // Creiamo la lista mergiando i dati
-    const mergedStandings = topQualifiers.map((q, idx) => {
-      const qName = q.athlete_name.split(' ').slice(0, 2).join(' ');
-      const finalS = finalStandings.find((s: any) => s.name === qName);
-      
-      const totalScore = disciplineTotalScores.find(
-        (ts: any) => ts.athlete_id === q.athlete_id && ts.discipline_id === d.id
-      )?.total_weighted;
+      // Creiamo la lista mergiando i dati
+      const mergedStandings = allAthletesInDiscipline.map((q, idx) => {
+        const qName = q.athlete_name.split(' ').slice(0, 2).join(' ');
+        const finalS = finalStandings.find((s: any) => s.name === qName);
+        
+        const phase2Score = disciplineTotalScores.find(
+          (ts: any) => ts.athlete_id === q.athlete_id && ts.discipline_id === d.id
+        )?.total_weighted || 0;
 
-      return {
-        athleteId: q.athlete_id,
-        originalPos: idx + 1,
-        finalPos: finalS ? finalS.pos : 99, // 99 means not finalized yet
-        name: qName,
-        stage: finalS ? finalS.stage : (idx < limit ? "Qualificato (In Gara)" : ""),
-        isWinner: finalS ? finalS.isWinner : false,
-        score: totalScore !== undefined ? totalScore : 0
-      };
-    });
+        // Somma dei punti Fase 1 + Fase 2 (Richiesta 6)
+        const totalScore = Number(q.score) + Number(phase2Score);
 
-    // Ordiniamo prima per posizione finale (se presente), altrimenti per posizione di qualifica
-    mergedStandings.sort((a, b) => {
-      if (a.finalPos !== 99 || b.finalPos !== 99) {
-        return a.finalPos - b.finalPos;
-      }
-      return a.originalPos - b.originalPos;
-    });
+        return {
+          athleteId: q.athlete_id,
+          originalPos: idx + 1,
+          finalPos: finalS ? finalS.pos : 99, // 99 means not finalized yet
+          name: qName,
+          stage: finalS ? finalS.stage : (idx < (d.kind === "CALCIO_BALILLA" ? 5 : 6) ? "Qualificato" : "Non qualificato"),
+          isWinner: finalS ? finalS.isWinner : false,
+          score: totalScore
+        };
+      });
+
+      // Ordiniamo per posizione finale (se presente), altrimenti per punteggio totale
+      mergedStandings.sort((a, b) => {
+        if (a.finalPos !== 99 || b.finalPos !== 99) {
+          if (a.finalPos !== b.finalPos) return a.finalPos - b.finalPos;
+        }
+        return b.score - a.score;
+      });
 
     // Assegniamo la pos visuale (1 a 6)
     mergedStandings.forEach((s, i) => {
