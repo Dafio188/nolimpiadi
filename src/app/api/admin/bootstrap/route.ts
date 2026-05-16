@@ -145,8 +145,14 @@ export async function GET() {
         SUM(v.points_conceded) AS total_conceded,
         COUNT(*) AS matches_played,
         SUM(
-          (LEAST(v.points_scored::float, v.target_victory::float) * (840.0 / NULLIF(ast.total_matches, 0)::float / NULLIF(v.target_victory, 0)::float))
-          - ((LEAST(v.points_conceded::float, v.target_victory::float) * (840.0 / NULLIF(ast.total_matches, 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
+          CASE 
+            WHEN d.kind IN ('FRECCETTE') THEN
+              (v.points_scored::float / NULLIF(GREATEST(v.points_scored::float, v.points_conceded::float), 0)::float * ( 840.0 / NULLIF(ast.total_matches, 0)::float))
+              - (v.points_conceded::float / NULLIF(GREATEST(v.points_scored::float, v.points_conceded::float), 0)::float * ( 840.0 / NULLIF(ast.total_matches, 0)::float) / 1000.0)
+            ELSE
+              (LEAST(v.points_scored::float, v.target_victory::float) * (840.0 / NULLIF(ast.total_matches, 0)::float / NULLIF(v.target_victory, 0)::float))
+              - ((LEAST(v.points_conceded::float, v.target_victory::float) * (840.0 / NULLIF(ast.total_matches, 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
+          END
         ) AS qualification_weighted
       FROM v_participations v
       JOIN disciplines d ON d.id = v.discipline_id
@@ -162,8 +168,14 @@ export async function GET() {
           v.phase,
           v.match_id,
           (
-            (LEAST(v.points_scored::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float))
-            - ((LEAST(v.points_conceded::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
+            CASE 
+              WHEN d.kind IN ('FRECCETTE') THEN
+                (v.points_scored::float / NULLIF(GREATEST(v.points_scored::float, v.points_conceded::float), 0)::float * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float))
+                - (v.points_conceded::float / NULLIF(GREATEST(v.points_scored::float, v.points_conceded::float), 0)::float * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float) / 1000.0)
+              ELSE
+                (LEAST(v.points_scored::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float))
+                - ((LEAST(v.points_conceded::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
+            END
           ) AS match_score
         FROM v_participations v
       )
