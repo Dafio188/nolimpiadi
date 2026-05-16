@@ -284,8 +284,8 @@ export default async function ClassificaGeneraleAdmin() {
         v.phase,
         v.match_id,
         (
-          (LEAST(v.points_scored::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float))
-          - ((LEAST(v.points_conceded::float, v.target_victory::float) * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
+          (v.points_scored::float * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float))
+          - ((v.points_conceded::float * ( 840.0 / NULLIF(COUNT(*) OVER(PARTITION BY v.athlete_id, v.discipline_id, v.phase), 0)::float / NULLIF(v.target_victory, 0)::float)) / 1000.0)
         ) AS match_score
       FROM v_participations v
       WHERE v.phase = 'FINALI'
