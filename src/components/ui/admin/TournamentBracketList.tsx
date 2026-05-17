@@ -386,19 +386,21 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
     });
   };
 
-  const [scores, setScores] = useState<Record<number, {p1: number, p2: number}>>({});
+  const [scores, setScores] = useState<Record<number, {p1: string, p2: string}>>({});
 
   // Initialize scores from DB
   if (Object.keys(scores).length === 0 && schedule.every(m => m.s1.every(Boolean))) {
-    const initialScores: Record<number, any> = {};
+    const initialScores: Record<number, {p1: string, p2: string}> = {};
     schedule.forEach(m => {
       const saved = getSavedMatch(m.s1.map(x=>x.id), m.s2.map(x=>x.id));
       if (saved) {
         const side1 = saved.sides.find((s:any) => hasExactAthletes(s, m.s1.map(x=>x.id)));
         const side2 = saved.sides.find((s:any) => hasExactAthletes(s, m.s2.map(x=>x.id)));
-        initialScores[m.id] = { p1: side1?.points || 0, p2: side2?.points || 0 };
+        const p1Val = side1?.points === undefined || side1?.points === null || side1?.points === -1 ? "" : String(side1.points);
+        const p2Val = side2?.points === undefined || side2?.points === null || side2?.points === -1 ? "" : String(side2.points);
+        initialScores[m.id] = { p1: p1Val, p2: p2Val };
       } else {
-        initialScores[m.id] = { p1: 0, p2: 0 };
+        initialScores[m.id] = { p1: "", p2: "" };
       }
     });
     setScores(initialScores);
@@ -407,6 +409,14 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
   const handleSave = async (matchDef: typeof schedule[0]) => {
     try {
       const matchScores = scores[matchDef.id];
+      const points1 = parseInt((matchScores?.p1 ?? "") || "0");
+      const points2 = parseInt((matchScores?.p2 ?? "") || "0");
+
+      if (isNaN(points1) || isNaN(points2)) {
+        toast.error("Inserisci entrambi i punteggi prima di salvare!");
+        return;
+      }
+
       const res = await fetch("/api/admin/finali/save-single-match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -415,8 +425,8 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
           stage: "FINALE",
           side1AthleteIds: matchDef.s1.map(a => a.id),
           side2AthleteIds: matchDef.s2.map(a => a.id),
-          points1: matchScores.p1,
-          points2: matchScores.p2
+          points1,
+          points2
         }),
       });
 
@@ -529,8 +539,14 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
                       <motion.input 
                         initial={false}
                         type="number" 
-                        value={scores[m.id]?.p1 === -1 ? 0 : scores[m.id]?.p1} 
-                        onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p1: parseInt(e.target.value) || 0 }}))}
+                        placeholder="0"
+                        value={scores[m.id]?.p1 ?? ""} 
+                        onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p1: e.target.value }}))}
+                        onFocus={() => {
+                          if (scores[m.id]?.p1 === "0") {
+                            setScores(prev => ({ ...prev, [m.id]: { ...prev[m.id], p1: "" } }));
+                          }
+                        }}
                         className={`w-full h-14 text-center rounded-2xl border-none text-3xl font-black shadow-inner transition-all focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
                       />
                     )}
@@ -561,8 +577,14 @@ function CalcioBalillaFinals({ discipline, matches, onDeleteMatch, busyAthletes,
                       <motion.input 
                         initial={false}
                         type="number" 
-                        value={scores[m.id]?.p2 === -1 ? 0 : scores[m.id]?.p2} 
-                        onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p2: parseInt(e.target.value) || 0 }}))}
+                        placeholder="0"
+                        value={scores[m.id]?.p2 ?? ""} 
+                        onChange={(e) => setScores(prev => ({...prev, [m.id]: { ...prev[m.id], p2: e.target.value }}))}
+                        onFocus={() => {
+                          if (scores[m.id]?.p2 === "0") {
+                            setScores(prev => ({ ...prev, [m.id]: { ...prev[m.id], p2: "" } }));
+                          }
+                        }}
                         className={`w-full h-14 text-center rounded-2xl border-none text-3xl font-black shadow-inner transition-all focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
                       />
                     )}
@@ -718,19 +740,33 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
   const aF5_1 = getA(rankings.find((a:any)=>a.id===lQ1), "f5_1", f5, 1);
   const aF5_2 = getA(rankings.find((a:any)=>a.id===lQ2), "f5_2", f5, 2);
 
+  const getInitialPoints = (match: any, side: number) => {
+    const pts = match?.sides.find((s: any) => s.side === side)?.points;
+    if (pts === undefined || pts === null || pts === -1) return "";
+    return String(pts);
+  };
+
   const [scores, setScores] = useState({
-    q1: { p1: q1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: q1?.sides.find((s:any)=>s.side===2)?.points || 0 },
-    q2: { p1: q2?.sides.find((s:any)=>s.side===1)?.points || 0, p2: q2?.sides.find((s:any)=>s.side===2)?.points || 0 },
-    s1: { p1: s1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: s1?.sides.find((s:any)=>s.side===2)?.points || 0 },
-    s2: { p1: s2?.sides.find((s:any)=>s.side===1)?.points || 0, p2: s2?.sides.find((s:any)=>s.side===2)?.points || 0 },
-    f1: { p1: f1?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f1?.sides.find((s:any)=>s.side===2)?.points || 0 },
-    f3: { p1: f3?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f3?.sides.find((s:any)=>s.side===2)?.points || 0 },
-    f5: { p1: f5?.sides.find((s:any)=>s.side===1)?.points || 0, p2: f5?.sides.find((s:any)=>s.side===2)?.points || 0 },
+    q1: { p1: getInitialPoints(q1, 1), p2: getInitialPoints(q1, 2) },
+    q2: { p1: getInitialPoints(q2, 1), p2: getInitialPoints(q2, 2) },
+    s1: { p1: getInitialPoints(s1, 1), p2: getInitialPoints(s1, 2) },
+    s2: { p1: getInitialPoints(s2, 1), p2: getInitialPoints(s2, 2) },
+    f1: { p1: getInitialPoints(f1, 1), p2: getInitialPoints(f1, 2) },
+    f3: { p1: getInitialPoints(f3, 1), p2: getInitialPoints(f3, 2) },
+    f5: { p1: getInitialPoints(f5, 1), p2: getInitialPoints(f5, 2) },
   });
 
   const handleSave = async (stageKey: keyof typeof scores, stageLabel: string, athlete1Id: string, athlete2Id: string) => {
     try {
       const matchScores = scores[stageKey];
+      const points1 = parseInt((matchScores?.p1 ?? "") || "0");
+      const points2 = parseInt((matchScores?.p2 ?? "") || "0");
+
+      if (isNaN(points1) || isNaN(points2)) {
+        toast.error("Inserisci entrambi i punteggi prima di salvare!");
+        return;
+      }
+
       const res = await fetch("/api/admin/finali/save-single-match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -739,8 +775,8 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
           stage: stageLabel,
           side1AthleteIds: [athlete1Id],
           side2AthleteIds: [athlete2Id],
-          points1: matchScores.p1,
-          points2: matchScores.p2
+          points1,
+          points2
         }),
       });
 
@@ -780,7 +816,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
     }
   };
 
-  const updateScore = (match: keyof typeof scores, p1: number, p2: number) => {
+  const updateScore = (match: keyof typeof scores, p1: string, p2: string) => {
     setScores(prev => ({ ...prev, [match]: { p1, p2 } }));
   };
 
@@ -809,7 +845,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
               title="3° vs 6°"
               a1={aQ1_1} a2={aQ1_2}
               p1={scores.q1.p1} p2={scores.q1.p2}
-              onChange={(p1: number, p2: number) => updateScore("q1", p1, p2)}
+              onChange={(p1: string, p2: string) => updateScore("q1", p1, p2)}
               onSave={() => handleSave("q1", "QUARTI", aQ1_1.id, aQ1_2.id)}
               isSaved={!!q1 && q1.sides[0]?.points >= 0}
               isInProgress={!!q1 && q1.sides[0]?.points === -1}
@@ -825,7 +861,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
               title="4° vs 5°"
               a1={aQ2_1} a2={aQ2_2}
               p1={scores.q2.p1} p2={scores.q2.p2}
-              onChange={(p1: number, p2: number) => updateScore("q2", p1, p2)}
+              onChange={(p1: string, p2: string) => updateScore("q2", p1, p2)}
               onSave={() => handleSave("q2", "QUARTI", aQ2_1.id, aQ2_2.id)}
               isSaved={!!q2 && q2.sides[0]?.points >= 0}
               isInProgress={!!q2 && q2.sides[0]?.points === -1}
@@ -846,7 +882,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             title={rankings[4] ? "1° vs Vincitore Q2" : "1° vs 4°"}
             a1={aS1_1} a2={aS1_2}
             p1={scores.s1.p1} p2={scores.s1.p2}
-            onChange={(p1: number, p2: number) => updateScore("s1", p1, p2)}
+            onChange={(p1: string, p2: string) => updateScore("s1", p1, p2)}
             onSave={() => handleSave("s1", "SEMIFINALI", aS1_1.id, aS1_2.id)}
             disabled={!aS1_1 || !aS1_2}
             isSaved={!!s1 && s1.sides[0]?.points >= 0}
@@ -864,7 +900,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             title={rankings[5] ? "2° vs Vincitore Q1" : "2° vs 3°"}
             a1={aS2_1} a2={aS2_2}
             p1={scores.s2.p1} p2={scores.s2.p2}
-            onChange={(p1: number, p2: number) => updateScore("s2", p1, p2)}
+            onChange={(p1: string, p2: string) => updateScore("s2", p1, p2)}
             onSave={() => handleSave("s2", "SEMIFINALI", aS2_1.id, aS2_2.id)}
             disabled={!aS2_1 || !aS2_2}
             isSaved={!!s2 && s2.sides[0]?.points >= 0}
@@ -886,7 +922,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             title="Finale 1°/2° Posto"
             a1={aF1_1} a2={aF1_2}
             p1={scores.f1.p1} p2={scores.f1.p2}
-            onChange={(p1: number, p2: number) => updateScore("f1", p1, p2)}
+            onChange={(p1: string, p2: string) => updateScore("f1", p1, p2)}
             onSave={() => handleSave("f1", "FINALE", aF1_1.id, aF1_2.id)}
             disabled={!aF1_1 || !aF1_2}
             isSaved={!!f1 && f1.sides[0]?.points >= 0}
@@ -904,7 +940,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             title="Finale 3°/4° Posto"
             a1={aF3_1} a2={aF3_2}
             p1={scores.f3.p1} p2={scores.f3.p2}
-            onChange={(p1: number, p2: number) => updateScore("f3", p1, p2)}
+            onChange={(p1: string, p2: string) => updateScore("f3", p1, p2)}
             onSave={() => handleSave("f3", "FINALE_34", aF3_1.id, aF3_2.id)}
             disabled={!aF3_1 || !aF3_2}
             isSaved={!!f3 && f3.sides[0]?.points >= 0}
@@ -922,7 +958,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             title="Finale 5°/6° Posto"
             a1={aF5_1} a2={aF5_2}
             p1={scores.f5.p1} p2={scores.f5.p2}
-            onChange={(p1: number, p2: number) => updateScore("f5", p1, p2)}
+            onChange={(p1: string, p2: string) => updateScore("f5", p1, p2)}
             onSave={() => handleSave("f5", "FINALE_56", aF5_1.id, aF5_2.id)}
             disabled={!aF5_1 || !aF5_2}
             isSaved={!!f5 && f5.sides[0]?.points >= 0}
@@ -1007,8 +1043,14 @@ function MatchBox({
           {isStarted && (
             <input 
               type="number" 
-              value={p1 === -1 ? 0 : p1} 
-              onChange={(e) => onChange(parseInt(e.target.value) || 0, p2)}
+              placeholder="-"
+              value={p1} 
+              onChange={(e) => onChange(e.target.value, p2)}
+              onFocus={() => {
+                if (p1 === "0") {
+                  onChange("", p2);
+                }
+              }}
               disabled={disabled}
               className={`w-14 h-10 text-center rounded-xl border-none text-lg font-black shadow-inner focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
             />
@@ -1050,8 +1092,14 @@ function MatchBox({
           {isStarted && (
             <input 
               type="number" 
-              value={p2 === -1 ? 0 : p2} 
-              onChange={(e) => onChange(p1, parseInt(e.target.value) || 0)}
+              placeholder="-"
+              value={p2} 
+              onChange={(e) => onChange(p1, e.target.value)}
+              onFocus={() => {
+                if (p2 === "0") {
+                  onChange(p1, "");
+                }
+              }}
               disabled={disabled}
               className={`w-14 h-10 text-center rounded-xl border-none text-lg font-black shadow-inner focus:ring-4 focus:ring-indigo-500/20 ${isInProgress ? "bg-white text-green-900" : "bg-zinc-200/50 text-zinc-500"}`}
             />
