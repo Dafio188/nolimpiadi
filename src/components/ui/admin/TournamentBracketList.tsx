@@ -746,6 +746,20 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
     return String(pts);
   };
 
+  // Rilevamento desincronizzazione (atleti sdoppiati per via di cambi classifica)
+  const desyncAthletes = new Set<string>();
+  const checkDuplicates = (athletes: (string | undefined)[]) => {
+    const seen = new Set<string>();
+    athletes.filter(Boolean).forEach(id => {
+      if (seen.has(id!)) desyncAthletes.add(id!);
+      seen.add(id!);
+    });
+  };
+  // Controlliamo ogni singola fase per evitare che lo stesso atleta compaia due volte
+  checkDuplicates([aQ1_1?.id, aQ1_2?.id, aQ2_1?.id, aQ2_2?.id]);
+  checkDuplicates([aS1_1?.id, aS1_2?.id, aS2_1?.id, aS2_2?.id]);
+  checkDuplicates([aF1_1?.id, aF1_2?.id, aF3_1?.id, aF3_2?.id, aF5_1?.id, aF5_2?.id]);
+
   const [scores, setScores] = useState({
     q1: { p1: getInitialPoints(q1, 1), p2: getInitialPoints(q1, 2) },
     q2: { p1: getInitialPoints(q2, 1), p2: getInitialPoints(q2, 2) },
@@ -855,6 +869,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
               onOverrideA2={(id: string) => setOverrides(prev => ({...prev, q1_2: id}))}
               onDelete={q1 ? () => onDeleteMatch(q1.id) : undefined}
               busyAthletes={busyAthletes}
+              desyncAthletes={desyncAthletes}
             />
             <div className="h-4 border-l-2 border-b-2 border-zinc-200 ml-8 my-2 rounded-bl-xl opacity-30"></div>
             <MatchBox 
@@ -871,6 +886,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
               onOverrideA2={(id: string) => setOverrides(prev => ({...prev, q2_2: id}))}
               onDelete={q2 ? () => onDeleteMatch(q2.id) : undefined}
               busyAthletes={busyAthletes}
+              desyncAthletes={desyncAthletes}
             />
           </div>
         )}
@@ -894,6 +910,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             onOverrideA2={(id: string) => setOverrides(prev => ({...prev, s1_2: id}))}
             onDelete={s1 ? () => onDeleteMatch(s1.id) : undefined}
             busyAthletes={busyAthletes}
+            desyncAthletes={desyncAthletes}
           />
           <div className="h-4 border-l-2 border-b-2 border-zinc-200 ml-8 my-2 rounded-bl-xl opacity-30"></div>
           <MatchBox 
@@ -912,6 +929,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             onOverrideA2={(id: string) => setOverrides(prev => ({...prev, s2_2: id}))}
             onDelete={s2 ? () => onDeleteMatch(s2.id) : undefined}
             busyAthletes={busyAthletes}
+            desyncAthletes={desyncAthletes}
           />
         </div>
 
@@ -935,6 +953,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f1_2: id}))}
             onDelete={f1 ? () => onDeleteMatch(f1.id) : undefined}
             busyAthletes={busyAthletes}
+            desyncAthletes={desyncAthletes}
           />
           <MatchBox 
             title="Finale 3°/4° Posto"
@@ -952,6 +971,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f3_2: id}))}
             onDelete={f3 ? () => onDeleteMatch(f3.id) : undefined}
             busyAthletes={busyAthletes}
+            desyncAthletes={desyncAthletes}
             onOpenAthlete={onOpenAthlete}
           />
           <MatchBox 
@@ -970,6 +990,7 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
             onOverrideA2={(id: string) => setOverrides(prev => ({...prev, f5_2: id}))}
             onDelete={f5 ? () => onDeleteMatch(f5.id) : undefined}
             busyAthletes={busyAthletes}
+            desyncAthletes={desyncAthletes}
             onOpenAthlete={onOpenAthlete}
           />
         </div>
@@ -980,12 +1001,16 @@ function DisciplineBracket({ discipline, matches, onDeleteMatch, busyAthletes, o
 
 function MatchBox({ 
   title, a1, a2, p1, p2, onChange, onSave, disabled, isSaved, waitingLabel = "In attesa...", accent, isInProgress, onSendToCourt,
-  allAthletes, onOverrideA1, onOverrideA2, onDelete, busyAthletes, onOpenAthlete
+  allAthletes, onOverrideA1, onOverrideA2, onDelete, busyAthletes, desyncAthletes, onOpenAthlete
 }: any) {
   const isStarted = isSaved || isInProgress;
   const isA1Busy = a1 && busyAthletes?.has(a1.id);
   const isA2Busy = a2 && busyAthletes?.has(a2.id);
-  const isBlocked = !isStarted && (isA1Busy || isA2Busy);
+  const isA1Desync = a1 && desyncAthletes?.has(a1.id);
+  const isA2Desync = a2 && desyncAthletes?.has(a2.id);
+  const isDesync = isA1Desync || isA2Desync;
+  
+  const isBlocked = !isStarted && (isA1Busy || isA2Busy || isDesync);
 
   return (
     <motion.div 
@@ -997,9 +1022,16 @@ function MatchBox({
       "bg-white/80 border-zinc-100 shadow-zinc-200/20"
     }`}>
       <div className="flex justify-between items-center mb-5">
-        <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] ${isInProgress ? "text-green-700" : "text-zinc-400"}`}>{title}</h4>
-        {isSaved && <div className="text-[9px] font-black text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 uppercase">OK</div>}
-        {isInProgress && (
+        <div className="flex items-center gap-2">
+          <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] ${isInProgress ? "text-green-700" : isDesync ? "text-red-600" : "text-zinc-400"}`}>{title}</h4>
+          {isDesync && (
+            <div className="text-[8px] font-black text-white bg-red-500 px-1.5 py-0.5 rounded-full shadow-lg shadow-red-500/20 uppercase animate-pulse">
+              DESYNC
+            </div>
+          )}
+        </div>
+        {isSaved && !isDesync && <div className="text-[9px] font-black text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100 uppercase">OK</div>}
+        {isInProgress && !isDesync && (
           <div className="flex items-center gap-1.5 text-[9px] font-black text-white bg-green-500 px-2 py-0.5 rounded-full shadow-lg shadow-green-500/20">
             <div className="w-1 h-1 rounded-full bg-white animate-ping" />
             LIVE
@@ -1027,17 +1059,21 @@ function MatchBox({
                   ))}
                 </select>
               </div>
-              {isA1Busy && <span className="text-[9px] text-orange-500 font-black mt-1 ml-1 uppercase tracking-wider">Impegnato</span>}
+              {isA1Busy && !isA1Desync && <span className="text-[9px] text-orange-500 font-black mt-1 ml-1 uppercase tracking-wider">Impegnato</span>}
+              {isA1Desync && <span className="text-[9px] text-red-500 font-black mt-1 ml-1 uppercase tracking-wider">Duplicato DB</span>}
             </div>
           ) : (
             <div className="flex-1 flex items-center gap-3">
               <LetterBadge letter={a1?.letter} isBusy={isA1Busy} isStarted={isStarted} />
-              <span 
-                className={`text-sm font-black truncate transition-colors ${a1 ? "cursor-pointer hover:text-indigo-600" : "text-zinc-300 italic"} ${isInProgress ? "text-green-900" : ""}`}
-                onClick={() => a1 && onOpenAthlete(a1.id)}
-              >
-                {a1 ? a1.name : waitingLabel}
-              </span>
+              <div className="flex flex-col">
+                <span 
+                  className={`text-sm font-black truncate transition-colors ${a1 ? "cursor-pointer hover:text-indigo-600" : "text-zinc-300 italic"} ${isInProgress ? "text-green-900" : ""} ${isA1Desync ? "text-red-600 line-through" : ""}`}
+                  onClick={() => a1 && onOpenAthlete(a1.id)}
+                >
+                  {a1 ? a1.name : waitingLabel}
+                </span>
+                {isA1Desync && <span className="text-[9px] text-red-500 font-black uppercase tracking-wider">Annullare Match Vecchio</span>}
+              </div>
             </div>
           )}
           {isStarted && (
@@ -1076,17 +1112,21 @@ function MatchBox({
                   ))}
                 </select>
               </div>
-              {isA2Busy && <span className="text-[9px] text-orange-500 font-black mt-1 ml-1 uppercase tracking-wider">Impegnato</span>}
+              {isA2Busy && !isA2Desync && <span className="text-[9px] text-orange-500 font-black mt-1 ml-1 uppercase tracking-wider">Impegnato</span>}
+              {isA2Desync && <span className="text-[9px] text-red-500 font-black mt-1 ml-1 uppercase tracking-wider">Duplicato DB</span>}
             </div>
           ) : (
             <div className="flex-1 flex items-center gap-3">
               <LetterBadge letter={a2?.letter} isBusy={isA2Busy} isStarted={isStarted} />
-              <span 
-                className={`text-sm font-black truncate transition-colors ${a2 ? "cursor-pointer hover:text-indigo-600" : "text-zinc-300 italic"} ${isInProgress ? "text-green-900" : ""}`}
-                onClick={() => a2 && onOpenAthlete(a2.id)}
-              >
-                {a2 ? a2.name : waitingLabel}
-              </span>
+              <div className="flex flex-col">
+                <span 
+                  className={`text-sm font-black truncate transition-colors ${a2 ? "cursor-pointer hover:text-indigo-600" : "text-zinc-300 italic"} ${isInProgress ? "text-green-900" : ""} ${isA2Desync ? "text-red-600 line-through" : ""}`}
+                  onClick={() => a2 && onOpenAthlete(a2.id)}
+                >
+                  {a2 ? a2.name : waitingLabel}
+                </span>
+                {isA2Desync && <span className="text-[9px] text-red-500 font-black uppercase tracking-wider">Annullare Match Vecchio</span>}
+              </div>
             </div>
           )}
           {isStarted && (
@@ -1114,11 +1154,11 @@ function MatchBox({
             disabled={disabled || isBlocked}
             className={`w-full py-3 rounded-2xl font-black text-[10px] tracking-[0.15em] uppercase flex items-center justify-center gap-2 transition-all shadow-xl active:scale-95 ${
               isBlocked
-                ? "bg-zinc-50 text-zinc-300 cursor-not-allowed border border-zinc-100"
+                ? isDesync ? "bg-red-50 text-red-500 border border-red-200" : "bg-zinc-50 text-zinc-300 cursor-not-allowed border border-zinc-100"
                 : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20"
             }`}
           >
-            {isBlocked ? "ATLETI OCCUPATI" : "MANDA IN CAMPO"}
+            {isBlocked ? (isDesync ? "BLOCCATO (DESINC)" : "ATLETI OCCUPATI") : "MANDA IN CAMPO"}
           </button>
         ) : isStarted ? (
           <div className="flex gap-2">
