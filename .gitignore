@@ -40,3 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# script di utilità locali (non fanno parte del build)
+/scripts/
+/scratch/
+
+# file temporanei Excel e lock
+*.xlsx
+.~lock.*
+
