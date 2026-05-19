@@ -5,7 +5,31 @@ import EditionCard from "@/components/ui/EditionCard";
 import { cookies } from "next/headers";
 
 const EDITIONS = [
-  // ... (EDITIONS data remains the same)
+  {
+    id: 7,
+    title: "7° Edizione",
+    date: "17 Maggio 2026",
+    results: [
+      { pos: 1, name: "Pietro Noli" },
+      { pos: 2, name: "Alessandro Robutti" },
+      { pos: 3, name: "Massimo Robutti" },
+      { pos: 4, name: "Stefano Mortola" },
+      { pos: 5, name: "Gianluca Bozzia" },
+      { pos: 6, name: "Claudia Barzaghi" },
+      { pos: 7, name: "Alberto Robutti" },
+      { pos: 8, name: "Emma Tira" },
+      { pos: 9, name: "Gustavo Bozzia Vanzetti" },
+      { pos: 10, name: "Matheus Interliggi" },
+      { pos: 11, name: "Gianni Teti" },
+      { pos: 12, name: "Valentino Bozzia Eboli" },
+    ],
+    disciplines: [
+      { name: "Ping Pong", winner: "Stefano M.", iconName: "Activity" },
+      { name: "Calcio Balilla", winner: "Stefano M.", iconName: "Users" },
+      { name: "Freccette", winner: "Alberto R.", iconName: "Target" },
+      { name: "Air Hockey", winner: "Pietro N.", iconName: "Zap" },
+    ]
+  },
   {
     id: 6,
     title: "6° Edizione",
@@ -205,7 +229,7 @@ export default async function AlboDoroPage() {
               </div>
               <h3 className="text-sm font-black uppercase tracking-widest text-[#86868b] mb-2">Pluricampione</h3>
               <p className="text-3xl font-black text-[#1d1d1f]">Pietro Noli</p>
-              <p className="text-blue-600 font-bold mt-1">3 Titoli Vinti</p>
+              <p className="text-blue-600 font-bold mt-1">4 Titoli Vinti</p>
             </div>
             <div className="bg-white rounded-[40px] p-10 shadow-sm border border-white flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 mb-6">
@@ -221,7 +245,7 @@ export default async function AlboDoroPage() {
               </div>
               <h3 className="text-sm font-black uppercase tracking-widest text-[#86868b] mb-2">Anni di Storia</h3>
               <p className="text-3xl font-black text-[#1d1d1f]">Dal 2018</p>
-              <p className="text-blue-600 font-bold mt-1">6 Edizioni</p>
+              <p className="text-blue-600 font-bold mt-1">7 Edizioni</p>
             </div>
           </div>
         </div>
@@ -244,7 +268,7 @@ export default async function AlboDoroPage() {
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-8">Vuoi entrare nella storia?</h2>
           <p className="text-xl text-zinc-400 font-medium mb-12">
-            La prossima edizione è alle porte. Preparati per le NOLImpiadi 2026.
+            Resti nel cuore di tutti. Le NOLImpiadi torneranno ancora più forti.
           </p>
           <Link href="/gare" className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 rounded-full text-white font-black hover:bg-blue-700 transition-all shadow-xl shadow-blue-900/20">
             SCOPRI LE DISCIPLINE
